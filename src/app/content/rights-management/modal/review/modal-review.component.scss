@@ -1,0 +1,19 @@
+.noticeContainer{
+    display: flex;
+    flex-direction: column;
+    max-height: 125px;
+    overflow: auto;
+  }
+  
+  .mat-table {
+    overflow: auto;
+    max-height: 200px;
+  }
+
+  .row{
+    border-bottom: 1px solid rgba(0,0,0,.12);
+  }
+
+  .margin{
+    margin-left: 15px;
+  }

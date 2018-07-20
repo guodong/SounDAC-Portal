@@ -1,0 +1,28 @@
+<nav>
+  <ul class="mt-1">
+    <li>
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        <i class="material-icons mx-4 align-middle">dashboard</i>
+        <span>Home</span>
+      </a>
+    </li>
+    <li>
+      <a routerLink="/wallet" routerLinkActive="active">
+        <i class="material-icons mx-4 align-middle">credit_card</i>
+        <span>Wallet</span>
+      </a>
+    </li>
+    <li *ngIf="auth.isManagement(auth.user)">
+      <a routerLink="/post-content" routerLinkActive="active">
+        <i class="material-icons mx-4 align-middle">line_style</i>
+        <span>Rights Management</span>
+      </a>
+    </li>
+    <li *ngIf="auth.isAdmin(auth.user)">
+      <a routerLink="/admin" routerLinkActive="active">
+        <i class="material-icons mx-4 align-middle">account_box</i>
+        <span>Admin</span>
+      </a>
+    </li>
+  </ul>
+</nav>

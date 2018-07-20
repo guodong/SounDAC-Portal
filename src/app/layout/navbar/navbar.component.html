@@ -1,0 +1,27 @@
+<mat-toolbar class="navbar mat-elevation-z6">
+  <mat-toolbar-row>
+
+    <!--Sidebar Toggle-->
+    <button mat-icon-button (click)="toggle()">
+      <mat-icon aria-label="Sidenav Toggle">menu</mat-icon>
+    </button>
+
+    <!--Brand-->
+    <button mat-button routerLink="/">
+      <img class="logo-icon" src="/assets/img/muse-logo.png" alt="Logo" />
+    </button>
+
+    <!--Spacer-->
+    <span class="fill-remaining-space"></span>
+
+    <!--Search-->
+    <!-- <app-search></app-search> -->
+
+    <div class="button-row">
+
+      <!--Auth-->
+      <app-navbar-auth></app-navbar-auth>
+
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>

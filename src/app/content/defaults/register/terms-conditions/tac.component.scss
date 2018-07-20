@@ -1,0 +1,14 @@
+:host {
+  display: block;
+
+    .mat-dialog-container {
+        padding: 0;
+        width: 720px;
+    }
+
+    .dialog-content-wrapper {
+        max-height: 15vh;
+        display: flex;
+        flex-direction: column;
+    }
+}

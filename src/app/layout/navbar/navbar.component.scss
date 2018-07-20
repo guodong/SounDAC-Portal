@@ -1,0 +1,30 @@
+@import "src/assets/scss/base";
+
+.navbar{
+
+    background-color: #272b35;
+    align-items: normal;
+
+    mat-icon,
+    .mat-button{
+        color: $sidenav-color;
+
+        &:hover{
+            color: white;
+        }
+    }
+
+    &.mat-elevation-z6{
+        z-index: 2;
+    }
+
+    .logo-icon{
+        height: 26px;
+        margin: 0 4px 3px 0;
+    }
+
+    .fill-remaining-space{
+        flex: 1 1 auto;
+    }
+
+}

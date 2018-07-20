@@ -1,0 +1,76 @@
+@import "src/assets/scss/base";
+
+:host {
+  #videoBackground {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      min-width: 100%; 
+      min-height: 100%;
+      z-index: -1;
+  }
+
+  .login{
+
+    max-width: 400px;
+    margin: 0 auto;
+
+    .logo{
+      max-width: 150px;
+    }
+
+    mat-form-field {
+      width: 100%;
+    }
+
+    .note{
+      color: #777;
+    }
+
+    .mb-custom-4{
+      margin-bottom: 2rem !important
+    }
+
+  }
+
+}
+
+// :host {
+//     #videoBackground {
+//         position: fixed;
+//         right: 0;
+//         bottom: 0;
+//         min-width: 100%; 
+//         min-height: 100%;
+//         z-index: -1;
+//     }
+
+//     .login {
+//         background: white;
+//         width: 380px;
+
+//         .login-content {
+//             padding: 0px 42px 42px;
+
+//             mat-form-field {
+//             width: 100%;
+//             margin: 6px 0;
+//             }
+
+//             a {
+//             text-decoration: none;
+//             color: #2196F3;
+
+//                 &:hover {
+//                     text-decoration: underline;
+//                 }
+//             }
+
+//             .note {
+//             color: #777;
+//             margin: 24px 0 0;
+//             text-align: center;
+//             }
+//         }
+//     }
+// }

@@ -1,0 +1,50 @@
+<form [formGroup]="form">
+  <div class="container-fluid">
+    <mat-toolbar-row class="header" fxLayout="column">
+      <h1>{{data.header}}</h1>
+    </mat-toolbar-row>
+    <div mat-dialog-content>
+      <div class="row my-1">
+        <mat-form-field class="col-12 my-2">
+          <input matInput tabindex="1" formControlName="artist" [(ngModel)]="data.artist" placeholder="Artist" required>
+
+          <mat-error *ngIf="form.controls.artist.hasError('required')">
+            <strong>Artist is required</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="row my-1">
+        <mat-form-field class="col-12 my-2">
+          <input matInput type="number" min=0 tabindex="1" formControlName="isni" [(ngModel)]="data.isni" placeholder="ISNI">
+        </mat-form-field>
+      </div>
+
+      <div class="row my-1">
+        <mat-form-field class="col-6 my-2">
+          <!-- <input matInput name="alias" [formControl]="aliasControl" tabindex="1" [(ngModel)]="data.alias" placeholder="Alias"> -->
+          <input matInput tabindex="1" formControlName="alias" [(ngModel)]="data.alias" placeholder="Alias" (keyup.enter)="addAliase()">
+        </mat-form-field>
+
+        <div class="col-6 my-2">
+          <span>Add another aliase... </span>
+          <button mat-icon-button (click)="addAliase()">
+            <mat-icon class="icon-sidenav-toggle fade-in-on-icon-sidenav">add_box</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="row my-1">
+        <mat-chip-list matPrefix #aliaseList name="alias">
+          <mat-chip class="chip" *ngFor="let alias of aliases; index as i" removable="true" (removed)="removeAlias(i)">
+            {{alias}}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+        </mat-chip-list>
+      </div>
+    </div>
+
+    <mat-dialog-actions align="end">
+      <button *ngIf="data.btnStart" class="mat-raised-button mat-primary" (click)="btnClick(data.btnStart)">{{data.btnStart}}</button>
+      <button *ngIf="data.btnEnd" [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="btnClick(data.btnEnd)">{{data.btnEnd}}</button>
+    </mat-dialog-actions>
+  </div>
+</form>

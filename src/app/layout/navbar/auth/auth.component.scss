@@ -1,0 +1,11 @@
+@import "src/assets/scss/base";
+
+mat-icon,
+.mat-button,
+.mat-button mat-icon{
+  color: $sidenav-color;
+
+  &:hover{
+    color: white;
+  }
+}

@@ -1,0 +1,11 @@
+<form name="smartForm" class="smart-form">
+    <mat-form-field class="full-width">
+        <input type="text" placeholder="Pro's" matInput [formControl]="smartControl" [matAutocomplete]="auto"
+            matTooltip= {{toolTips.pros}} matTooltipShowDelay= {{toolTips.delay}}>
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option #selectedPro *ngFor="let option of filteredOptions | async" [value]="option">
+                {{ option }}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+</form>

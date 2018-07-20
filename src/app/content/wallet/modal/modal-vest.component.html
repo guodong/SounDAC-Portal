@@ -1,0 +1,13 @@
+<h1 mat-dialog-title>Vest</h1>
+
+<div mat-dialog-content>
+  <div mat-dialog-content>Move tokens to Vesting.</div>
+    <mat-form-field>
+        <input matInput placeholder="Amount to Vest" tabindex="1" [(ngModel)]="data">
+    </mat-form-field>
+</div>
+
+<div mat-dialog-actions>
+  <button class="mat-raised-button mat-primary"(click)="save()">Submit</button>
+  <button class="mat-raised-button"(click)="close()">Cancel</button>
+</div>

@@ -1,0 +1,13 @@
+<app-navbar (sidenavToggle)="sidenavToggle()"></app-navbar>
+
+<mat-sidenav-container class="app-container" fxLayout="row">
+
+  <mat-sidenav #sidenav class="app-sidenav mat-elevation-z6" fxLayout="column" [mode]="(mediaQueryList.matches) ? 'over' : 'side'" opened>
+    <app-sidenav></app-sidenav>
+  </mat-sidenav>
+
+  <router-outlet></router-outlet>
+
+  <app-loading [isLoading]="ui.getLoadingState()" [loadingMessage]="ui.getLoadingMessage()"></app-loading>
+
+</mat-sidenav-container>

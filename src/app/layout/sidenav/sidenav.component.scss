@@ -1,0 +1,52 @@
+@import "src/assets/scss/base"; //Bootstrap & Custom Variables
+
+nav{
+
+  h3 {
+    font-size: $font-size-lg;
+    padding: $grid-gutter-width/2;
+    margin: 0;
+  }
+
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      display: list-item;
+      border-bottom-width: 1px;
+      border-bottom-style: solid;
+      margin: 0;
+      padding: 0;
+      color: rgba(0, 0, 0, 0.54);
+      border-color: rgba(0, 0, 0, 0.06);
+
+      a {
+        color: $sidenav-color;
+        box-sizing: border-box;
+        display: block;
+        line-height: $grid-gutter-width*1.5;
+        padding: 0 16px;
+        position: relative;
+
+        .material-icons{
+          font-size: 22px;
+        }
+
+        &:hover{
+          color: white;
+          background: $sidenav-background-hover;
+          cursor: pointer;
+        }
+
+        &:active,
+        &.active{
+          color: white;
+          background: $sidenav-background-hover;
+        }
+
+      }
+    }
+  }
+}

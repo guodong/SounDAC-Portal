@@ -1,0 +1,336 @@
+<h1 mat-dialog-title>Content Review</h1>
+<mat-divider></mat-divider>
+<div mat-dialog-content>
+    <div class="container-fluid">
+        <br>
+        <h3>Master Side</h3>
+        <div>
+            <h4>Track Info</h4>
+            <div class="row">
+                <div class="col-md-3">Content Uploader:</div>
+                <div class="col-md-3" [innerHtml]="formData.uploader"></div>
+                <div class="col-md-1">Content ID:</div>
+                <div class="col-md-5" [innerHtml]="formData.url"></div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-3">Content Part of Album:</div>
+                <div class="col-md-3" [innerHtml]="formData.album_meta.partOfAlbum"></div>
+                <div class="col-md-3">Track Title:</div>
+                <div class="col-md-3" [innerHtml]="formData.track_meta.trackTitle"></div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-3">Track Producer:</div>
+                <div class="col-md-3" [innerHtml]="formData.track_meta.trackProducer"></div>
+                <div class="col-md-3">Contains Samples:</div>
+                <div class="col-md-3" [innerHtml]="formData.track_meta.hasSample"></div>
+            </div>
+            <br>
+
+            <div class="row">
+                <div class="col-md-3">Track Artists:</div>
+            </div>
+            <div>
+                <mat-list class="margin">
+                    <div class="row">
+                        <div class="col-md-3">Artist</div>
+                        <div class="col-md-3">ISNI</div>
+                        <div class="col-md-6">Aliases</div>
+                    </div>
+                    <mat-list-item *ngFor="let data of trackArtists,  index as i">
+                        <div class="col-md-3" [innerHtml]="data.artist"></div>
+                        <div class="col-md-3" [innerHtml]="data.isni"></div>
+                        <div class="col-md-6" [innerHtml]="data.aliases"></div>
+                    </mat-list-item>
+                </mat-list>
+                <mat-divider></mat-divider>
+            </div>
+            <br>
+
+
+
+            <div class="row">
+                <div class="col-md-3">Featured Artist:</div>
+                <div class="col-md-3" [innerHtml]="formData.track_meta.featuredArtist"></div>
+                <div class="col-md-3">Featured Artist ISNI:</div>
+                <div class="col-md-3" [innerHtml]="formData.track_meta.featuredArtistIsni"></div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-3">Primary Genre:</div>
+                <div class="col-md-3" [innerHtml]="formData.track_meta.trackGenre1"></div>
+                <div class="col-md-3">Secondary Genre:</div>
+                <div class="col-md-3" [innerHtml]="formData.track_meta.trackGenre2"></div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-3">Is Content Explicit:</div>
+                <div class="col-md-3" [innerHtml]="formData.album_meta.explicit"></div>
+                <div class="col-md-3">Track Number:</div>
+                <div class="col-md-3" [innerHtml]="formData.track_meta.trackNo"></div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-3">Track Volume Number:</div>
+                <div class="col-md-3" [innerHtml]="formData.track_meta.trackVolumeNo"></div>
+                <div class="col-md-3">Track Duration:</div>
+                <div class="col-md-3" [innerHtml]="formData.track_meta.trackDuration"></div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-3">Release Date:</div>
+                <div class="col-md-3" [innerHtml]="formData.album_meta.releaseDate"></div>
+                <div class="col-md-3">Sales Start Date:</div>
+                <div class="col-md-3" [innerHtml]="formData.album_meta.salesStartDate"></div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-3">Country of Origin:</div>
+                <div class="col-md-3" [innerHtml]="formData.album_meta.countryOrigin"></div>
+                <div class="col-md-3">Track P Line:</div>
+                <div class="col-md-3" [innerHtml]="formData.track_meta.trackPLine"></div>
+
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-3">ISRC Code:</div>
+                <div class="col-md-3" [innerHtml]="formData.track_meta.isrc"></div>
+                <div class="col-md-3">UPC or EAN:</div>
+                <div class="col-md-3" [innerHtml]="formData.album_meta.upcEan"></div>
+            </div>
+        </div>
+        <br>
+
+        <div>
+            <h4>Album Info</h4>
+            <!-- <br> -->
+            <div class="row">
+                <div class="col-md-3">Album Title:</div>
+                <div class="col-md-3" [innerHtml]="formData.album_meta.albumTitle"></div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-3">Album Type:</div>
+                <div class="col-md-3" [innerHtml]="formData.album_meta.albumType"></div>
+                <div class="col-md-3">Album Producer:</div>
+                <div class="col-md-3" [innerHtml]="formData.album_meta.albumProducer"></div>
+            </div>
+            <br>
+            <!-- Album Artist -->
+            <div class="row">
+                <!-- <h4>Album Artists</h4> -->
+                <div class="col-md-3">Album Artists:</div>
+            </div>
+            <div>
+                <mat-list class="margin">
+                    <div class="row">
+                        <div class="col-md-3">Artist</div>
+                        <div class="col-md-3">ISNI</div>
+                        <div class="col-md-6">Aliases</div>
+                    </div>
+                    <mat-list-item *ngFor="let data of albumArtists,  index as i">
+                        <div class="col-md-3" [innerHtml]="data.artist"></div>
+                        <div class="col-md-3" [innerHtml]="data.isni"></div>
+                        <div class="col-md-6" [innerHtml]="data.aliases"></div>
+                    </mat-list-item>
+                </mat-list>
+                <mat-divider *ngIf="albumArtists !== undefined"></mat-divider>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-3">Album P Line:</div>
+                <div class="col-md-3" [innerHtml]="formData.album_meta.albumPLine"></div>
+                <div class="col-md-3">Album C Line:</div>
+                <div class="col-md-3" [innerHtml]="formData.album_meta.albumCLine"></div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-3">Primary Genre:</div>
+                <div class="col-md-3" [innerHtml]="formData.album_meta.albumGenre1"></div>
+                <div class="col-md-3">Secondary Genre:</div>
+                <div class="col-md-3" [innerHtml]="formData.album_meta.albumGenre2"></div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-3">Master Label Name:</div>
+                <div class="col-md-3" [innerHtml]="formData.album_meta.masterLabelName"></div>
+                <div class="col-md-3">Display Label Name:</div>
+                <div class="col-md-3" [innerHtml]="formData.album_meta.displayLabelName"></div>
+            </div>
+            <br>
+        </div>
+        <br>
+
+        <h3>Composition Side</h3>
+        <br>
+        <div>
+            <br>
+            <div class="row">
+                <div class="col-md-3">Composition Title:</div>
+                <div class="col-md-3" [innerHtml]="formData.comp_meta.compTitle"></div>
+                <div class="col-md-3">Composition Title Alternate:</div>
+                <div class="col-md-3" [innerHtml]="formData.comp_meta.compTitleAlt"></div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-3">Composition ISWC:</div>
+                <div class="col-md-3" [innerHtml]="formData.comp_meta.compTitleIswc"></div>
+                <div class="col-md-3">Preforming Rights Organization:</div>
+                <div class="col-md-3" [innerHtml]="formData.comp_meta.performingRightsOrg"></div>
+            </div>
+            <br>
+
+            <div class="row">
+                <div class="col-md-3">Writers:</div>
+            </div>
+            <div>
+                <mat-list class="margin">
+                    <div class="row">
+                        <div class="col-md-3">Writer</div>
+                        <div class="col-md-3">Writer IPI or CAE</div>
+                        <div class="col-md-2">ISNI</div>
+                        <div class="col-md-2">Writer's Publisher</div>
+                        <div class="col-md-2">Writer's Role</div>
+                    </div>
+                    <mat-list-item *ngFor="let data of writers,  index as i">
+                        <div class="col-md-3" [innerHtml]="data.writer"></div>
+                        <div class="col-md-3" [innerHtml]="data.IPI_CAE"></div>
+                        <div class="col-md-3" [innerHtml]="data.ISNI"></div>
+                        <div class="col-md-3" [innerHtml]="data.publisher"></div>
+                        <div class="col-md-3" [innerHtml]="data.role"></div>
+                    </mat-list-item>
+                </mat-list>
+                <mat-divider *ngIf="writers.lenght !== 0"></mat-divider>
+            </div>
+            <br>
+
+            <div class="row">
+                <div class="col-md-3">Publishers:</div>
+            </div>
+            <div>
+                <mat-list class="margin">
+                    <div class="row">
+                        <div class="col-md-4">Publisher</div>
+                        <div class="col-md-4">publisher's IPI or CAE</div>
+                        <div class="col-md-4">ISNI</div>
+                    </div>
+                    <mat-list-item *ngFor="let data of publishers,  index as i">
+                        <div class="col-md-4" [innerHtml]="data.publisher"></div>
+                        <div class="col-md-4" [innerHtml]="data.IPI_CAE"></div>
+                        <div class="col-md-4" [innerHtml]="data.ISNI"></div>
+                    </mat-list-item>
+                </mat-list>
+                <mat-divider *ngIf="publishers.length !== 0"></mat-divider>
+            </div>
+            <br>
+        </div>
+        <br>
+        <h3>Management & Royalty Splits</h3>
+        <br>
+        <div>
+            <h4>General Royalty Splits</h4>
+            <!-- <br> -->
+            <div class="row">
+                <div class="col-md-6">Percentage of income going to Master Side</div>
+                <div class="col-md-6" [innerHtml]="formData.master_share"></div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6">Percentage of income going to Streaming Platform</div>
+                <div class="col-md-6" [innerHtml]="formData.playing_reward"></div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6">Percentage of income going to Composition Side</div>
+                <div class="col-md-6" [innerHtml]="formData.publishers_share"></div>
+            </div>
+            <br>
+
+            <div class="row">
+                <div class="col-md-3">Master Side Royalty Split:</div>
+            </div>
+            <div>
+                <mat-list class="margin">
+                    <div class="row">
+                        <div class="col-md-3">Muser Name</div>
+                        <div class="col-md-3">Percentage of Income</div>
+                        <div class="col-md-3">Manages Contract</div>
+                        <div class="col-md-3">Weight</div>
+                    </div>
+                    <mat-list-item *ngFor="let data of masterRoyalty,  index as i">
+                        <div class="col-md-3" [innerHtml]="data.muserName"></div>
+                        <div class="col-md-3" [innerHtml]="data.income"></div>
+                        <div class="col-md-3" [innerHtml]="data.management"></div>
+                        <div class="col-md-3" [innerHtml]="data.weight"></div>
+                    </mat-list-item>
+                </mat-list>
+                <mat-divider *ngIf="masterRoyalty.lenght !== 0"></mat-divider>
+                <!-- <mat-divider></mat-divider> -->
+                
+            </div>
+            <br>
+            
+            <div class="row">
+                <div class="col-md-6">Threshold for a change to take place</div>
+                <div class="col-md-6" [innerHtml]="formData.management_threshold"></div>
+            </div>
+            <br>
+
+            <h4>Composition Side Royalty Split</h4>
+            <div class="row">
+                <div class="col-md-3">Composition Side Royalty Split:</div>
+            </div>
+            <div>
+                <mat-list class="margin">
+                    <div class="row">
+                        <div class="col-md-3">Muser Name</div>
+                        <div class="col-md-3">Percentage of Income</div>
+                        <div class="col-md-3">Manages Contract</div>
+                        <div class="col-md-3">Weight</div>
+                    </div>
+                    <mat-list-item *ngFor="let data of compRoyalty,  index as i">
+                        <div class="col-md-3" [innerHtml]="data.muserName"></div>
+                        <div class="col-md-3" [innerHtml]="data.income"></div>
+                        <div class="col-md-3" [innerHtml]="data.management"></div>
+                        <div class="col-md-3" [innerHtml]="data.weight"></div>
+                    </mat-list-item>
+                </mat-list>
+                <mat-divider *ngIf="compRoyalty.length !== 0"></mat-divider>
+                <!-- <mat-divider></mat-divider> -->
+                
+            </div>
+            <br>
+            <div class="row">
+                    <div class="col-md-6">Threshold for a change to take place</div>
+                    <div class="col-md-6" [innerHtml]="formData.management_threshold_comp"></div>
+                </div>
+                <br>
+        </div>
+    </div>
+    <br>
+
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Disclaimer</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="noticeContainer">
+            <p>
+                It is mutually assumed and understood that uploading your content to the MUSE blockchain is done purely at your own risk.
+                We does not make any warranties about the completeness, reliability and accuracy of this information. Any
+                action you take upon the Rights Management Portal, is strictly at your own risk. We are not liable for any
+                losses and/or damages in connection with the use of the Rights Management Portal or the MUSE blockchain.
+                By uploading your content to the MUSE blockchain through the Rights Management Portal, you hereby consent
+                to our disclaimer and agree to its terms.
+            </p>
+        </mat-card-content>
+        <mat-card-actions>
+            <mat-checkbox [(ngModel)]="agree">I Agree</mat-checkbox>
+        </mat-card-actions>
+    </mat-card>
+</div>
+
+<div mat-dialog-actions>
+    <button class="mat-raised-button" (click)="close()">Edit</button>
+    <button class="mat-raised-button mat-primary" (click)="save('Post')" [disabled]="!agree">Post</button>
+</div>

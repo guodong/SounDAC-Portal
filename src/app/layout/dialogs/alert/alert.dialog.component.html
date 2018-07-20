@@ -1,0 +1,16 @@
+<div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between center">
+  <div>{{data.title}}</div>
+  <div>
+    <code>{{data.button}}</code>
+  </div>
+</div>
+
+<mat-dialog-content>
+  <p>{{data.message}}</p>
+</mat-dialog-content>
+
+
+<mat-dialog-actions align="end">
+  <button *ngIf="data.btnStart" mat-button color="primary" (click)="btnClick(data.btnStart)">{{data.btnStart}}</button>
+  <button *ngIf="data.btnEnd" mat-button color="primary" (click)="btnClick(data.btnEnd)">{{data.btnEnd}}</button>
+</mat-dialog-actions>

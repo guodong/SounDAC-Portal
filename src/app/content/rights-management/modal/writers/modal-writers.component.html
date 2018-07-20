@@ -1,0 +1,56 @@
+<form [formGroup]="form">
+  <div class="container-fluid">
+    <mat-toolbar-row class="header" fxLayout="column">
+      <h1>Writer's Content</h1>
+    </mat-toolbar-row>
+    <div mat-dialog-content>
+      <div class="row my-1">
+        <mat-form-field class="col-12 my-2" matTooltip= {{toolTips.writer}} matTooltipShowDelay= {{toolTips.delay}}>
+          <input matInput tabindex="1" formControlName="writer" placeholder="Writer" required>
+          <mat-error *ngIf="form.controls.writer.hasError('required')">
+            <strong>Writer is required</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="row my-1">
+        <mat-form-field class="col-6 my-2" matTooltip= {{toolTips.ipicae}} matTooltipShowDelay= {{toolTips.delay}}>
+          <input matInput tabindex="1" formControlName="IPI_CAE" placeholder="Writer IPI or CAE">
+        </mat-form-field>
+
+        <mat-form-field class="col-6 my-2" matTooltip= {{toolTips.isni}} matTooltipShowDelay= {{toolTips.delay}}>
+          <input matInput type="number" min=0 tabindex="1" formControlName="ISNI" placeholder="ISNI">
+        </mat-form-field>
+      </div>
+
+      <div class="row my-1">
+        <mat-form-field class="col-6 my-2" matTooltip= {{toolTips.publisher}} matTooltipShowDelay= {{toolTips.delay}}>
+          <input matInput tabindex="1" formControlName="publisher" placeholder="Writer's Publisher" required>
+          <mat-error *ngIf="form.controls.publisher.hasError('required')">
+            <strong>Publisher is required</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <form [formGroup]="form" class="col-6 my-2">
+          <mat-form-field >
+            <mat-select placeholder="Writer's Role" formControlName="role" name="role" matTooltip= {{toolTips.role}} 
+            matTooltipShowDelay= {{toolTips.delay}} required>
+              <mat-option *ngFor="let r of roles" [value]="r.value">
+                {{ r.view }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.controls.publisher.hasError('required')">
+              <strong>Role is required</strong>
+            </mat-error>
+          </mat-form-field>
+        </form>
+
+      </div>
+    </div>
+
+    <mat-dialog-actions align="end">
+      <button *ngIf="data.btnStart" class="mat-raised-button mat-primary" (click)="btnClick(data.btnStart)">{{data.btnStart}}</button>
+      <button *ngIf="data.btnEnd" [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="btnClick(data.btnEnd)">{{data.btnEnd}}</button>
+    </mat-dialog-actions>
+  </div>
+</form>

@@ -1,0 +1,33 @@
+@import "assets/scss/base";
+@import "assets/scss/mixins/_breakpoints";
+@import "assets/scss/partials/_colors";
+@import "assets/scss/partials/_page-layouts";
+
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+.mat-drawer-container {
+  background-color: #eceff1;
+}
+
+.mat-drawer-content {
+  width: 100%;
+}
+
+button {
+  &:focus {
+    outline: none;
+  }
+}
+
+a {
+  transition: $transition-base;
+
+  &:hover,
+  &:active,
+  &:focus {
+    text-decoration: none !important;
+  }  
+}

@@ -1,0 +1,248 @@
+@import '~@angular/material/theming';
+@include mat-core();
+
+$mat-white: (
+    500: white,
+    contrast: (
+        500: $black-87-opacity
+    )
+);
+
+$mat-black: (
+    500: black,
+    contrast: (
+        500: white,
+    )
+);
+
+$mat-dark: (
+    50: #ECECEE,
+    100: #C5C6CB,
+    200: #9EA1A9,
+    300: #7D818C,
+    400: #5C616F,
+    500: #3C4252,
+    600: #353A48,
+    700: #2D323E,
+    800: #262933,
+    900: #1E2129,
+    A100: #C5C6CB,
+    A200: #9EA1A9,
+    A400: #5C616F,
+    A700: #2D323E,
+    contrast: (
+        50: $black-87-opacity,
+        100: $black-87-opacity,
+        200: $black-87-opacity,
+        300: white,
+        400: white,
+        500: $white-87-opacity,
+        600: $white-87-opacity,
+        700: $white-87-opacity,
+        800: $white-87-opacity,
+        900: $white-87-opacity,
+        A100: $black-87-opacity,
+        A200: $white-87-opacity,
+        A400: $white-87-opacity,
+        A700: $white-87-opacity,
+    )
+);
+
+$rmp:(
+    royal-heath : #B1387D,
+    opal: #ABC0B8,
+    blue-smoke: #6F7D78,
+    white: #FFFFFF,
+    vivid-violet: #80308E,
+    silver-chalice: #A0A0A0,
+    dark: #2B2B2B,
+    amaranth: #D91A5D,
+    black: #000000,
+    mardi-gras: #2A0044,
+    cannon-pink: #974983,
+    cinder: #100F15,
+    mine-shaft: #333333,
+    mine-shaft-active: #4C4C4C, 
+    plum: #92398C,
+    charm: #DC7FA9,
+    pale-slate: #CCC0CC,
+    cherub: #F1B9EC,
+    cranberry: #D2518A,
+    east-side: #AE7EC6,
+    eminence: #5A3779,    
+);
+
+
+$misc:(
+    primary: #16839C,
+    primary-active: #55ACEE,
+    danger: #FE0000,
+    danger-active: #FF563F,
+    bg-secondary: #E0EBEE,
+    link: #639EBE,
+    light: #FFFFFF,
+    custom-gray: #C3C3C3,
+    facebook: #3052A8,
+    facebook-active: #345CC0,
+    google: #DD4B39,
+    custom-icon : #555555,
+    sidenav-toolbar-background: #272B35,
+    sidenav-background: #2B303B,
+);
+
+// -tables.scss
+$tables: (
+    table-bg: #FFFFFF,
+    table-bg-accent: #F5F5F5,
+    table-bg-hover: rgba(0,0,0,.12),
+    table-bg-active: rgba(0,0,0,.12),
+    table-border-color: #E0E0E0,
+    table-grey-header-color: #FAFAFA,
+    table-header-font-color: #757575,
+);
+
+// -calendar.scss
+$calendar: (
+    event-title: #212121,
+    event-action: #FFFFFF,
+);
+
+// -cards.scss
+$cards: (
+    header-border-bottom: #E0E0E0,
+    header-color: #757575,
+    header-background: #EEEEEE,
+    extra-color: #888,
+    footer-border-top: #E0E0E0,
+);
+
+// -charts.scss
+$charts: (
+    title-container-color: #212121,
+    footer-border: #E1E1E1,
+    title-container-background:#EEEEEE,
+    title-container-border: #E1E1E1,
+    fill-background: #FFFFFF,
+);
+
+$icons: ( 
+    mat-icon-color: rgba(0, 0, 0, 0.54),
+);
+
+$inbox: (
+    not-active: #616161,
+    primary: #3F51B5,
+    read: #9F9F9F,
+    star: #616161,
+);
+
+
+$layouts: ( 
+    carded-border-bottom: rgba(0, 0, 0, 0.12),
+);
+
+
+$tables: ( 
+    table-header-font-color:       #757575,
+    table-bg:                      #FFFFFF,
+    table-bg-accent:               #F5F5F5,
+    table-bg-hover:                rgba(0,0,0,.12),
+    table-bg-active:               rgba(0,0,0,.12),
+    table-border-color:            #E0E0E0,
+    table-grey-header-color:       #FAFAFA,
+    thead-border-bottom:           rgba(0,0,0,.12),
+    tbody-border-top: rgba(0,0,0,.12),
+    table-striped-background-color: #FDE0DC,
+    table-hover-background-color: #F9DBDD,
+    table-responsive-a-background-color: #FDE0DC,
+    table-responsive-b-background-color: #F9BDBB,
+    table-grey-header-background-color: #EEEEEE,
+);
+
+
+// Palettes
+$primary: mat-palette($mat-dark);
+$accent: mat-palette($mat-light-blue, 600, 400, 700);
+$warn: mat-palette($mat-red);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$theme: mat-light-theme($primary, $accent, $warn);
+
+$background: map-get($theme, background);
+$foreground: map-get($theme, foreground);
+
+
+/**
+  General
+ */
+ $color: rgba(black, 0.87);
+ $secondary-color: rgba(black, 0.54);
+ $spacing: 24px;
+ $divider-color: rgba(black, 0.12);
+ 
+ /**
+   Toolbar
+  */
+ $toolbar-height: 64px;
+ $toolbar-z-index: 500;
+ 
+ /**
+   Notifications
+  */
+ $color__primary: #4CAF50;
+ $color__accent: #E91E63;
+ $color__warn: #f44336;
+ 
+ $color__primary-contrast: #FFF;
+ $color__accent-contrast: #FFF;
+ $color__warn-contrast: #FFF;
+
+ //Sidenav  
+ $sidenav-color: #A7A9AE;
+ $sidenav-background: #2B303B;
+ $sidenav-background-hover: darken($sidenav-background, 2);
+ 
+ $config: mat-typography-config(
+    $font-family: 'Roboto, "Helvetica Neue", sans-serif',
+    $display-4: mat-typography-level(112px, 112px, 300),
+    $display-3: mat-typography-level(56px, 56px, 400),
+    $display-2: mat-typography-level(45px, 48px, 400),
+    $display-1: mat-typography-level(34px, 40px, 400),
+    $headline: mat-typography-level(24px, 32px, 400),
+    $title: mat-typography-level(20px, 32px, 500),
+    $subheading-2: mat-typography-level(16px, 28px, 400),
+    $subheading-1: mat-typography-level(15px, 24px, 400),
+    $body-2: mat-typography-level(14px, 24px, 500),
+    $body-1: mat-typography-level(14px, 20px, 400),
+    $caption: mat-typography-level(12px, 20px, 400),
+    $button: mat-typography-level(14px, 14px, 500),
+      // Line-height must be unit-less fraction of the font-size.
+    $input: mat-typography-level(16px, 1.125, 400)
+  );
+
+  
+/**
+ USAGE:
+  .my-class {
+    background: $theme-background;
+  }
+ */
+$theme-foreground-map: map-get($theme, foreground);
+$theme-background-map: map-get($theme, background);
+$theme-primary-map: map-get($theme, primary);
+$theme-accent-map: map-get($theme, accent);
+$theme-warn-map: map-get($theme, warn);
+
+$theme-text: mat-color($theme-foreground-map, text);
+$theme-hint-text: mat-color($theme-foreground-map, hint-text);
+$theme-secondary-text: mat-color($theme-foreground-map, secondary-text);
+$theme-divider: mat-color($theme-foreground-map, divider);
+$theme-icon: mat-color($theme-foreground-map, icon);
+
+$theme-background: mat-color($theme-background-map, background);
+$theme-app-bar: mat-color($theme-background-map, app-bar);
+$theme-background-hover: mat-color($theme-background-map, hover);
+
+$theme-card: mat-color($theme-background-map, card);
+
+@include angular-material-theme($theme);

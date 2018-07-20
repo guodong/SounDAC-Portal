@@ -1,0 +1,12 @@
+<div class="loading-dialog" [class.show]="isLoading">
+  <div class="container d-flex justify-content-center">
+    <div class="row align-self-center text-center">
+      <div class="col-12 my-1">
+        <mat-spinner class="mx-auto"></mat-spinner>
+      </div>
+      <div *ngIf="loadingMessage" class="col-12 my-1">
+        <h4 [innerHtml]="loadingMessage"></h4>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+<div class="dialog-content-wrapper">
+  <mat-toolbar matDialogTitle>
+    <mat-toolbar-row>
+      <span class="title dialog-title">{{data.title}}</span>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div mat-dialog-content>
+    <div [innerHTML]="data.message"></div>
+  </div>
+
+  <div mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
+    <button mat-button (click)="btnClick(data.btnEnd)">{{data.btnEnd}}</button>
+  </div>
+</div>

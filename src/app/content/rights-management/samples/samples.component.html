@@ -1,0 +1,11 @@
+<form name="smartForm" class="smart-form">
+    <mat-form-field class="full-width">
+        <input type="text" placeholder="Contains Samples?" matInput [formControl]="smartControl" [matAutocomplete]="auto"
+            matTooltip= {{toolTips.sample}} matTooltipShowDelay= {{toolTips.delay}}>
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option #selectedSample class="shift-icon" *ngFor="let option of filteredOptions | async" [value]="option">
+                {{ option }}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+</form>
