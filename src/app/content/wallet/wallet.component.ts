@@ -311,12 +311,21 @@ export class WalletComponent implements OnInit, OnDestroy {
   voteWitness(witnessOwner: string, vote: boolean) {
     this.ui.showLoading();
     const password = this.auth.user.getPassword();
-    this.museService.voteWitness(this.muserName, password, witnessOwner, vote);
+    this.auth.getPrivateKeys(this.muserName, password).then((keys: MuseKeys) => {
+
+      this.account.keys.basic = keys.basic;
+      this.account.keys.active = keys.active;
+      this.account.keys.owner = keys.owner;
+      this.account.keys.memo = keys.memo;
+
+      this.museService.voteWitness(this.muserName, this.account.keys.active, witnessOwner, vote);
+
+    });
   }
 
   claimWIF() {
     this.ui.showLoading();
-    this.museService.claimBalance(this.muserName, this.inputWIF); // ToDo: Check Muse-js library to figure source of current error
+    // this.museService.claimBalance(this.muserName, this.inputWIF); // ToDo: Check Muse-js library to figure source of current error
   }
 
 }

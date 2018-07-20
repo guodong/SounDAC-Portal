@@ -76,7 +76,11 @@ export class AuthService {
       });
 
     }, error => {
-      this.alert.showErrorMessage(error.error.error);
+      if (error.error.error && error.error.error.message) {
+        this.alert.showErrorMessage(error.error.error.message);
+      } else {
+        this.alert.showErrorMessage(error.message);
+      }
     });
 
   }

@@ -392,7 +392,7 @@
             <div class="row my-1">
 
               <div class="col-12 mt-2">
-                <small class="text-danger font-weight-bold">This feature is currently disabled in this version</small>
+                <!-- <small class="text-danger font-weight-bold">This feature is currently disabled</small> -->
                 <h3>Witness Voting</h3>
               </div>
 
@@ -425,8 +425,7 @@
                   </div>
                   <div class="col-xs-12 col-sm-6 col-md-8">
                     <button mat-raised-button class="mat-purple-bg" (click)="voteWitness(inputWitness, account.witnessVotes.indexOf(inputWitness) <= -1)"
-                      [disabled]="true">Vote
-                      <!-- [disabled]="!inputWitness">Vote -->
+                      [disabled]="!inputWitness">Vote
                     </button>
                   </div>
                 </div>
@@ -440,10 +439,10 @@
                     <th mat-header-cell *matHeaderCellDef>Witness</th>
                     <mat-cell *matCellDef="let witness; let i=index">
                       <span class="mr-3" [innerHtml]="i +1"></span>
-                      <button [disabled]="true" *ngIf="account.witnessVotes.indexOf(witness.owner) <= -1" mat-button class="mr-3 border purple-border" (click)="voteWitness(witness.owner, true)">
+                      <button *ngIf="account.witnessVotes.indexOf(witness.owner) <= -1" mat-button class="mr-3 border purple-border" (click)="voteWitness(witness.owner, true)">
                         <mat-icon class="purple-fg" aria-label="thumb_up">thumb_up</mat-icon>
                       </button>
-                      <button [disabled]="true" *ngIf="account.witnessVotes.indexOf(witness.owner) > -1" mat-button class="mr-3 mat-purple-bg" (click)="voteWitness(witness.owner, false)">
+                      <button *ngIf="account.witnessVotes.indexOf(witness.owner) > -1" mat-button class="mr-3 mat-purple-bg" (click)="voteWitness(witness.owner, false)">
                         <mat-icon class="mat-icon white-fg" aria-label="thumb_up">thumb_up</mat-icon>
                       </button>
                       <span [innerHtml]="witness.owner"></span>
@@ -480,7 +479,7 @@
 
             <div class="row my-1">
               <div class="col-12 mt-2">
-                <small class="text-danger font-weight-bold">This feature is currently disabled in this version</small>
+                <small class="text-danger font-weight-bold">This feature is currently disabled</small>
                 <h3>Claim of Stake</h3>
               </div>
               <div class="col-12">
