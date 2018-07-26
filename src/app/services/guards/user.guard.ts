@@ -3,6 +3,7 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from
 import { Observable } from 'rxjs/Observable';
 import { AlertService } from '../alert.service';
 import { AuthService } from '../auth.service';
+import { User } from '../../models/user';
 
 @Injectable()
 export class UserGuard implements CanActivate {
@@ -16,19 +17,29 @@ export class UserGuard implements CanActivate {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<boolean> {
+  ): Observable<boolean> | boolean {
 
-    if (this.auth.isUser(this.auth.user)) {
-      return Observable.of(true);
-    }
+    // Done inside map to make sure we have the user loaded
+    return this.auth.user$.map(user => {
 
-    // Alert Warning
-    this.alert.showErrorMessage('Access Denied - Must be logged');
+      // Set User
+      this.auth.user = user;
 
-    // Redirect
-    this.router.navigateByUrl('/login');
+      // Check User
+      if (this.auth.isUser(this.auth.user)) {
+        return true;
+      }
 
-    return Observable.of(false);
+      // Alert Warning
+      // this.alert.showErrorMessage('Access Denied - Must be logged');
+
+      // Redirect
+      this.router.navigateByUrl('/login');
+
+      return false;
+
+    });
 
   }
+
 }

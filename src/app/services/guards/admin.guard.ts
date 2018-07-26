@@ -17,18 +17,28 @@ export class AdminGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> {
 
-    if (this.auth.isAdmin(this.auth.user)) {
-      return Observable.of(true);
-    } else {
+    // Done inside map to make sure we have the user loaded
+    return this.auth.user$.map(user => {
 
-      // Alert Warning
-      this.alert.showErrorMessage('Access Denied - Admin Only');
+      // Set User
+      this.auth.user = user;
 
-      // Redirect
-      this.router.navigateByUrl('/');
+      if (this.auth.isAdmin(this.auth.user)) {
 
-    }
-    return Observable.of(false);
+        return true;
+
+      } else {
+
+        // Alert Warning
+        this.alert.showErrorMessage('Access Denied - Admin Only');
+
+        // Redirect
+        this.router.navigateByUrl('/');
+
+      }
+      return false;
+
+    });
 
   }
 }

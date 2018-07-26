@@ -22,6 +22,9 @@ import { MuseAccount } from '../../models/muse-account';
 import { MuseKeys } from '../../models/muse-keys';
 import { MuseWitness } from '../../models/muse-witness';
 import { Subscription } from '../../../../node_modules/rxjs/Subscription';
+import { timer } from '../../../../node_modules/rxjs/observable/timer';
+import { Observable } from '../../../../node_modules/@firebase/util';
+import { User } from '../../models/user';
 
 @Component({
   selector: 'wallet',
@@ -91,17 +94,28 @@ export class WalletComponent implements OnInit, OnDestroy {
     this.ui.showLoading();
 
     // Get MuserName
-    this.subscription = this.auth.user$.subscribe(user => {
+    this.subscription = this.auth.user$.map(user => {
 
       if (user) {
+
+        // this.auth.user = user; // Update User
         this.muserName = user.musername;
 
         // Get Account Infos
         this.getAccount();
+        this.getPrivateKeys(); // Loading Private keys until blockchain fork happens - Require Active keys for most transactions
         this.getAccountHistory();
         this.getWitnesses();
         this.getMarketCap();
+
+        if (user) {
+          const pw = this.auth.user.getPassword();
+        }
+
       }
+
+    }).subscribe(user => {
+
     });
 
   }
@@ -125,6 +139,18 @@ export class WalletComponent implements OnInit, OnDestroy {
       this.ui.hideLoading();
     });
 
+  }
+
+  getPrivateKeys() {
+    const password = this.auth.user.getPassword();
+    this.auth.getPrivateKeys(this.muserName, password).then((keys: MuseKeys) => {
+
+      this.account.keys.basic = keys.basic;
+      this.account.keys.active = keys.active;
+      this.account.keys.owner = keys.owner;
+      this.account.keys.memo = keys.memo;
+
+    });
   }
 
   getAccountHistory() {
@@ -155,37 +181,44 @@ export class WalletComponent implements OnInit, OnDestroy {
 
   transferMuse() {
 
-    const authPassword = this.auth.user.getPassword();
+    // const authPassword = this.auth.user.getPassword();
 
     this.dialogRefTrans = this.dialog.open(ModalTransferComponent);
     this.dialogRefTrans.afterClosed().subscribe(data => {
-      this.ui.showLoading();
-      this.museService.transferMuse(this.muserName, authPassword, data.transferto, data.amount, data.memo);
+      if (data) {
+        this.ui.showLoading();
+        this.museService.transferMuse(this.muserName, this.account.keys.active, data.transferto, data.amount, data.memo); // ... - Change active key back to password once blockchain fork happens
+      }
     });
+
   }
 
   vestMuse() {
     this.dialogRefVest = this.dialog.open(ModalDialogVestComponent);
-    const authPassword = this.auth.user.getPassword();
+    // const authPassword = this.auth.user.getPassword();
     this.dialogRefVest.afterClosed().subscribe(data => {
-      this.ui.showLoading();
-      this.museService.transferMusetoVest(this.muserName, authPassword, data);
+      if (data) {
+        this.ui.showLoading();
+        this.museService.transferMusetoVest(this.muserName, this.account.keys.active, data); // ... - Change active key back to password once blockchain fork happens
+      }
     });
   }
 
   withdrawVest() {
     this.dialogRefWithd = this.dialog.open(ModalWithdrawComponent);
-    const authPassword = this.auth.user.getPassword();
+    // const authPassword = this.auth.user.getPassword();
     this.dialogRefWithd.afterClosed().subscribe(data => {
-      this.ui.showLoading();
-      this.museService.withdrawVesting(this.muserName, authPassword, data);
+      if (data) {
+        this.ui.showLoading();
+        this.museService.withdrawVesting(this.muserName, this.account.keys.active, data); // ... - Change active key back to password once blockchain fork happens
+      }
     });
   }
 
   cancelWithdraw() {
     this.ui.showLoading();
-    const authPassword = this.auth.user.getPassword();
-    this.museService.withdrawVesting(this.muserName, authPassword, 0);
+    // const authPassword = this.auth.user.getPassword();
+    this.museService.withdrawVesting(this.muserName, this.account.keys.active, 0); // ... - Change active key back to password once blockchain fork happens
   }
 
   generatePassword() {
@@ -311,12 +344,21 @@ export class WalletComponent implements OnInit, OnDestroy {
   voteWitness(witnessOwner: string, vote: boolean) {
     this.ui.showLoading();
     const password = this.auth.user.getPassword();
-    this.museService.voteWitness(this.muserName, password, witnessOwner, vote);
+    this.auth.getPrivateKeys(this.muserName, password).then((keys: MuseKeys) => {
+
+      this.account.keys.basic = keys.basic;
+      this.account.keys.active = keys.active;
+      this.account.keys.owner = keys.owner;
+      this.account.keys.memo = keys.memo;
+
+      this.museService.voteWitness(this.muserName, this.account.keys.active, witnessOwner, vote);
+
+    });
   }
 
   claimWIF() {
     this.ui.showLoading();
-    this.museService.claimBalance(this.muserName, this.inputWIF); // ToDo: Check Muse-js library to figure source of current error
+    // this.museService.claimBalance(this.muserName, this.inputWIF); // ToDo: Check Muse-js library to figure source of current error
   }
 
 }
