@@ -17,4 +17,8 @@ export class AdminComponent {
 
   }
 
+  test(){
+    console.log(Number(0.01).toFixed(6));
+  }
+
 }

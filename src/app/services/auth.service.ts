@@ -56,6 +56,8 @@ export class AuthService {
 
   register(user: User) {
 
+    this.ui.showLoading();
+
     // Muse Connect Register
     this.http.post(this.url + 'register', user).subscribe((response: any) => {
 
@@ -65,21 +67,27 @@ export class AuthService {
         // Email Verification
         userRecord.user.sendEmailVerification().then(result => {
 
+          // Hide Loader
+          this.ui.hideLoading();
+
           // Success Message
           this.alert.showSuccessMessage('Success', 'A confirmation email has been sent, please verify your address before login.');
 
           // Redirect
-          this.router.navigateByUrl('/login');
+          this.router.navigateByUrl('/login');          
 
         }).catch(error => {
+          this.ui.hideLoading();
           this.alert.showErrorMessage(error);
         });
 
       }).catch(error => {
+        this.ui.hideLoading();
         this.alert.showErrorMessage(error);
       });
 
     }, error => {
+      this.ui.hideLoading();
       if (error.error.error && error.error.error.message) {
         this.alert.showErrorMessage(error.error.error.message);
       } else {

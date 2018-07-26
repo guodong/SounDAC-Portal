@@ -1,5 +1,5 @@
 {
   "projects": {
-    "default": "api-museblockchain" // "rights-management-portal"
+    "default": "rights-management-portal" // "api-museblockchain"
   }
 }
