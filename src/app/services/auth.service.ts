@@ -36,12 +36,16 @@ export class AuthService {
         return Observable.of(null);
       }
     });
+
     this.user$.subscribe((user: User) => {
-      this.user = user;
-      if (!user) {
-        sessionStorage.removeItem('password');
+
+      // Set User
+      if (user) {
+        this.user = user;
+      } else {
         this.ui.hideLoading();
       }
+
     });
 
   }
@@ -102,7 +106,8 @@ export class AuthService {
             // Set User
             this.user = new User(res.id, res.musername, res.email, res.key, res.roles);
             this.user.encryptPassword(user.password);
-            this.userService.updateUser(this.user).subscribe((usr: User) => {
+            this.user$ = Observable.of(this.user);
+            this.userService.updateUser(this.user).subscribe((usr: User) => {              
 
               // Redirect
               this.ui.hideLoading();
@@ -146,8 +151,8 @@ export class AuthService {
       sessionStorage.removeItem('password');
 
       // Reset User
-      this.user = new User();
       this.user$ = Observable.of(null);
+      this.user = new User();
 
       // Redirect
       this.router.navigateByUrl('/login');
@@ -175,7 +180,7 @@ export class AuthService {
 
   private checkAuthorization(user: User, allowedRoles: string[]): boolean {
 
-    if (!user) {
+    if (!user || !user.id) {
       return false;
     }
 

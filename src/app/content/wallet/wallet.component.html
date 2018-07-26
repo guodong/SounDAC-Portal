@@ -212,7 +212,7 @@
 
             <div class="row my-1">
               <div class="col-12 mt-2">
-                <!-- <small class="text-danger font-weight-bold">This feature is currently disabled in this version</small> -->
+                <small class="text-danger font-weight-bold">This feature is currently disabled</small>
                 <h3 [innerHtml]="'Reset '+ muserName +'\'s Password'"></h3>
               </div>
               <div class="col-12">
@@ -280,7 +280,7 @@
                 </div>
 
                 <div class="col-12 my-2">
-                  <button mat-raised-button class="mat-purple-bg" [disabled]="!passwordForm.valid">
+                  <button mat-raised-button class="mat-purple-bg" disabled><!--[disabled]="!passwordForm.valid"-->
                     Update Password
                   </button>
                 </div>
