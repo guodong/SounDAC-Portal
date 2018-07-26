@@ -2,13 +2,9 @@
   <div class="top-bg mat-deep-purple-bg"></div>
   <div class="center">
 
-    <!--Header-->
+
     <div class="header white-fg p-24" fxLayout="row" fxLayoutAlign="space-between center">
       <h2>Rights Management</h2>
-
-      <!-- <button mat-raised-button class="mat-white-bg mt-16 mt-sm-0 save-content-button" mat-raised-button type="submit" (click)="saveToDatabase()">
-          <span>FINISH LATER</span>
-        </button> -->
 
       <button mat-raised-button class="mat-white-bg mt-16 mt-sm-0 save-content-button" mat-raised-button type="submit" (click)="reviewContent()"
         [disabled]="!contentForm.valid || !customValidation()">
@@ -16,7 +12,7 @@
       </button>
     </div>
 
-    <!--Content-->
+
     <div class="content-card mat-white-bg mb-5">
       <form [formGroup]="contentForm" class="content w-100-p" fxLayout="column" fxFlex>
         <mat-tab-group>
@@ -24,6 +20,7 @@
             <div class="container-fluid">
               <div class="row my-1">
                 <div class="col-12 my-2">
+                  <!-- {{contentForm.value | json}} -->
                   <h1>Track Info:</h1>
                   <div formGroupName="album_meta">
                     <mat-checkbox matInput formControlName="partOfAlbum" [matTooltip]="toolTips.partOfAlbum" [matTooltipShowDelay]="toolTips.delay">
@@ -35,7 +32,7 @@
 
               <div class="row my-1" formGroupName="track_meta">
                 <mat-form-field class="col-4 my-2">
-                  <input matInput formControlName="trackTitle" placeholder="Track Title *" [matTooltip]="toolTips.trackTitle" [matTooltipShowDelay]="toolTips.delay">
+                  <input matInput formControlName="trackTitle" placeholder="Track Title*" [matTooltip]="toolTips.trackTitle" [matTooltipShowDelay]="toolTips.delay">
                   <mat-error *ngIf="contentForm.get('track_meta.trackTitle').hasError('required') && contentForm.get('track_meta.trackTitle').touched">
                     <strong>Track Title is required</strong>
                   </mat-error>
@@ -56,15 +53,15 @@
 
               <div class="row my-1" formGroupName="track_meta">
                 <div class="col-4 my-2">
-                  <mat-label [ngClass]="{'required': trackArtistList?.length == 0}" class="spacing">Track Artist *</mat-label>
+                  <mat-label [ngClass]="{'required': trackArtists?.length == 0}" class="spacing">Track Artist *</mat-label>
                   <button mat-raised-button class="mat-purple-bg mt-16 mt-sm-0" mat-raised-button (click)="addArtist('Track Artist')" [matTooltip]="toolTips.trackArtist"
                     [matTooltipShowDelay]="toolTips.delay">Add</button>
-                  <mat-error *ngIf="trackArtistList?.length == 0">
+                  <mat-error *ngIf="trackArtists.length == 0">
                     <strong>is required</strong>
                   </mat-error>
 
                   <mat-chip-list matPrefix>
-                    <mat-chip class="chip" *ngFor="let data of trackArtistList; index as i" removable="true" (removed)="removeFromList('trackArtistList', i)">
+                    <mat-chip class="chip" *ngFor="let data of trackArtists.value; index as i" removable="true" (removed)="removeFromList('trackArtists', i)">
                       {{ data.artist }} {{data.isni}} {{data.aliases}}
                       <mat-icon matChipRemove>cancel</mat-icon>
                     </mat-chip>
@@ -74,6 +71,7 @@
                 <mat-form-field class="col-4 my-2">
                   <input matInput formControlName="featuredArtist" placeholder="Featured Artist" [matTooltip]="toolTips.featuredArtist" [matTooltipShowDelay]="toolTips.delay">
                 </mat-form-field>
+
                 <mat-form-field class="col-4 my-2">
                   <input type="number" min=0 matInput formControlName="featuredArtistIsni" placeholder="Featured Artist ISNI" [matTooltip]="toolTips.featuredArtistIsni"
                     [matTooltipShowDelay]="toolTips.delay">
@@ -122,7 +120,7 @@
                     <mat-icon matDatepickerToggleIcon>date_range</mat-icon>
                   </mat-datepicker-toggle>
 
-                  <input mat-icon="date_range" matInput [matDatepicker]="releaseDate" formControlName="releaseDate" placeholder="Release Date"
+                  <input mat-icon="date_range" matInput [matDatepicker]="releaseDate" formControlName="releaseDate" placeholder="Release Date*"
                     [max]="maxDate" [matTooltip]="toolTips.releaseDate" [matTooltipShowDelay]="toolTips.delay" (click)="releaseDate.open()">
                   <mat-datepicker #releaseDate></mat-datepicker>
                   <mat-error *ngIf="contentForm.get('album_meta.releaseDate').hasError('required') && contentForm.get('album_meta.releaseDate').touched">
@@ -134,7 +132,7 @@
                   <mat-datepicker-toggle matPrefix [for]="salesStartDate">
                     <mat-icon matDatepickerToggleIcon>date_range</mat-icon>
                   </mat-datepicker-toggle>
-                  <input matInput [matDatepicker]="salesStartDate" formControlName="salesStartDate" placeholder="Sales Start Date" [max]="maxDate"
+                  <input matInput [matDatepicker]="salesStartDate" formControlName="salesStartDate" placeholder="Sales Start Date*" [max]="maxDate"
                     [matTooltip]="toolTips.salesStartDate" [matTooltipShowDelay]="toolTips.delay" (click)="salesStartDate.open()">
 
                   <mat-datepicker #salesStartDate></mat-datepicker>
@@ -157,7 +155,7 @@
                 </mat-form-field>
 
                 <mat-form-field class="col-4 my-2" formGroupName="album_meta">
-                  <input matInput formControlName="upcEan" placeholder="UPC or EAN" [matTooltip]="toolTips.upcEan" [matTooltipShowDelay]="toolTips.delay">
+                  <input matInput type="number" formControlName="upcEan" placeholder="UPC or EAN" [matTooltip]="toolTips.upcEan" [matTooltipShowDelay]="toolTips.delay">
                   <mat-error *ngIf="contentForm.get('album_meta.upcEan').hasError('pattern') && contentForm.get('album_meta.upcEan').touched">
                     <strong>Please correct UPC or EAN</strong>
                   </mat-error>
@@ -195,7 +193,7 @@
                     [matTooltipShowDelay]="toolTips.delay">Add</button>
 
                   <mat-chip-list matPrefix>
-                    <mat-chip class="chip" *ngFor="let data of albumArtistList; index as i" removable="true" (removed)="removeFromList('albumArtistList', i)">
+                    <mat-chip class="chip" *ngFor="let data of albumArtists.value; index as i" removable="true" (removed)="removeFromList('albumArtists', i)">
                       {{ data.artist }} {{data.isni}} {{data.aliases}}
                       <mat-icon matChipRemove>cancel</mat-icon>
                     </mat-chip>
@@ -217,7 +215,7 @@
 
               <div class="row my-1" formGroupName="album_meta">
                 <mat-form-field class="col-6 my-2">
-                  <input matInput formControlName="masterLabelName" placeholder="Master Label Name" [matTooltip]="toolTips.masterLabel" [matTooltipShowDelay]="toolTips.delay">
+                  <input matInput formControlName="masterLabelName" placeholder="Master Label Name*" [matTooltip]="toolTips.masterLabel" [matTooltipShowDelay]="toolTips.delay">
                   <mat-error *ngIf="contentForm.get('album_meta.masterLabelName').hasError('required') && contentForm.get('album_meta.masterLabelName').touched">
                     <strong>Master Label Name is required</strong>
                   </mat-error>
@@ -246,19 +244,18 @@
 
               <div class="row my-1">
                 <div class="col-4 my-2" formGroupName="comp_meta">
-                  <mat-label [ngClass]="{'required': writersList?.length == 0}" class="spacing">Writers</mat-label>
+                  <mat-label [ngClass]="{'required': writers?.length == 0}" class="spacing">Writers*</mat-label>
                   <button mat-raised-button class="mat-purple-bg mt-16 mt-sm-0" mat-raised-button (click)="addWriter()" [matTooltip]="toolTips.writer"
                     [matTooltipShowDelay]="toolTips.delay">Add</button>
-                  <mat-error *ngIf="writersList?.length == 0">
+                  <mat-error *ngIf="writers?.length == 0">
                     <strong>is required</strong>
                   </mat-error>
                   <mat-chip-list matPrefix>
-                    <mat-chip class="chip" *ngFor="let data of writersList; index as i" removable="true" (removed)="removeFromList('writersList', i)">
+                    <mat-chip class="chip" *ngFor="let data of writers.value; index as i" removable="true" (removed)="removeFromList('writers', i)">
                       {{ data.writer }} {{data.IPI_CAE}} {{data.ISNI}} {{data.publisher}} {{data.role}}
                       <mat-icon matChipRemove>cancel</mat-icon>
                     </mat-chip>
                   </mat-chip-list>
-
                 </div>
 
                 <div class="col-4 my-2" formGroupName="comp_meta">
@@ -267,7 +264,7 @@
                     [matTooltipShowDelay]="toolTips.delay">Add</button>
 
                   <mat-chip-list matPrefix>
-                    <mat-chip class="chip" *ngFor="let data of publishersList; index as i" removable="true" (removed)="removeFromList('publishersList', i)">
+                    <mat-chip class="chip" *ngFor="let data of publishers.value; index as i" removable="true" (removed)="removeFromList('publishers', i)">
                       {{data.publisher}} {{ data.IPI_CAE }} {{data.ISNI}}
                       <mat-icon matChipRemove>cancel</mat-icon>
                     </mat-chip>
@@ -290,17 +287,24 @@
             <div class="container-fluid">
               <div class="row my-1">
                 <div class="col-12 my-2">
+                  <!-- {{ contentForm.value | json }} -->
+                </div>
+              </div>
+
+              <div class="row my-1">
+                <div class="col-12 my-2">
                   <h1>General Royalty Splits:</h1>
                 </div>
               </div>
 
-              <mat-error *ngIf="!genSplitTotal">
+              <!-- <mat-error *ngIf="!genSplitTotal">
                 <strong>General Royalty Splits must total 100%</strong>
-              </mat-error>
+              </mat-error> -->
+
               <div class="row my-1">
                 <div class="col-12 my-2">
-                  <mat-checkbox matInput [matTooltip]="toolTips.oneOwner" [matTooltipShowDelay]="toolTips.delay" [disabled]="masterRoyaltyList.length > 1"
-                    (change)="oneOwner()">
+                  <mat-checkbox matInput formControlName="soleOwner" [matTooltip]="toolTips.oneOwner" [matTooltipShowDelay]="toolTips.delay"
+                    [disabled]="masterRoyaltySplit.length > 1" (change)="oneOwner()">
                     <span [innerHtml]="'Content is 100% owned and managed by ' + muserName"></span>
                   </mat-checkbox>
                 </div>
@@ -308,73 +312,116 @@
 
               <div>
                 <div class="row my-1">
-                  <div class="col-4 my-2">
+                  <div class="col-8 my-2">
                     <mat-label>Percentage of income going to Master Side:</mat-label>
                   </div>
-                  <div class="col-7 my-2">
-                    <mat-slider [max]="mastMax" [min]="mastMin" [step]="step" [thumb-label]="thumbLabel" formControlName="master_share">
-                    </mat-slider>
-                  </div>
-                  <div class="col-1 my-2 bottom-border">
-                    <h4 [innerHtml]="contentForm.value.master_share +' %'"></h4>
-                  </div>
-                </div>
-
-                <div class="row my-1">
-                  <div class="col-4 my-2">
-                    <mat-label>Percentage of income going to Streaming Platform:</mat-label>
-                    <p class="small-label">NOTE: This value is deducted from the Master Side Income</p>
-                  </div>
-                  <div class="col-7 my-2">
-                    <mat-slider [max]="streamMax" [min]="streamMin" [step]="step" [thumb-label]="thumbLabel" formControlName="playing_reward">
-                    </mat-slider>
-                  </div>
-                  <div class="col-1 my-2 bottom-border">
-                    <h4 [innerHtml]="contentForm.value.playing_reward +' %'"></h4>
-                  </div>
-                </div>
-
-                <div class="row my-1">
                   <div class="col-4 my-2">
                     <mat-label>Percentage of income going to Composition Side:</mat-label>
                   </div>
-                  <div class="col-7 my-2">
-                    <mat-slider [max]="compMax" [min]="compMin" [step]="step" [thumb-label]="thumbLabel" formControlName="publishers_share">
+                </div>
+
+                <div class="row my-1">
+                  <div class="col-2 my-2">
+                    <mat-form-field>
+                      <input matInput type="number" 
+                        [min]="splitMin" 
+                        [max]="max" formControlName="master_share" 
+                        [innerHtml]="contentForm.value.master_share"
+                        (change)="onGenMasterSplitChange()"
+                        [attr.disabled]="sliderDisabled?'':null">
+                       
+                    </mat-form-field>
+                    <mat-error *ngIf="contentForm.get('master_share').hasError('max') || contentForm.get('master_share').hasError('min') || contentForm.get('master_share').hasError('pattern') && contentForm.get('master_share').touched">
+                      <strong>Master Side income must be 1 - 100</strong>
+                    </mat-error>
+                    <!-- <mat-error *ngIf="contentForm.get('master_share').hasError('pattern') && contentForm.get('master_share').touched">
+                      <strong>Max number of decimal places is 2</strong>
+                    </mat-error> -->
+                  </div>
+                  <div class="col-8 my-2">
+                    <mat-slider [disabled]="sliderDisabled" [step]="step" [thumb-label]="thumbLabel" [max]="max" [min]="splitMin" (change)="onGenSplitChange()"
+                      formControlName="master_share">
                     </mat-slider>
                   </div>
-                  <div class="col-1 my-2 bottom-border">
-                    <h4 [innerHtml]="contentForm.value.publishers_share +' %'"></h4>
+
+                  <div class="col-1 my-2">
+                    <mat-form-field>
+                      <input matInput type="number" min=0 
+                        [max]="max" formControlName="publishers_share" 
+                        [innerHtml]="contentForm.value.publishers_share"
+                        (change)="onGenCompSplitChange()"
+                        [attr.disabled]="sliderDisabled?'':null">
+                    </mat-form-field>
+                    <mat-error *ngIf="contentForm.get('publishers_share').hasError('max') || contentForm.get('publishers_share').hasError('min') && contentForm.get('publishers_share').touched">
+                      <strong>Composition Side income must be 0 - 100</strong>
+                    </mat-error>
+                    <!-- <mat-error *ngIf="contentForm.get('publishers_share').hasError('pattern') && contentForm.get('publishers_share').touched">
+                      <strong>Max number of decimal places is 2</strong>
+                    </mat-error> -->
                   </div>
                 </div>
+                <div class="row my-1">
+                  <div class="col-12 my-2">
+                    <mat-label>Percentage of income going to Streaming Platform:</mat-label>
+                    <p class="small-label">NOTE: This value is deducted from the Master Side Income</p>
+                  </div>
+                </div>
+                <div class="row my-1">
+                  <div class="col-12 my-2">
+                    <mat-form-field>
+                      <input matInput type="number" min=1 [max]="playRewardMax" formControlName="playing_reward" [innerHtml]="contentForm.get('playing_reward').value">
+                    </mat-form-field>
+                    <mat-error *ngIf="contentForm.get('playing_reward').value > contentForm.get('master_share').value || contentForm.get('playing_reward').value === ''|| contentForm.get('playing_reward').value === null">
+                      <strong>Streaming Platform income must be 1 to {{playRewardMax}}</strong>
+                    </mat-error>
+                  </div>
+
+                </div>
+
+
               </div>
 
-              <!-- TODO: add the remaining error messages -->
               <h1>Master Side Royalty Split:</h1>
+
               <div class="row my-1">
                 <div class="col-12 my-2">
-
                   <mat-form-field formGroupName="tempDistributions">
-                    <input matInput placeholder="Muser Name" name="payee" formControlName="payee" [(ngModel)]="masterRoyaltyInput.muserName">
+                    <input matInput placeholder="Muser Name" formControlName="payee" [attr.disabled]="sliderDisabled?'':null">
                   </mat-form-field>
                   <mat-form-field formGroupName="tempDistributions">
-                    <input type="number" min=0 max=100 matInput placeholder="Percentage of Income" name="bp" formControlName="bp" [(ngModel)]="masterRoyaltyInput.income">
+                    <input type="number" min=0 max=100 matInput placeholder="Percentage of Income" formControlName="bp" [attr.disabled]="sliderDisabled?'':null">
                   </mat-form-field>
 
-                  <mat-checkbox class="margin" [disabled]="isOneOwner" (change)="updateMasterManagesContract()">Manages Contract</mat-checkbox>
-                  <mat-form-field formGroupName="tempManagement" *ngIf="masterManagesContract && !isOneOwner">
-                    <input type="number" min=0 max=100 matInput placeholder="Weight" name="percentage" formControlName="percentage" [(ngModel)]="masterRoyaltyInput.weight">
+                  <mat-checkbox class="margin" formControlName="masterManagesContract" #masterManagesContract [disabled]="isOneOwner" id="masterManagesContract" [checked]="masterManagesContract.checked"
+                    (change)="updateMasterManagesContract(masterManagesContract.checked)">
+                    Manages Contract</mat-checkbox>
+
+                  <mat-form-field formGroupName="tempManagement" *ngIf="masterManagesContract.checked && !isOneOwner">
+                    <input type="number" min=0 max=100 matInput placeholder="Weight" formControlName="percentage">
                   </mat-form-field>
-                  <button mat-raised-button class="mat-purple-bg mt-16 mt-sm-0" (click)="addRoyaltySplitList('masterRoyaltyList')" color="primary"
+
+                  <button mat-raised-button class="mat-purple-bg mt-16 mt-sm-0" (click)="addRoyaltySplit('masterRoyaltySplit')" color="primary"
                     [disabled]="!mastInputValid() || isOneOwner">Add</button>
 
                   <mat-error *ngIf="contentForm.get('tempDistributions.bp').hasError('max') || contentForm.get('tempDistributions.bp').hasError('min') && contentForm.get('tempDistributions.bp').touched">
                     <strong>Percentage of income must be 0 - 100</strong>
                   </mat-error>
+
                   <mat-error *ngIf="contentForm.get('tempManagement.percentage').hasError('max') || contentForm.get('tempManagement.percentage').hasError('min') && contentForm.get('tempManagement.percentage').touched">
                     <strong>Weight must be 0 - 100</strong>
                   </mat-error>
+
+                  <!-- <mat-error *ngIf="contentForm.get('tempManagement.percentage').hasError('pattern') && contentForm.get('tempManagement.percentage').touched">
+                    <strong>Max number of decimal places is 2</strong>
+                  </mat-error> -->
+
+                  <!-- <mat-error *ngIf="contentForm.get('tempDistributions.bp').hasError('pattern') && contentForm.get('tempDistributions.bp').touched">
+                    <strong>Max number of decimal places is 2</strong>
+                  </mat-error> -->
                 </div>
+
               </div>
+
               <div *ngIf="showMasterThreshold()">
                 <mat-label class="spacing">Threshold for a change to take place</mat-label>
                 <mat-form-field class="col-4 my-2" [matTooltip]="toolTips.threshold" [matTooltipShowDelay]="toolTips.delay">
@@ -383,6 +430,10 @@
                 <mat-error *ngIf="contentForm.get('management_threshold').hasError('max') || contentForm.get('management_threshold').hasError('min') || contentForm.get('management_threshold').value === null && contentForm.get('management_threshold').touched">
                   <strong>Threshold must be 0 - 100</strong>
                 </mat-error>
+
+                <!-- <mat-error *ngIf="contentForm.get('management_threshold').hasError('pattern') && contentForm.get('management_threshold').touched">
+                  <strong>Max number of decimal places is 2</strong>
+                </mat-error> -->
               </div>
               <mat-error *ngIf="masterIncomeTotal !== 100 && contentForm.get('tempDistributions.bp').touched">
                 <strong>Income must total 100%</strong>
@@ -390,10 +441,11 @@
               <mat-error *ngIf="masterWeightTotal !== 100 && contentForm.get('tempManagement.percentage').touched">
                 <strong>Weight must total 100%</strong>
               </mat-error>
+
               <div class="container-fluid">
                 <div class="row my-1">
                   <div class="col-md-12">
-                    <mat-list *ngIf="masterRoyaltyList.length !== 0">
+                    <mat-list *ngIf="masterRoyaltySplit.length !== 0">
                       <div class="row my-1">
                         <div class="col-md-1">User Name</div>
                         <div class="col-md-1">Income</div>
@@ -402,13 +454,20 @@
                         <div class="col-md-1">Remove</div>
                       </div>
                       <mat-divider class="col-md-6"></mat-divider>
-                      <mat-list-item *ngFor="let data of masterRoyaltyList,  index as i">
+                      <mat-list-item *ngFor="let data of masterRoyaltySplit,  index as i">
                         <div class="col-md-1" [innerHtml]="data.muserName"></div>
-                        <div class="col-md-1" [innerHtml]="data.income"></div>
-                        <div class="col-md-2" [innerHtml]="data.management"></div>
-                        <div class="col-md-1" [innerHtml]="data.weight"></div>
                         <div class="col-md-1">
-                          <button mat-icon-button [disabled]="isOneOwner" (click)="removeFromList('masterRoyaltyList', i)">
+                          <div class="col-md-1" *ngIf="data.income !== 0" [innerHtml]="data.income"></div>
+                        </div>
+
+                        <!-- <div class="col-md-1" [innerHtml]="data.income"></div> -->
+                        <div class="col-md-2" [innerHtml]="data.management"></div>
+                        <div class="col-md-1">
+                          <div class="col-md-1" *ngIf="data.weight !== 0" [innerHtml]="data.weight"></div>
+                        </div>
+                        <!-- <div class="col-md-1" [innerHtml]="data.weight"></div> -->
+                        <div class="col-md-1">
+                          <button mat-icon-button [disabled]="isOneOwner" (click)="removeFromList('masterRoyaltySplit', i)">
                             <mat-icon>cancel</mat-icon>
                           </button>
                         </div>
@@ -418,37 +477,55 @@
                   </div>
                 </div>
               </div>
-              <div *ngIf="compValue !== 0">
-                <h1 class="row my-1">Composition Side Royalty Split:</h1>
-                <mat-error *ngIf="compRoyaltyRequired && distributionsCompList.length === 0">
-                  <strong>Composition Side Royalty Split Required</strong>
-                </mat-error>
 
+              <div *ngIf="pubShareValue !== 0">
+                <h1>Composition Side Royalty Split:</h1>
                 <div class="row my-1">
                   <div class="col-12 my-2">
-                    <mat-form-field formGroupName="tempDistributionsComp">
-                      <input matInput placeholder="Muser Name" name="payee" formControlName="payee" [(ngModel)]="compRoyaltyInput.muserName">
-                    </mat-form-field>
-                    <mat-form-field formGroupName="tempDistributionsComp">
-                      <input type="number" min=0 max=100 matInput placeholder="Percentage of Income" name="bp" formControlName="bp" [(ngModel)]="compRoyaltyInput.income">
-                    </mat-form-field>
-
-                    <mat-checkbox class="margin" (change)="updateCompManagesContract()">Manages Contract</mat-checkbox>
-                    <mat-form-field class="margin-right" formGroupName="tempManagementComp" *ngIf="compManagesContract">
-                      <input type="number" min=0 max=100 matInput placeholder="Weight" name="percentage" formControlName="percentage" [(ngModel)]="compRoyaltyInput.weight">
-                    </mat-form-field>
-                    <button mat-raised-button class="mat-purple-bg mt-16 mt-sm-0" (click)="addRoyaltySplitList('compRoyaltyList')" color="primary"
-                      [disabled]="!compInputValid()">Add</button>
-
-                    <mat-error *ngIf="contentForm.get('tempDistributionsComp.bp').hasError('max') || contentForm.get('tempDistributionsComp.bp').hasError('min') && contentForm.get('tempDistributionsComp.bp').touched">
-                      <strong>Percentage of income must be 0 - 100</strong>
+                    <mat-error *ngIf="compRoyaltyRequired && distributionsComp.length === 0">
+                      <!-- <mat-error *ngIf="compRoyaltyRequired"> -->
+                      <strong>Composition Side Royalty Split Required</strong>
                     </mat-error>
-                    <mat-error *ngIf="contentForm.get('tempManagementComp.percentage').hasError('max') || contentForm.get('tempManagementComp.percentage').hasError('min') && contentForm.get('tempManagementComp.percentage').touched">
-                      <strong>Weight must be 0 - 100</strong>
-                    </mat-error>
+
+                    <div class="row my-1">
+                      <div class="col-12 my-2">
+                        <mat-form-field formGroupName="tempDistributionsComp">
+                          <input matInput placeholder="Muser Name" formControlName="payee">
+                        </mat-form-field>
+                        <mat-form-field formGroupName="tempDistributionsComp">
+                          <input type="number" min=0 max=100 matInput placeholder="Percentage of Income" formControlName="bp">
+                        </mat-form-field>
+
+                        <mat-checkbox class="margin" 
+                        formControlName="managesCompContract" 
+                        #managesCompContract id="managesCompContract" 
+                        (change)="updateManagesCompsContract(managesCompContract.checked)">
+                          Manages Contract</mat-checkbox>
+
+                        <mat-form-field formGroupName="tempManagementComp" class="margin-right" *ngIf="managesCompContract.checked">
+                          <input type="number" min=0 max=100 matInput placeholder="Weight" formControlName="percentage">
+                        </mat-form-field>
+                        <button mat-raised-button class="mat-purple-bg mt-16 mt-sm-0" (click)="addRoyaltySplit('compRoyaltySplit')" color="primary"
+                          [disabled]="!compInputValid()">Add</button>
+
+                        <mat-error *ngIf="contentForm.get('tempDistributionsComp.bp').hasError('max') || contentForm.get('tempDistributionsComp.bp').hasError('min') && contentForm.get('tempDistributionsComp.bp').touched">
+                          <strong>Percentage of income must be 0 - 100</strong>
+                        </mat-error>
+                        <mat-error *ngIf="contentForm.get('tempManagementComp.percentage').hasError('max') || contentForm.get('tempManagementComp.percentage').hasError('min') && contentForm.get('tempManagementComp.percentage').touched">
+                          <strong>Weight must be 0 - 100</strong>
+                        </mat-error>
+
+                        <!-- <mat-error *ngIf="contentForm.get('tempDistributionsComp.bp').hasError('pattern') && contentForm.get('tempDistributionsComp.bp').touched">
+                          <strong>Max number of decimal places is 2</strong>
+                        </mat-error> -->
+
+                        <!-- <mat-error *ngIf="contentForm.get('tempDistributionsComp.percentage').hasError('pattern') && contentForm.get('tempDistributionsComp.percentage').touched">
+                          <strong>Max number of decimal places is 2</strong>
+                        </mat-error> -->
+                      </div>
+                    </div>
                   </div>
                 </div>
-
                 <div *ngIf="showCompThreshold()">
                   <mat-label class="spacing">Threshold for a change to take place</mat-label>
                   <mat-form-field class="col-4 my-2" [matTooltip]="toolTips.threshold" [matTooltipShowDelay]="toolTips.delay">
@@ -465,10 +542,14 @@
                   <strong>Weight must total 100%</strong>
                 </mat-error>
 
+                <!-- <mat-error *ngIf="contentForm.get('management_threshold_comp').hasError('pattern') && contentForm.get('management_threshold_comp').touched">
+                  <strong>Max number of decimal places is 2</strong>
+                </mat-error> -->
+
                 <div class="container-fluid">
                   <div class="row my-1">
                     <div class="col-md-12">
-                      <mat-list *ngIf="compRoyaltyList.length !== 0">
+                      <mat-list *ngIf="compRoyaltySplit.length !== 0">
                         <div class="row my-1">
                           <div class="col-md-1">User Name</div>
                           <div class="col-md-1">Income</div>
@@ -477,13 +558,19 @@
                           <div class="col-md-1">Remove</div>
                         </div>
                         <mat-divider class="col-md-6"></mat-divider>
-                        <mat-list-item *ngFor="let data of compRoyaltyList,  index as i">
+                        <mat-list-item *ngFor="let data of compRoyaltySplit,  index as i">
                           <div class="col-md-1" [innerHtml]="data.muserName"></div>
-                          <div class="col-md-1" [innerHtml]="data.income"></div>
-                          <div class="col-md-2" [innerHtml]="data.management"></div>
-                          <div class="col-md-1" [innerHtml]="data.weight"></div>
                           <div class="col-md-1">
-                            <button mat-icon-button (click)="removeFromList('compRoyaltyList', i)">
+                            <div class="col-md-1" *ngIf="data.income !== 0" [innerHtml]="data.income"></div>
+                          </div>
+                          <!-- <div class="col-md-1" [innerHtml]="data.income"></div> -->
+                          <div class="col-md-2" [innerHtml]="data.management"></div>
+                          <div class="col-md-1">
+                            <div class="col-md-1" *ngIf="data.weight !== 0" [innerHtml]="data.weight"></div>
+                          </div>
+                          <!-- <div class="col-md-1" [innerHtml]="data.weight"></div> -->
+                          <div class="col-md-1">
+                            <button mat-icon-button (click)="removeFromList('compRoyaltySplit', i)">
                               <mat-icon>cancel</mat-icon>
                             </button>
                           </div>

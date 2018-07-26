@@ -1,6 +1,6 @@
 // region imports
 import { Component, OnInit, AfterViewInit, ViewChild, Injectable } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { MatDialog, MatDialogRef, MatTableDataSource, MatTable } from '@angular/material';
 import { Observable } from 'rxjs/Rx';
@@ -18,8 +18,7 @@ import { Enums } from '../content.enums';
 import { Utils } from '../../../modules/shared/utilities/utils';
 import { UIService } from '../../../services/ui.service';
 import { Subscription } from '../../../../../node_modules/rxjs/Subscription';
-// import { ContentModel } from '../../../core/models/content.model';
-
+import { denormalizeWinPath } from 'tslint/lib/utils';
 // endregion
 
 @Component({
@@ -29,10 +28,10 @@ import { Subscription } from '../../../../../node_modules/rxjs/Subscription';
 })
 
 export class ContentComponent implements OnInit, AfterViewInit {
- 
+
   constructor(
     private auth: AuthService,
-    private _fb: FormBuilder,
+    private fb: FormBuilder,
     private museService: MuseService,
     private alert: AlertService,
     private dialog: MatDialog,
@@ -40,26 +39,10 @@ export class ContentComponent implements OnInit, AfterViewInit {
     private ui: UIService
   ) {
     this.currentDate();
+    this.auth.user.getPassword();
   }
-  
+
   // region variables
-  max = 100;
-  mastValue;
-  streamValue;
-  compValue;
-
-  mastMax;
-  streamMax;
-  compMax;
-  total;
-
-  mastMin;
-  streamMin;
-  compMin;
-
-  step = .5;
-  thumbLabel = true;
-  // content = new ContentModel();
   subscription: Subscription;
   contentForm: FormGroup;
   formErrors: any;
@@ -67,31 +50,24 @@ export class ContentComponent implements OnInit, AfterViewInit {
   dialogRefArtist: MatDialogRef<ModalArtistComponent>;
   dialogRefWriters: MatDialogRef<ModalWritersComponent>;
   dialogRefReview: MatDialogRef<ModalReviewComponent>;
-
-
   muserName: string;
   maxDate: Date;
   maxYear: number;
   maxBp: number;
   maxPercentage: number;
-  genSplitTotal: boolean;
   compRoyaltyRequired: boolean;
-
   data: any;
 
-  masterRoyaltyInput = {
-    muserName: localStorage.getItem('currentUser'),
-    income: 100,
-    management: null,
-    weight: 100
-  };
 
-  compRoyaltyInput = {
-    muserName: '',
-    income: null,
-    management: null,
-    weight: null
-  };
+  max = 100;
+  splitMax = 99;
+  splitMin = 1;
+  pubShareValue;
+  playRewardMax;
+  // total;
+  step = .5;
+  thumbLabel = false;
+  sliderDisabled = false;
 
   masterIncomeMax = 100;
   compIncomeMax = 100;
@@ -104,22 +80,13 @@ export class ContentComponent implements OnInit, AfterViewInit {
   compIncomeTotal = 0;
   compWeightTotal = 0;
 
-  masterRoyaltyList = [];
-  distributionsList = [];
-  managementList = [];
+  masterRoyaltySplit = [];
+  compRoyaltySplit = [];
 
-  compRoyaltyList = [];
-  distributionsCompList = [];
-  managementCompList = [];
-
-  trackArtistList = [];
-  albumArtistList = [];
-  writersList = [];
-  publishersList = [];
-
-  masterManagesContract = false;
-  compManagesContract = false;
+  // masterManagesContract = false;
+  // managesCompContract = false;
   isOneOwner = false;
+  // soleOwner = false;
   // endregion
 
   // region to move out of component
@@ -216,7 +183,6 @@ export class ContentComponent implements OnInit, AfterViewInit {
     trackArtistAliases: 'A NAME THAT A PERSON OR GROUP ASSUMES, WHICH CAN DIFFER FROM THEIR FIRST OR TRUE NAME ',
     trackArtistIsni: 'THE ISO STANDARD IDENTIFIER FOR NAMES',
     featuredArtist: 'IF THE TRACK CONTAINS FEATURED ARTISTS NOTE: FOR NAMING GROUPS AS WELL AS INDIVIDUALS',
-    // IF A TRACK CONTAINS ONE OR MORE , EACH ARTIST MUST BE ADDED SEPARATELY.',
     featuredArtistIsni: 'THE ISO STANDARD IDENTIFIER FOR NAMES',
     isrc: 'A UNIQUE AND PERMANENT IDENTIFIER FOR A SPECIFIC RECORDING, INDEPENDENT OF THE FORMAT OR THE RIGHTS HOLDERS.',
     country: 'RECORDING LOCATION.',
@@ -256,22 +222,17 @@ export class ContentComponent implements OnInit, AfterViewInit {
 
   // region lifecycle 
   ngOnInit() {
-    // Get MuserName
     this.subscription = this.auth.user$.subscribe(user => {
       if (user) {
         this.muserName = user.musername;
       }
     });
 
-    // this.content = new ContentModel();
     this.contentForm = this.createContentForm();
     this.contentForm.valueChanges.subscribe(() => {
       this.onFormValuesChanged();
-      this.onGeneralSplitsChange();
-      this.getGeneralSplitsFormValues();
-      this.syncGeneralSplits();
     });
-    this.masterManagesContract = false;
+    this.compRoyaltyRequired = true;
   }
 
   ngAfterViewInit() {
@@ -282,16 +243,52 @@ export class ContentComponent implements OnInit, AfterViewInit {
   }
   // endregion
 
-  // region functions
-  createContentForm() {
-    return this._fb.group({
-      uploader: [this.muserName],
-      url: 'ipfs://' + Utils.generateGUID(),
+  // region Get values as FormArray
+  get trackArtists() {
+    return this.contentForm.get('track_meta.trackArtists') as FormArray;
+  }
 
-      album_meta: this._fb.group({
+  get albumArtists() {
+    return this.contentForm.get('album_meta.albumArtists') as FormArray;
+  }
+
+  get writers() {
+    return this.contentForm.get('comp_meta.writers') as FormArray;
+  }
+
+  get publishers() {
+    return this.contentForm.get('comp_meta.publishers') as FormArray;
+  }
+
+  get distributions() {
+    return this.contentForm.get('distributions') as FormArray;
+  }
+
+  get management() {
+    return this.contentForm.get('management') as FormArray;
+  }
+
+  get distributionsComp() {
+    return this.contentForm.get('distributionsComp') as FormArray;
+  }
+
+  get managementComp() {
+    return this.contentForm.get('managementComp') as FormArray;
+  }
+  // endregion
+
+  // region functions
+
+  // region GOOD
+
+  createContentForm() {
+    return this.fb.group({
+      uploader: this.auth.user.musername,
+      url: 'ipfs://' + Utils.generateGUID(),
+      album_meta: this.fb.group({
         partOfAlbum: false,
         albumTitle: [''],
-        albumArtists: [],
+        albumArtists: this.fb.array([]),
         albumGenre1: [''],
         albumGenre2: [''],
         countryOrigin: [''],
@@ -310,10 +307,10 @@ export class ContentComponent implements OnInit, AfterViewInit {
         displayLabelName: [''],
       }),
 
-      track_meta: this._fb.group({
+      track_meta: this.fb.group({
         trackTitle: ['', Validators.required],
         isrc: [''],
-        trackArtists: [],
+        trackArtists: this.fb.array([]),
         featuredArtist: [''],
         featuredArtistIsni: [''],
         trackProducer: [''],
@@ -321,7 +318,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
         trackGenre2: [''],
         trackPLine: [''],
         // TODO: fix validation
-        // trackNo: ['', [Validators.min(0), Validators.pattern('^[0-9][0-9]*([.][0-9]{2}|)$')]],
+        // trackNo: ['', Validators.pattern('^[0-9][0-9]*([.][0-9]{2}|)$')],
         // trackVolumeNo: ['', [Validators.min(0), Validators.pattern('^[0-9][0-9]*([.][0-9]{2}|)$')]],
         // trackDuration: ['', [Validators.pattern('^[0-9][0-9]*([.][0-9]{2}|)$')]],
         // trackDuration: ['', Validators.pattern('^[0-9]*$"')],
@@ -331,83 +328,65 @@ export class ContentComponent implements OnInit, AfterViewInit {
         hasSample: [''],
       }),
 
-      comp_meta: this._fb.group({
+      comp_meta: this.fb.group({
         compTitle: [''],
         compTitleAlt: [''],
         compTitleIswc: [''],
-        isThirdPartyPublishers: [false],
-        publishers: [],
-        writers: [],
+        isThirdPartyPublishers: [true],
+        publishers: this.fb.array([]),
+        writers: this.fb.array([]),
         performingRightsOrg: [''],
       }),
 
-      distributions: [],
+      distributions: this.fb.array([]),
 
-      management: [],
+      tempDistributions: this.fb.group({
+        payee: [''],
+        bp: ['', [Validators.min(0), Validators.max(100), Validators.pattern('[0-9]+(\.[0-9][0-9]?)?')]]
+      }),
 
-      management_threshold: [100, [Validators.min(0), Validators.max(100)]],
+      management: this.fb.array([]),
 
-      distributionsComp: [],
+      tempManagement: this.fb.group({
+        voter: [''],
+        percentage: ['', [Validators.min(0), Validators.max(100), Validators.pattern('[0-9]+(\.[0-9][0-9]?)?')]]
+      }),
 
-      managementComp: [],
+      management_threshold: [100, [Validators.min(0), Validators.max(100), Validators.pattern('[0-9]+(\.[0-9][0-9]?)?')]],
+
+      distributionsComp: this.fb.array([]),
+      tempDistributionsComp: this.fb.group({
+        payee: [''],
+        bp: ['', [Validators.min(0), Validators.max(100), Validators.pattern('[0-9]+(\.[0-9][0-9]?)?')]]
+      }),
+
+      managementComp: this.fb.array([]),
+
+      tempManagementComp: this.fb.group({
+        voter: [''],
+        percentage: ['', [Validators.min(0), Validators.max(100), Validators.pattern('[0-9]+(\.[0-9][0-9]?)?')]]
+      }),
 
       management_threshold_comp: [100, [Validators.min(0), Validators.max(100)]],
-
-      master_share: [45, [Validators.min(0), Validators.max(100)]], // Only used for clarification in UI.
+      // 
+      master_share: [50, [Validators.min(1), Validators.max(100), Validators.pattern('[0-9]+(\.[0-9][0-9]?)?')]], // Only used for clarification in UI.
       // The master_share value doesnt need to be submitted to the chain,
       // the value is inferred from the total balance minus the
       // publishers_share
 
-      publishers_share: [50, [Validators.min(0), Validators.max(100)]], // On the chain, the remaining balance is inferred as the composition side shares 
+      publishers_share: [50, [Validators.min(0), Validators.max(100), Validators.pattern('[0-9]+(\.[0-9][0-9]?)?')]], // On the chain, the remaining balance is inferred as the composition side shares 
 
-      playing_reward: [5, [Validators.required, Validators.min(1), Validators.max(100)]],
+      playing_reward: [5, [Validators.required, Validators.min(1), Validators.max(100), Validators.pattern('[0-9]+(\.[0-9][0-9]?)?')]],
 
-      tempAlbumArtists: this._fb.group({
-        artist: [''],
-        aliases: [[]],
-        ISNI: [''],
-      }),
 
-      tempTrackArtists: this._fb.group({
-        artist: [''],
-        aliases: [[]],
-        ISNI: [''],
-      }),
+      soleOwner: false,
+      masterManagesContract: false,
+      managesCompContract: false,
 
-      tempPublishers: this._fb.group({
-        publisher: [''],
-        IPI_CAE: [''],
-        ISNI: ['']
-      }),
 
-      tempWriters: this._fb.group({
-        writer: [''],
-        IPI_CAE: [''],
-        ISNI: [''],
-        role: [Enums.WritersRole.Default],
-        publisher: ['']
-      }),
-
-      tempDistributions: this._fb.group({
-        payee: [''],
-        bp: ['', [Validators.min(0), Validators.max(100)]]
-      }),
-
-      tempManagement: this._fb.group({
-        voter: [''],
-        percentage: ['', [Validators.min(0), Validators.max(100)]]
-      }),
-
-      tempDistributionsComp: this._fb.group({
-        payee: [''],
-        bp: ['', [Validators.min(0), Validators.max(100)]]
-      }),
-
-      tempManagementComp: this._fb.group({
-        voter: [''],
-        percentage: ['', [Validators.min(0), Validators.max(100)]]
-      }),
+      // isOneOwner: false, // TODO: Move variable to inside form - here
     });
+
   }
 
   onFormValuesChanged() {
@@ -423,48 +402,8 @@ export class ContentComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onGeneralSplitsChange() {
-    this.contentForm.get('master_share').valueChanges.subscribe(val => {
-      this.mastValue = val;
-      this.contentForm.value.master_share = val;
-      this.syncGeneralSplits('master_share');
-    });
-
-    this.contentForm.get('publishers_share').valueChanges.subscribe(val => {
-      this.compValue = val;
-      this.contentForm.value.publishers_share = val;
-      this.syncGeneralSplits('publishers_share');
-    });
-
-    this.contentForm.get('playing_reward').valueChanges.subscribe(val => {
-      this.streamValue = val;
-      this.contentForm.value.playing_reward = val;
-      this.syncGeneralSplits('playing_reward');
-    });
-  }
-
-  updateMasterManagesContract() {
-    if (!this.masterManagesContract) {
-      this.masterManagesContract = true;
-    }
-    else {
-      this.masterManagesContract = false;
-      this.masterRoyaltyInput.weight = null;
-    }
-  }
-
-  updateCompManagesContract() {
-    if (!this.compManagesContract) {
-      this.compManagesContract = true;
-    }
-    else {
-      this.compManagesContract = false;
-      this.compRoyaltyInput.weight = null;
-    }
-  }
-
   showMasterThreshold() {
-    if (this.managementList.length > 1) {
+    if (this.management.length > 1) {
       return true;
     }
     else {
@@ -473,7 +412,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
   }
 
   showCompThreshold() {
-    if (this.managementCompList.length > 1) {
+    if (this.managementComp.length > 1) {
       return true;
     }
     else {
@@ -481,165 +420,29 @@ export class ContentComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getGeneralSplitsFormValues() {
-    this.mastValue = this.contentForm.value.master_share;
-    this.compValue = this.contentForm.value.publishers_share;
-    this.streamValue = this.contentForm.value.playing_reward;
-  }
-
-  syncGeneralSplits(splitType?) {
-    this.mastMin = 0;
-    this.compMin = 0;
-    this.streamMin = 1;
-    this.validateGenSplitTotal();
-    this.validateCompRoyaltyRequired();
-
-    this.mastMax = (this.max - (this.compValue + this.streamValue));
-    this.compMax = (this.max - (this.mastValue + this.streamValue));
-    this.streamMax = (this.max - (this.mastValue + this.compValue));
-    this.total = this.mastValue + this.streamValue + this.compValue;
-  }
-
   oneOwner() {
     if (!this.isOneOwner) {
-      this.removeFromList('masterRoyaltyList', 0);
-      this.contentForm.patchValue({ master_share: 95 });
+      this.sliderDisabled = true;
+      this.removeFromList('masterRoyaltySplit', 0);
+      this.contentForm.patchValue({ master_share: 100 });
       this.contentForm.patchValue({ playing_reward: 5 });
       this.contentForm.patchValue({ publishers_share: 0 });
-      this.masterRoyaltyInput.muserName = this.muserName;
-      this.masterManagesContract = true;
-      this.masterRoyaltyInput.weight = 100;
-      this.masterRoyaltyInput.income = 100;
-      this.addRoyaltySplitList('masterRoyaltyList');
+      this.contentForm.get('tempDistributions').patchValue({ payee: this.auth.user.musername });
+      this.updateMasterManagesContract(true);
+      this.contentForm.get('tempDistributions').patchValue({ bp: 100 });
+      this.contentForm.get('tempManagement').patchValue({ percentage: 100 });
+      this.addRoyaltySplit('masterRoyaltySplit');
       this.isOneOwner = true;
+      this.onGenSplitChange();
     } else {
       this.isOneOwner = false;
-      this.masterRoyaltyInput.muserName = '';
-      this.masterManagesContract = false;
-      this.masterRoyaltyInput.weight = null;
-      this.masterRoyaltyInput.income = null;
-      this.removeFromList('masterRoyaltyList', 0);
-    }
-  }
-
-  addRoyaltySplitList(listName) {
-    switch (listName) {
-      case 'masterRoyaltyList':
-        this.museService.muserExist(this.masterRoyaltyInput.muserName).then(
-          muser => {
-            if (this.isOneOwner === true) {
-              muser = true;
-            }
-            if (muser === true) {
-              if (this.masterRoyaltyInput.income !== null || this.masterRoyaltyInput.income !== undefined) {
-                this.masterIncomeTotal = this.masterIncomeTotal + this.masterRoyaltyInput.income;
-              }
-              if (this.masterRoyaltyInput.weight !== null || this.masterRoyaltyInput.weight !== undefined) {
-                this.masterWeightTotal = this.masterWeightTotal + this.masterRoyaltyInput.weight;
-              }
-
-              const normDistBp = this.normalizeSplitVal(this.masterRoyaltyInput.income);
-              // const normDistWeight = this.normalizeSplitVal(this.masterRoyaltyInput.weight);
-              let managementValue = '';
-
-              if (this.masterManagesContract === true) {
-                managementValue = 'Contract Manager';
-              } else {
-                this.masterRoyaltyInput.weight = null;
-              }
-
-              this.masterRoyaltyList.push({
-                muserName: this.masterRoyaltyInput.muserName,
-                income: this.masterRoyaltyInput.income,
-                management: managementValue,
-                weight: this.masterRoyaltyInput.weight
-              });
-
-              this.distributionsList.push({
-                payee: this.masterRoyaltyInput.muserName,
-                // bp: this.masterRoyaltyInput.income
-                bp: normDistBp
-              });
-
-              if (this.masterManagesContract === true) {
-                this.managementList.push({
-                  voter: this.masterRoyaltyInput.muserName,
-                  percentage: this.masterRoyaltyInput.weight
-                  // percentage: normDistWeight
-                });
-                if (this.masterRoyaltyInput.weight < 100) {
-                  this.showMasterThreshold();
-                }
-              }
-              this.masterRoyaltyInput.muserName = null;
-              this.masterRoyaltyInput.income = null;
-              this.masterRoyaltyInput.management = null;
-              this.masterRoyaltyInput.weight = null;
-            }
-            else {
-              this.alert.showErrorMessage(ErrorCodes.muserNameNotFound);
-            }
-          });
-        break;
-      case 'compRoyaltyList':
-        this.museService.muserExist(this.compRoyaltyInput.muserName).then(
-          muser => {
-            if (muser === true) {
-              if (this.compRoyaltyInput.income !== null || this.compRoyaltyInput.income !== undefined) {
-
-                this.compIncomeTotal = this.compIncomeTotal + this.compRoyaltyInput.income;
-              }
-              if (this.compRoyaltyInput.weight !== null || this.compRoyaltyInput.weight !== undefined) {
-
-                this.compWeightTotal = this.compWeightTotal + this.compRoyaltyInput.weight;
-              }
-
-              const normDistCompBp = this.normalizeSplitVal(this.compRoyaltyInput.income);
-              // const normDistCompWeight = this.normalizeSplitVal(this.compRoyaltyInput.weight);
-
-              let managementCompValue = '';
-
-              if (this.compManagesContract === true) {
-                managementCompValue = 'Contract Manager';
-              } else {
-                this.compRoyaltyInput.weight = null;
-              }
-
-              this.compRoyaltyList.push({
-                muserName: this.compRoyaltyInput.muserName,
-                income: this.compRoyaltyInput.income,
-                management: managementCompValue,
-                weight: this.compRoyaltyInput.weight
-              });
-
-              this.distributionsCompList.push({
-                payee: this.compRoyaltyInput.muserName,
-                // bp: this.compRoyaltyInput.income
-                bp: normDistCompBp
-              });
-
-              if (this.compManagesContract === true) {
-                this.managementCompList.push({
-                  voter: this.compRoyaltyInput.muserName,
-                  percentage: this.compRoyaltyInput.weight
-                  // percentage: normDistCompWeight
-                });
-                if (this.compRoyaltyInput.weight < 100) {
-                  this.showCompThreshold();
-                }
-              }
-              this.compRoyaltyInput.muserName = null;
-              this.compRoyaltyInput.income = null;
-              this.compRoyaltyInput.management = null;
-              this.compRoyaltyInput.weight = null;
-              // this.compManagesContract = false;
-            }
-            else {
-              this.alert.showErrorMessage(ErrorCodes.muserNameNotFound);
-            }
-          });
-        break;
-      // default:
+      this.sliderDisabled = false;
+      this.contentForm.get('tempDistributions').patchValue({ payee: '' });
+      this.updateMasterManagesContract(false);
+      this.contentForm.get('tempDistributions').patchValue({ bp: null });
+      this.contentForm.get('tempManagement').patchValue({ voter: '' });
+      this.contentForm.get('tempManagement').patchValue({ percentage: null });
+      this.removeFromList('masterRoyaltySplit', 0);
     }
   }
 
@@ -654,11 +457,12 @@ export class ContentComponent implements OnInit, AfterViewInit {
     this.dialogRefPublishers.afterClosed().subscribe(
       data => {
         if (data !== undefined) {
-          this.publishersList.push({
-            publisher: data.publisher,
-            IPI_CAE: data.IPI_CAE,
-            ISNI: data.ISNI
-          });
+          this.publishers.push(
+            this.fb.control({
+              publisher: data.publisher,
+              IPI_CAE: data.IPI_CAE,
+              ISNI: data.ISNI
+            }));
         }
       });
   }
@@ -674,16 +478,21 @@ export class ContentComponent implements OnInit, AfterViewInit {
     this.dialogRefWriters.afterClosed().subscribe(
       data => {
         if (data !== undefined) {
-          this.writersList.push({
-            writer: data.writer,
-            IPI_CAE: data.IPI_CAE,
-            ISNI: data.ISNI,
-            publisher: data.publisher,
-            role: data.role
-          });
+          if (data.ISNI === ''){
+            data.ISNI = 0;
+          }
+
+          this.writers.push(
+            
+            this.fb.control({
+              writer: data.writer,
+              IPI_CAE: data.IPI_CAE,
+              ISNI: data.ISNI,
+              publisher: data.publisher,
+              role: data.role
+            }));
         }
       });
-
   }
 
   addArtist(headerTxt) {
@@ -700,61 +509,24 @@ export class ContentComponent implements OnInit, AfterViewInit {
         if (data !== undefined) {
           switch (headerTxt) {
             case 'Track Artist':
-              this.trackArtistList.push({
-                artist: data.artist,
-                isni: data.isni,
-                aliases: data.aliases
-              });
+              this.trackArtists.push(
+                this.fb.control({
+                  artist: data.artist,
+                  isni: data.isni,
+                  aliases: data.aliases
+                }));
               break;
             case 'Album Artist':
-              this.albumArtistList.push({
-                artist: data.artist,
-                isni: data.isni,
-                aliases: data.aliases
-              });
+              this.albumArtists.push(
+                this.fb.control({
+                  artist: data.artist,
+                  isni: data.isni,
+                  aliases: data.aliases
+                }));
               break;
           }
         }
       });
-  }
-
-  removeFromList(listName: string, i) {
-    switch (listName) {
-      case 'masterRoyaltyList':
-        let masterIncome = 0;
-        let masterWeight = 0;
-        this.masterRoyaltyList.slice(i, i + 1).map((v) => {
-          Object.assign(v, v);
-          masterIncome = v.income;
-          masterWeight = v.weight;
-        });
-
-        this.masterRoyaltyList.splice(i, 1);
-        this.distributionsList.splice(i, 1);
-        this.managementList.splice(i, 1);
-
-        this.masterIncomeTotal = this.masterIncomeTotal - masterIncome;
-        this.masterWeightTotal = this.masterWeightTotal - masterWeight;
-        break;
-      case 'compRoyaltyList':
-        let compIncome = 0;
-        let compWeight = 0;
-        this.compRoyaltyList.slice(i, i + 1).map((v) => {
-          Object.assign(v, v);
-          compIncome = v.income;
-          compWeight = v.weight;
-        });
-
-        this.compRoyaltyList.splice(i, 1);
-        this.distributionsCompList.splice(i, 1);
-        this.managementCompList.splice(i, 1);
-
-        this.compIncomeTotal = this.compIncomeTotal - compIncome;
-        this.compWeightTotal = this.compWeightTotal - compWeight;
-        break;
-      default:
-        this[listName].splice(i, 1);
-    }
   }
 
   setCountry(country) {
@@ -788,10 +560,66 @@ export class ContentComponent implements OnInit, AfterViewInit {
     return (num * 100);
   }
 
-  customValidation() {
-    this.validateGenSplitTotal();
-    if (this.distributionsList.length === 0 || this.trackArtistList.length === 0 || this.writersList.length === 0 || !this.genSplitTotal ||
-      this.masterIncomeTotal !== 100 || this.masterWeightTotal !== 100 || (this.compRoyaltyRequired && this.distributionsCompList.length === 0) ||
+  denormalizeSplitVal(num: number) {
+    return (num / 100);
+  }
+
+  updateMasterManagesContract(value?) {
+    if (value) {
+      // this.masterManagesContract = true;
+      this.contentForm.patchValue({ masterManagesContract: true });
+    }
+    else {
+      // this.masterManagesContract = false;
+      this.contentForm.patchValue({ masterManagesContract: false });
+      this.contentForm.get('tempManagement').patchValue({ percentage: null });
+    }
+  }
+
+  updateManagesCompsContract(value?) {
+    if (value) {
+      this.contentForm.patchValue({ masterManagesContract: true });
+    }
+    else {
+      this.contentForm.patchValue({ masterManagesContract: false });
+      this.contentForm.get('tempManagementComp').patchValue({ percentage: null });
+    }
+  }
+
+  onGenMasterSplitChange() {
+    this.contentForm.patchValue({ publishers_share: (this.max - this.contentForm.get('master_share').value) });
+    this.onGenSplitChange();
+  }
+
+  onGenCompSplitChange() {
+    this.contentForm.patchValue({ master_share: (this.max - this.contentForm.get('publishers_share').value) });
+    this.onGenSplitChange();
+  }
+
+  onGenSplitChange() {
+    this.contentForm.patchValue({ publishers_share: (this.max - this.contentForm.get('master_share').value) });
+    this.contentForm.patchValue({ master_share: (this.max - this.contentForm.get('publishers_share').value) });
+    this.playRewardMax = this.contentForm.get('master_share').value;
+    this.setCompRoyalty();
+  }
+
+  setCompRoyalty() {
+    this.pubShareValue = this.contentForm.get('publishers_share').value;
+    if (this.pubShareValue === 0) {
+      this.setCompRoyaltyNotRequired();
+    } else {
+      this.compRoyaltyRequired = true;
+      this.contentForm.get('comp_meta').patchValue({ isThirdPartyPublishers: true });
+    }
+  }
+
+  customValidation() { // TODO: this is not needed with the refactor - Remove
+    if (this.distributions.length === 0 ||
+      this.trackArtists.length === 0 ||
+      this.writers.length === 0 ||
+      this.masterIncomeTotal !== 100 ||
+      this.masterWeightTotal !== 100 ||
+      (this.compRoyaltyRequired && this.distributionsComp.length === 0) ||
       (this.compRoyaltyRequired && (this.compIncomeTotal !== 100 || this.compWeightTotal !== 100))) {
       return false;
     }
@@ -800,104 +628,364 @@ export class ContentComponent implements OnInit, AfterViewInit {
     }
   }
 
-  validateGenSplitTotal() {
-    if (this.total === this.max) {
-      this.genSplitTotal = true;
-    } else {
-      this.genSplitTotal = false;
-    }
-  }
+  setCompRoyaltyNotRequired() {
+    this.compRoyaltySplit = [];
+    this.contentForm.get('tempDistributionsComp').patchValue({ payee: null });
+    this.contentForm.get('tempDistributionsComp').patchValue({ bp: null });
+    this.contentForm.get('tempManagementComp').patchValue({ voter: null });
+    this.contentForm.get('tempManagementComp').patchValue({ percentage: null });
 
-  validateCompRoyaltyRequired() {
-    if (this.compValue === 0) {
-      this.compRoyaltyList = [];
-      this.distributionsCompList = [];
-      this.managementCompList = [];
-      this.compIncomeTotal = 0;
-      this.compWeightTotal = 0;
-      this.compRoyaltyRequired = false;
-    }
-    else {
-      this.compRoyaltyRequired = true;
-    }
+    this.contentForm.get('comp_meta').patchValue({ isThirdPartyPublishers: false });
+
+    this.contentForm.patchValue({ distributionsComp: [] });
+    this.contentForm.patchValue({ managementComp: [] });
+    this.compIncomeTotal = 0;
+    this.compWeightTotal = 0;
+    this.compRoyaltyRequired = false;
   }
 
   mastInputValid() {
-    if (this.masterRoyaltyInput.muserName === null || this.masterRoyaltyInput.muserName === '' || this.masterRoyaltyInput.income < 0 || this.masterRoyaltyInput.income > 100 || this.masterRoyaltyInput.income === null ||
-      this.masterRoyaltyInput.weight < 0 || this.masterRoyaltyInput.weight > 100 || this.contentForm.get('management_threshold').value === null || (this.masterManagesContract === true && this.masterRoyaltyInput.weight === null)) {
+    if (this.contentForm.get('tempDistributions.payee').value === null ||
+      this.contentForm.get('tempDistributions.payee').value === '' ||
+
+      this.contentForm.get('tempDistributions.bp').value === null ||
+      this.contentForm.get('tempDistributions.bp').value === '' ||
+      this.contentForm.get('tempDistributions.bp').value < 0 ||
+      this.contentForm.get('tempDistributions.bp').value > 100 ||
+
+      this.contentForm.get('management_threshold').value === null ||
+      this.contentForm.get('management_threshold').value === '' ||
+      this.contentForm.get('playing_reward').value > this.contentForm.get('master_share').value ||
+
+      // (this.masterManagesContract === true &&
+      (this.contentForm.get('masterManagesContract').value === true &&
+        (
+          this.contentForm.get('tempManagement.percentage').value === null ||
+          this.contentForm.get('tempManagement.percentage').value === '' ||
+          this.contentForm.get('tempManagement.percentage').value < 0 ||
+          this.contentForm.get('tempManagement.percentage').value > 100
+        )
+      )
+    ) {
       return false;
     }
     return true;
   }
 
   compInputValid() {
-    if (this.compRoyaltyInput.muserName === null || this.compRoyaltyInput.muserName === '' || this.compRoyaltyInput.income < 0 || this.compRoyaltyInput.income > 100 || this.compRoyaltyInput.income === null ||
-      this.compRoyaltyInput.weight < 0 || this.compRoyaltyInput.weight > 100 || this.contentForm.get('management_threshold_comp').value === null || (this.compManagesContract === true && this.compRoyaltyInput.weight === null)) {
+    if (this.contentForm.get('tempDistributionsComp.payee').value === null ||
+      this.contentForm.get('tempDistributionsComp.payee').value === '' ||
+
+      this.contentForm.get('tempDistributionsComp.bp').value === null ||
+      this.contentForm.get('tempDistributionsComp.bp').value === '' ||
+      this.contentForm.get('tempDistributionsComp.bp').value < 0 ||
+      this.contentForm.get('tempDistributionsComp.bp').value > 100 ||
+
+      this.contentForm.get('management_threshold_comp').value === null ||
+      this.contentForm.get('management_threshold_comp').value === '' ||
+
+      (this.contentForm.get('managesCompContract').value === true &&
+        (
+          this.contentForm.get('tempManagementComp.percentage').value === null ||
+          this.contentForm.get('tempManagementComp.percentage').value === '' ||
+          this.contentForm.get('tempManagementComp.percentage').value < 0 ||
+          this.contentForm.get('tempManagementComp.percentage').value > 100
+        )
+      )
+    ) {
       return false;
     }
     return true;
   }
- 
+
+  resetValues(val?: boolean) {
+    this.max = 100;
+    this.splitMax = 99;
+    this.splitMin = 1;
+    this.pubShareValue = 50;
+    this.playRewardMax = 50;
+
+    this.masterIncomeMax = 100;
+    this.compIncomeMax = 100;
+
+    this.masterWeightMax = 100;
+    this.compWeightMax = 100;
+
+    this.masterIncomeTotal = 0;
+    this.masterWeightTotal = 0;
+    this.compIncomeTotal = 0;
+    this.compWeightTotal = 0;
+
+    this.masterRoyaltySplit = [];
+    this.compRoyaltySplit = [];
+
+    this.isOneOwner = false;
+    this.sliderDisabled = false;
+
+    this.contentForm.reset();
+    this.ngOnInit();
+  }
+
+  // endregion
+
+  addRoyaltySplit(listName) {
+    switch (listName) {
+      case 'masterRoyaltySplit':
+        this.museService.muserExist(this.contentForm.get('tempDistributions.payee').value).then(
+          muser => {
+            if (this.isOneOwner === true) {
+              muser = true;
+            }
+            if (muser === true) {
+              // if (this.contentForm.get('tempDistributions.bp').value !== null || this.contentForm.get('tempDistributions.bp').value !== undefined || this.contentForm.get('tempDistributions.bp').value !== 0) {
+              //   this.masterIncomeTotal = this.masterIncomeTotal + this.contentForm.get('tempDistributions.bp').value;
+              // }
+              // if (this.contentForm.get('tempManagement.percentage').value !== null || this.contentForm.get('tempManagement.percentage').value !== undefined || this.contentForm.get('tempManagement.percentage').value !== 0) {
+              //   this.masterWeightTotal = this.masterWeightTotal + this.contentForm.get('tempManagement.percentage').value;
+              // }
+
+              let managementValue = '';
+
+              // if (this.masterManagesContract === true) {
+              if (this.contentForm.get('masterManagesContract').value === true) {
+                this.contentForm.patchValue({ masterManagesContract: true });
+                managementValue = 'Contract Manager';
+              } else {
+                this.contentForm.get('tempManagement').patchValue({ percentage: 0 });
+              }
+
+              this.masterRoyaltySplit.push({
+                muserName: this.contentForm.get('tempDistributions.payee').value,
+                income: this.contentForm.get('tempDistributions.bp').value,
+                management: managementValue,
+                weight: this.contentForm.get('tempManagement.percentage').value,
+              });
+
+              if (this.masterRoyaltySplit.length !== 0) {
+                this.masterIncomeTotal = this.masterIncomeTotal + this.contentForm.get('tempDistributions.bp').value;
+              }
+              if (this.contentForm.get('tempManagement.percentage').value !== null || this.contentForm.get('tempManagement.percentage').value !== undefined || this.contentForm.get('tempManagement.percentage').value !== 0) {
+                this.masterWeightTotal = this.masterWeightTotal + this.contentForm.get('tempManagement.percentage').value;
+              }
+              
+
+
+
+              // alert('TD: ' + this.contentForm.get('tempDistributions.bp').value);
+              const normDistBp = this.normalizeSplitVal(this.contentForm.get('tempDistributions.bp').value);
+              // this.contentForm.patchValue({ publishers_share: normDistBp });
+
+              this.distributions.push(
+                this.fb.control({
+                  payee: this.contentForm.get('tempDistributions.payee').value,
+                  bp: normDistBp,
+                  // bp: this.contentForm.get('tempDistributions.bp').value,
+                }));
+
+
+              if (this.contentForm.get('masterManagesContract').value === true) {
+                this.management.push(
+                  this.fb.control({
+                    voter: this.contentForm.get('tempDistributions.payee').value,
+                    percentage: this.contentForm.get('tempManagement.percentage').value,
+                  }));
+                if (this.contentForm.get('tempManagement.percentage').value < 100) {
+                  this.showMasterThreshold();
+                }
+              }
+              this.contentForm.get('tempDistributions').patchValue({ payee: null });
+              this.contentForm.get('tempDistributions').patchValue({ bp: '' });
+              this.contentForm.get('tempManagement').patchValue({ voter: null });
+              this.contentForm.get('tempManagement').patchValue({ percentage: '' });
+            }
+
+            else {
+              this.alert.showErrorMessage(ErrorCodes.muserNameNotFound);
+            }
+          });
+        break;
+      case 'compRoyaltySplit':
+        this.museService.muserExist(this.contentForm.get('tempDistributionsComp.payee').value).then(
+          muser => {
+            if (muser === true) {
+              if (this.contentForm.get('tempDistributionsComp.bp').value !== null || this.contentForm.get('tempDistributionsComp.bp').value !== undefined) {
+                this.compIncomeTotal = this.compIncomeTotal + this.contentForm.get('tempDistributionsComp.bp').value;
+              }
+              if (this.contentForm.get('tempManagementComp.percentage').value !== null || this.contentForm.get('tempManagementComp.percentage').value !== undefined) {
+                this.compWeightTotal = this.compWeightTotal + this.contentForm.get('tempManagementComp.percentage').value;
+              }
+
+              let managementCompValue = '';
+
+              if (this.contentForm.get('managesCompContract').value === true) {
+                managementCompValue = 'Contract Manager';
+              } else {
+                this.contentForm.get('tempManagementComp').patchValue({ percentage: 0 });
+              }
+
+              this.compRoyaltySplit.push({
+                muserName: this.contentForm.get('tempDistributionsComp.payee').value,
+                income: this.contentForm.get('tempDistributionsComp.bp').value,
+                management: managementCompValue,
+                weight: this.contentForm.get('tempManagementComp.percentage').value,
+              });
+
+              const normDistBp = this.normalizeSplitVal(this.contentForm.get('tempDistributionsComp.bp').value);
+
+              this.distributionsComp.push(
+                this.fb.control({
+                  payee: this.contentForm.get('tempDistributionsComp.payee').value,
+                  bp: normDistBp,
+                  // bp: this.contentForm.get('tempDistributionsComp.bp').value,
+                }));
+
+              if (this.contentForm.get('managesCompContract').value === true) {
+                this.managementComp.push(
+                  this.fb.control({
+                    voter: this.contentForm.get('tempDistributionsComp.payee').value,
+                    percentage: this.contentForm.get('tempManagementComp.percentage').value,
+                  }));
+                if (this.contentForm.get('tempManagementComp.percentage').value < 100) {
+                  this.showCompThreshold();
+                }
+              }
+
+              this.contentForm.get('tempDistributionsComp').patchValue({ payee: null });
+              this.contentForm.get('tempDistributionsComp').patchValue({ bp: '' });
+              this.contentForm.get('tempManagementComp').patchValue({ voter: null });
+              this.contentForm.get('tempManagementComp').patchValue({ percentage: '' });
+            }
+            else {
+              this.alert.showErrorMessage(ErrorCodes.muserNameNotFound);
+            }
+          });
+        break;
+    }
+  }
+
+  removeFromList(listName: string, i) {
+    switch (listName) {
+      case 'masterRoyaltySplit':
+        let masterIncome = 0;
+        let masterWeight = 0;
+
+        if (this.masterRoyaltySplit.length !== 0) {
+          this.masterRoyaltySplit.splice(i, 1);
+
+          if (this.distributions.at(i).value.bp !== undefined || this.distributions.at(i).value.bp !== null || this.distributions.at(i).value.bp !== 0) {
+            masterIncome = this.denormalizeSplitVal(this.distributions.at(i).value.bp);
+            // masterIncome = this.distributions.at(i).value.bp;
+          }
+
+          if (this.distributions.at(i) !== undefined || this.distributions.at(i) !== null) {
+            this.distributions.removeAt(i);
+          }
+
+          if (this.management.length !== 0) {
+            masterWeight = this.management.at(i).value.percentage;
+            this.management.removeAt(i);
+          }
+
+          this.masterIncomeTotal = this.masterIncomeTotal - masterIncome;
+          this.masterWeightTotal = this.masterWeightTotal - masterWeight;
+
+          // console.log('005: ' + this.masterIncomeTotal);
+          // console.log('006: ' + this.masterWeightTotal);
+        }
+        break;
+      case 'compRoyaltySplit':
+        let compIncome = 0;
+        let compWeight = 0;
+        if (this.compRoyaltySplit.length !== 0) {
+          this.compRoyaltySplit.splice(i, 1);
+          if (this.distributionsComp.at(i).value.bp !== undefined || this.distributionsComp.at(i).value.bp !== null || this.distributionsComp.at(i).value.bp !== 0) {
+            compIncome = this.denormalizeSplitVal(this.distributionsComp.at(i).value.bp);
+          }
+
+          if (this.distributionsComp.at(i) !== undefined || this.distributionsComp.at(i) !== null) {
+            this.distributionsComp.removeAt(i);
+          }
+
+          if (this.managementComp.length !== 0) {
+            compWeight = this.managementComp.at(i).value.percentage;
+            this.managementComp.removeAt(i);
+          }
+
+          this.compIncomeTotal = this.compIncomeTotal - compIncome;
+          this.compWeightTotal = this.compWeightTotal - compWeight;
+
+          // this.compIncomeTotal = compIncome - this.compIncomeTotal;
+          // this.compWeightTotal = compWeight - this.compWeightTotal;
+        }
+        break;
+      default:
+        this[listName].removeAt(i);
+    }
+  }
+
+
+  denormalizeForView() {
+    if (this.contentForm.get('publishers_share').value !== 0) {
+      const pubShr = (this.contentForm.get('publishers_share').value / 100);
+      this.contentForm.patchValue({ publishers_share: pubShr });
+    }
+
+    const plyRew = (this.contentForm.get('playing_reward').value / 100);
+    this.contentForm.patchValue({ playing_reward: plyRew });
+  }
+
   reviewContent() {
-    // this.prepData();
+    this.prepReview();
     this.dialogRefReview = this.dialog.open(ModalReviewComponent, {
       width: '60%',
       disableClose: true,
-
-      data: [this.contentForm.getRawValue(), this.trackArtistList, this.albumArtistList, this.writersList, this.publishersList,
-      this.masterRoyaltyList, this.compRoyaltyList]
-
-
-      // btnStart: AlertBtnText.Cancel,
-      // btnEnd: AlertBtnText.Add
+      data: [this.contentForm.getRawValue(), this.trackArtists, this.albumArtists, this.writers, this.publishers, this.masterRoyaltySplit, this.compRoyaltySplit]
     });
 
     this.dialogRefReview.afterClosed().subscribe(data => {
 
       if (data !== undefined) {
-        // this.ui.showLoading();
-        this.prepData().then((results) => {
-          if (results === true) {
+        this.ui.showLoading();
+        this.normalizeFormValues().then((results) => {
+          if (results !== undefined) {
             const authPassword = this.auth.user.getPassword();
-            this.museService.postContent(authPassword, this.muserName, data).then((success) => {
-              if (success === true) {
-                this.contentForm.reset();
-                this.ngOnInit();
+            this.museService.postContent(authPassword, this.auth.user.musername, results).then((success) => {
+              console.log('Success!');
+              if (success !== undefined) {
+                const answer = this.alert.showSuccessMessage('Success!', 'Your content has been posted to SounDAC.');
+                this.resetValues(); // TODO: Pass in 'yes'/'no' reset partial or all based on answer
+                this.ui.hideLoading();
+              } else{
+                this.denormalizeForView();
               }
             }).catch((err) => {
+              this.denormalizeForView();
               this.alert.showErrorMessage('Failed to Post Content - Error: ' + err);
+              this.ui.hideLoading();
             });
           }
-          // this.ui.hideLoading();
+          else {
+            this.alert.showErrorMessage('Unable to finalize content.');
+          }
+          this.ui.hideLoading();
         });
       }
-      // this.ui.showLoading();
-      // this.dataService.postContent(authPassword, this.muserName, data).then(() => {
-      //   // TODO: the reset needs to go somewhere after post is successful
-      //   // this.contentForm.reset();
-      //   // this.ngOnInit();
-      //   // this.ui.hideLoading();
-      // }).catch((err) => {
-      //   this.alert.showErrorMessage('Failed to Post Content - Error: ' + err);
-      // });
-      // this.ui.hideLoading();
     });
-
   }
 
-  prepData() { // TODO: Double check all values are correct!!!
-    this.ui.showLoading();
-    // alert('compValue: ' + this.compValue);
+  prepReview() {
+    const num_releaseDate = Number.parseInt(this.datePipe.transform(this.contentForm.value.album_meta.releaseDate, 'yyyyMMdd'));
+    this.contentForm.get('album_meta').patchValue({ releaseDate: num_releaseDate });
+
+    const num_salesStartDate = Number.parseInt(this.datePipe.transform(this.contentForm.value.album_meta.salesStartDate, 'yyyyMMdd'));
+    this.contentForm.get('album_meta').patchValue({ salesStartDate: num_salesStartDate });
+  }
+
+  normalizeFormValues() { // TODO: Double check all values are correct!!!
     return new Promise((resolve, reject) => {
       const isValid = this.customValidation();
       if (isValid) {
-
-        const num_salesStartDate = Number.parseInt(this.datePipe.transform(this.contentForm.value.album_meta.salesStartDate, 'yyyyMMdd'));
-        this.contentForm.get('album_meta').patchValue({ salesStartDate: num_salesStartDate });
-
-        const num_releaseDate = Number.parseInt(this.datePipe.transform(this.contentForm.value.album_meta.releaseDate, 'yyyyMMdd'));
-        this.contentForm.get('album_meta').patchValue({ releaseDate: num_releaseDate });
-
+        const num_releaseDate = this.contentForm.get('album_meta.releaseDate').value;
         const releaseYear = num_releaseDate.toString().substring(0, 4);
         const num_releaseYear = Number.parseInt(releaseYear);
         this.contentForm.get('album_meta').patchValue({ releaseYear: num_releaseYear });
@@ -908,74 +996,192 @@ export class ContentComponent implements OnInit, AfterViewInit {
         this.contentForm.patchValue({ publishers_share: normPubShar });
         this.contentForm.patchValue({ playing_reward: normPlayReward });
 
+        // region Album
         if (this.contentForm.value.album_meta.albumTitle === '') {
           this.contentForm.get('album_meta').patchValue({ albumTitle: this.contentForm.value.track_meta.trackTitle });
         }
-
-        if (this.publishersList.length === 0) {
-          this.contentForm.get('comp_meta.publishers').patchValue({
-            publisher: ' '
-          });
-        } else {
-          this.contentForm.get('comp_meta.publishers').patchValue({
-            publisher: this.publishersList
-          });
+        if (this.contentForm.value.album_meta.albumGenre1 === '') {
+          this.contentForm.get('album_meta').patchValue({ albumGenre1: 0 });
+        }
+        if (this.contentForm.value.album_meta.albumGenre2 === '') {
+          this.contentForm.get('album_meta').patchValue({ albumGenre2: null });
         }
 
-        if (this.managementList.length === 1) {
+        if (this.contentForm.value.album_meta.explicit === '') {
+          this.contentForm.get('album_meta').patchValue({ explicit: 0 });
+        }
+        if (this.contentForm.value.album_meta.upcEan === '') {
+          this.contentForm.get('album_meta').patchValue({ upcEan: 0 });
+        }
+        // endregion
+
+        // region Track
+        if (this.contentForm.value.track_meta.featuredArtistIsni === '') {
+          this.contentForm.get('track_meta').patchValue({ featuredArtistIsni: undefined });
+        }
+        if (this.contentForm.value.track_meta.trackGenre1 === '') {
+          this.contentForm.get('track_meta').patchValue({ trackGenre1: 0 });
+        }
+        if (this.contentForm.value.track_meta.trackGenre2 === '') {
+          this.contentForm.get('track_meta').patchValue({ trackGenre2: undefined });
+        }
+        if (this.contentForm.value.track_meta.trackNo === '') {
+          this.contentForm.get('track_meta').patchValue({ trackNo: 0 });
+        }
+        if (this.contentForm.value.track_meta.trackVolumeNo === '') {
+          this.contentForm.get('track_meta').patchValue({ trackVolumeNo: 0 });
+        }
+        if (this.contentForm.value.track_meta.trackDuration === '') {
+          this.contentForm.get('track_meta').patchValue({ trackDuration: 0 });
+        }
+        if (this.contentForm.value.track_meta.hasSample === '') {
+          this.contentForm.get('track_meta').patchValue({ hasSample: false });
+        }
+        // endregion
+
+        // region Comp
+        if (this.publishers.length === 0) {
+          this.publishers.push(
+            this.fb.control({
+              publisher: ' ',
+              IPI_CAE: '',
+              ISNI: undefined
+            }));
+        }
+        // endregion
+
+        // region Distributions and Management
+
+        // this.management.forEach(element => {
+
+        // });
+
+        if (this.management.length === 1) {
           this.contentForm.patchValue({
             management_threshold: 100
           });
         }
 
-        if (this.managementCompList.length === 1) {
+        if (this.managementComp.length === 1) {
           this.contentForm.patchValue({
             management_threshold_comp: 100,
           });
         }
-
-        if (this.compValue === 0) {
-          this.contentForm.get('comp_meta').patchValue({
-            isThirdPartyPublishers: false
-          });
-        } else {
-          this.contentForm.get('comp_meta').patchValue({
-            isThirdPartyPublishers: true
-          });
-        }
-
-        // console.log('albumArtists List: ' + this.albumArtistList);
-        // console.log('trackArtists List: ' + this.trackArtistList);
-        // console.log('publishers List: ' + this.publishersList);
-        // console.log('writers List: ' + this.writersList);
-
-        this.contentForm.get('album_meta').patchValue({ albumArtists: this.albumArtistList });
-        this.contentForm.get('track_meta').patchValue({ trackArtists: this.trackArtistList });
-        this.contentForm.get('comp_meta').patchValue({ publishers: this.publishersList, writers: this.writersList });
-
-        // console.log('albumArtists: ' + this.contentForm.get('album_meta'));
-        // console.log('trackArtists: ' + this.contentForm.get('track_meta'));
-        // console.log('publishers: ' + this.contentForm.get('comp_meta.publishers'));
-        // console.log('writers: ' + this.contentForm.get('comp_meta.writers'));
-
-        this.contentForm.patchValue({
-          distributions: this.distributionsList,
-          distributionsComp: this.distributionsCompList,
-          management: this.managementList,
-          managementComp: this.managementCompList
-        });
-
-        this.ui.hideLoading();
-        resolve(true);
+        // endregion
+        resolve(this.contentForm.value);
       } else {
-        this.ui.hideLoading();
+
         this.alert.showErrorMessage(ErrorCodes.invalidContentForm);
         reject(false);
       }
-      // this.ui.hideLoading();
     });
-    // this.ui.hideLoading();
   }
 
-   // endregion
+
+  // region Original - Workingish
+  // normalizeFormValues() { // TODO: Double check all values are correct!!!
+  //   return new Promise((resolve, reject) => {
+  //     const isValid = this.customValidation();
+  //     if (isValid) {
+
+  //       const num_releaseDate = Number.parseInt(this.datePipe.transform(this.contentForm.value.album_meta.releaseDate, 'yyyyMMdd'));
+  //       const releaseYear = num_releaseDate.toString().substring(0, 4);
+  //       const num_releaseYear = Number.parseInt(releaseYear);
+  //       this.contentForm.get('album_meta').patchValue({ releaseYear: num_releaseYear });
+
+  //       const normPubShar = this.normalizeSplitVal(this.contentForm.value.publishers_share);
+  //       const normPlayReward = this.normalizeSplitVal(this.contentForm.value.playing_reward);
+
+  //       this.contentForm.patchValue({ publishers_share: normPubShar });
+  //       this.contentForm.patchValue({ playing_reward: normPlayReward });
+
+  //       // region Album
+  //       if (this.contentForm.value.album_meta.albumTitle === '') {
+  //         this.contentForm.get('album_meta').patchValue({ albumTitle: this.contentForm.value.track_meta.trackTitle });
+  //       }
+  //       if (this.contentForm.value.album_meta.albumGenre1 === '') {
+  //         this.contentForm.get('album_meta').patchValue({ albumGenre1: 0 });
+  //       }
+  //       if (this.contentForm.value.album_meta.albumGenre2 === '') {
+  //         this.contentForm.get('album_meta').patchValue({ albumGenre2: null });
+  //       }
+  //       // if (this.contentForm.value.album_meta.countryOrigin === '') {
+  //       //   this.contentForm.get('album_meta').patchValue({ countryOrigin: 'Undefined' });
+  //       // }
+  //       if (this.contentForm.value.album_meta.explicit === '') {
+  //         this.contentForm.get('album_meta').patchValue({ explicit: 0 });
+  //       }
+  //       if (this.contentForm.value.album_meta.upcEan === '') {
+  //         this.contentForm.get('album_meta').patchValue({ upcEan: 0 });
+  //       }
+  //       // endregion
+
+  //       // region Track
+  //       if (this.contentForm.value.track_meta.featuredArtistIsni === '') {
+  //         this.contentForm.get('track_meta').patchValue({ featuredArtistIsni: undefined });
+  //       }
+  //       if (this.contentForm.value.track_meta.trackGenre1 === '') {
+  //         this.contentForm.get('track_meta').patchValue({ trackGenre1: 0 });
+  //       }
+  //       if (this.contentForm.value.track_meta.trackGenre2 === '') {
+  //         this.contentForm.get('track_meta').patchValue({ trackGenre2: undefined });
+  //       }
+  //       if (this.contentForm.value.track_meta.trackNo === '') {
+  //         this.contentForm.get('track_meta').patchValue({ trackNo: 0 });
+  //       }
+  //       if (this.contentForm.value.track_meta.trackVolumeNo === '') {
+  //         this.contentForm.get('track_meta').patchValue({ trackVolumeNo: 0 });
+  //       }
+  //       if (this.contentForm.value.track_meta.trackDuration === '') {
+  //         this.contentForm.get('track_meta').patchValue({ trackDuration: 0 });
+  //       }
+  //       if (this.contentForm.value.track_meta.hasSample === '') {
+  //         this.contentForm.get('track_meta').patchValue({ hasSample: false });
+  //       }
+  //       // endregion
+
+  //       // region Comp
+  //       if (this.publishers.length === 0) {
+  //         this.publishers.push(
+  //           this.fb.control({
+  //             publisher: ' ',
+  //             IPI_CAE: '',
+  //             ISNI: undefined
+  //           }));
+  //       }
+  //       // endregion
+
+  //       // region Distributions and Management
+
+  //       if (this.management.length === 1) {
+  //         this.contentForm.patchValue({
+  //           management_threshold: 100
+  //         });
+  //       }
+
+  //       if (this.managementComp.length === 1) {
+  //         this.contentForm.patchValue({
+  //           management_threshold_comp: 100,
+  //         });
+  //       }
+  //       // endregion
+  //       console.log(this.contentForm.value),
+  //         setTimeout(() => {
+
+  //           resolve(true);
+  //         },
+  //           5000);
+
+
+  //       // resolve(true);
+  //     } else {
+
+  //       this.alert.showErrorMessage(ErrorCodes.invalidContentForm);
+  //       reject(false);
+  //     }
+  //   });
+  // }
+  // endregion
+
+    // endregion
 }

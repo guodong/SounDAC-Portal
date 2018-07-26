@@ -3,9 +3,9 @@
 <div mat-dialog-content>
     <div class="container-fluid">
         <br>
-        <h3>Master Side</h3>
+        <h2>Master Side</h2>
         <div>
-            <h4>Track Info</h4>
+            <strong>Track Info</strong>
             <div class="row">
                 <div class="col-md-3">Content Uploader:</div>
                 <div class="col-md-3" [innerHtml]="formData.uploader"></div>
@@ -20,6 +20,7 @@
                 <div class="col-md-3" [innerHtml]="formData.track_meta.trackTitle"></div>
             </div>
             <br>
+
             <div class="row">
                 <div class="col-md-3">Track Producer:</div>
                 <div class="col-md-3" [innerHtml]="formData.track_meta.trackProducer"></div>
@@ -38,17 +39,15 @@
                         <div class="col-md-3">ISNI</div>
                         <div class="col-md-6">Aliases</div>
                     </div>
-                    <mat-list-item *ngFor="let data of trackArtists,  index as i">
-                        <div class="col-md-3" [innerHtml]="data.artist"></div>
-                        <div class="col-md-3" [innerHtml]="data.isni"></div>
-                        <div class="col-md-6" [innerHtml]="data.aliases"></div>
+                    <mat-list-item *ngFor="let val of trackArtists,  index as i">
+                        <div class="col-md-3" [innerHtml]="val.artist"></div>
+                        <div class="col-md-3" [innerHtml]="val.isni"></div>
+                        <div class="col-md-6" [innerHtml]="val.aliases"></div>
                     </mat-list-item>
                 </mat-list>
                 <mat-divider></mat-divider>
             </div>
             <br>
-
-
 
             <div class="row">
                 <div class="col-md-3">Featured Artist:</div>
@@ -103,8 +102,7 @@
         <br>
 
         <div>
-            <h4>Album Info</h4>
-            <!-- <br> -->
+            <strong>Album Info</strong>
             <div class="row">
                 <div class="col-md-3">Album Title:</div>
                 <div class="col-md-3" [innerHtml]="formData.album_meta.albumTitle"></div>
@@ -117,9 +115,8 @@
                 <div class="col-md-3" [innerHtml]="formData.album_meta.albumProducer"></div>
             </div>
             <br>
-            <!-- Album Artist -->
+
             <div class="row">
-                <!-- <h4>Album Artists</h4> -->
                 <div class="col-md-3">Album Artists:</div>
             </div>
             <div>
@@ -129,13 +126,13 @@
                         <div class="col-md-3">ISNI</div>
                         <div class="col-md-6">Aliases</div>
                     </div>
-                    <mat-list-item *ngFor="let data of albumArtists,  index as i">
-                        <div class="col-md-3" [innerHtml]="data.artist"></div>
-                        <div class="col-md-3" [innerHtml]="data.isni"></div>
-                        <div class="col-md-6" [innerHtml]="data.aliases"></div>
+                    <mat-list-item *ngFor="let val of albumArtists,  index as i">
+                        <div class="col-md-3" [innerHtml]="val.artist"></div>
+                        <div class="col-md-3" [innerHtml]="val.isni"></div>
+                        <div class="col-md-6" [innerHtml]="val.aliases"></div>
                     </mat-list-item>
                 </mat-list>
-                <mat-divider *ngIf="albumArtists !== undefined"></mat-divider>
+                <mat-divider *ngIf="data[2].lenght !== 0"></mat-divider>
             </div>
             <br>
             <div class="row">
@@ -162,10 +159,8 @@
         </div>
         <br>
 
-        <h3>Composition Side</h3>
-        <br>
+        <h2>Composition Side</h2>
         <div>
-            <br>
             <div class="row">
                 <div class="col-md-3">Composition Title:</div>
                 <div class="col-md-3" [innerHtml]="formData.comp_meta.compTitle"></div>
@@ -193,15 +188,15 @@
                         <div class="col-md-2">Writer's Publisher</div>
                         <div class="col-md-2">Writer's Role</div>
                     </div>
-                    <mat-list-item *ngFor="let data of writers,  index as i">
-                        <div class="col-md-3" [innerHtml]="data.writer"></div>
-                        <div class="col-md-3" [innerHtml]="data.IPI_CAE"></div>
-                        <div class="col-md-3" [innerHtml]="data.ISNI"></div>
-                        <div class="col-md-3" [innerHtml]="data.publisher"></div>
-                        <div class="col-md-3" [innerHtml]="data.role"></div>
+                    <mat-list-item *ngFor="let val of writers,  index as i">
+                        <div class="col-md-3" [innerHtml]="val.writer"></div>
+                        <div class="col-md-3" [innerHtml]="val.IPI_CAE"></div>
+                        <div class="col-md-3" [innerHtml]="val.ISNI"></div>
+                        <div class="col-md-3" [innerHtml]="val.publisher"></div>
+                        <div class="col-md-3" [innerHtml]="val.role"></div>
                     </mat-list-item>
                 </mat-list>
-                <mat-divider *ngIf="writers.lenght !== 0"></mat-divider>
+                <mat-divider *ngIf="data[3].lenght !== 0"></mat-divider>
             </div>
             <br>
 
@@ -215,22 +210,20 @@
                         <div class="col-md-4">publisher's IPI or CAE</div>
                         <div class="col-md-4">ISNI</div>
                     </div>
-                    <mat-list-item *ngFor="let data of publishers,  index as i">
-                        <div class="col-md-4" [innerHtml]="data.publisher"></div>
-                        <div class="col-md-4" [innerHtml]="data.IPI_CAE"></div>
-                        <div class="col-md-4" [innerHtml]="data.ISNI"></div>
+                    <mat-list-item *ngFor="let val of publishers,  index as i">
+                        <div class="col-md-4" [innerHtml]="val.publisher"></div>
+                        <div class="col-md-4" [innerHtml]="val.IPI_CAE"></div>
+                        <div class="col-md-4" [innerHtml]="val.ISNI"></div>
                     </mat-list-item>
                 </mat-list>
-                <mat-divider *ngIf="publishers.length !== 0"></mat-divider>
+                <mat-divider *ngIf="data[4].length !== 0"></mat-divider>
             </div>
             <br>
         </div>
         <br>
-        <h3>Management & Royalty Splits</h3>
-        <br>
+        <h2>Management & Royalty Splits</h2>
         <div>
-            <h4>General Royalty Splits</h4>
-            <!-- <br> -->
+            <strong>General Royalty Splits</strong>
             <div class="row">
                 <div class="col-md-6">Percentage of income going to Master Side</div>
                 <div class="col-md-6" [innerHtml]="formData.master_share"></div>
@@ -248,7 +241,7 @@
             <br>
 
             <div class="row">
-                <div class="col-md-3">Master Side Royalty Split:</div>
+                <div class="col-3 strong" >Master Side Royalty Split:</div>
             </div>
             <div>
                 <mat-list class="margin">
@@ -258,28 +251,25 @@
                         <div class="col-md-3">Manages Contract</div>
                         <div class="col-md-3">Weight</div>
                     </div>
-                    <mat-list-item *ngFor="let data of masterRoyalty,  index as i">
-                        <div class="col-md-3" [innerHtml]="data.muserName"></div>
-                        <div class="col-md-3" [innerHtml]="data.income"></div>
-                        <div class="col-md-3" [innerHtml]="data.management"></div>
-                        <div class="col-md-3" [innerHtml]="data.weight"></div>
+                    <mat-list-item *ngFor="let val of masterRoyalty,  index as i">
+                        <div class="col-md-3" [innerHtml]="val.muserName"></div>
+                        <div class="col-md-3" [innerHtml]="val.income"></div>
+                        <div class="col-md-3" [innerHtml]="val.management"></div>
+                        <div class="col-md-3" [innerHtml]="val.weight"></div>
                     </mat-list-item>
                 </mat-list>
-                <mat-divider *ngIf="masterRoyalty.lenght !== 0"></mat-divider>
-                <!-- <mat-divider></mat-divider> -->
-                
+                <mat-divider *ngIf="data[5].lenght !== 0"></mat-divider>
             </div>
             <br>
-            
+
             <div class="row">
                 <div class="col-md-6">Threshold for a change to take place</div>
                 <div class="col-md-6" [innerHtml]="formData.management_threshold"></div>
             </div>
             <br>
 
-            <h4>Composition Side Royalty Split</h4>
             <div class="row">
-                <div class="col-md-3">Composition Side Royalty Split:</div>
+                <div class="col-md-3 strong">Composition Side Royalty Split:</div>
             </div>
             <div>
                 <mat-list class="margin">
@@ -289,23 +279,21 @@
                         <div class="col-md-3">Manages Contract</div>
                         <div class="col-md-3">Weight</div>
                     </div>
-                    <mat-list-item *ngFor="let data of compRoyalty,  index as i">
-                        <div class="col-md-3" [innerHtml]="data.muserName"></div>
-                        <div class="col-md-3" [innerHtml]="data.income"></div>
-                        <div class="col-md-3" [innerHtml]="data.management"></div>
-                        <div class="col-md-3" [innerHtml]="data.weight"></div>
+                    <mat-list-item *ngFor="let val of compRoyalty,  index as i">
+                        <div class="col-md-3" [innerHtml]="val.muserName"></div>
+                        <div class="col-md-3" [innerHtml]="val.income"></div>
+                        <div class="col-md-3" [innerHtml]="val.management"></div>
+                        <div class="col-md-3" [innerHtml]="val.weight"></div>
                     </mat-list-item>
                 </mat-list>
-                <mat-divider *ngIf="compRoyalty.length !== 0"></mat-divider>
-                <!-- <mat-divider></mat-divider> -->
-                
+                <mat-divider *ngIf="data[6].length !== 0"></mat-divider>
             </div>
             <br>
             <div class="row">
-                    <div class="col-md-6">Threshold for a change to take place</div>
-                    <div class="col-md-6" [innerHtml]="formData.management_threshold_comp"></div>
-                </div>
-                <br>
+                <div class="col-md-6">Threshold for a change to take place</div>
+                <div class="col-md-6" [innerHtml]="formData.management_threshold_comp"></div>
+            </div>
+            <br>
         </div>
     </div>
     <br>

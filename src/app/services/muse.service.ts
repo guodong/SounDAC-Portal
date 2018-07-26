@@ -4,17 +4,24 @@ import { Observable, Observer } from 'rxjs';
 
 // Services
 import { AlertService } from './alert.service';
+import { AuthService } from './auth.service';
 
 // Api
 import * as muse from 'museblockchain-js';
 import { MuseAccountHistory } from '../models/muse-account-history';
 
+import { MuseKeys } from '../models/muse-keys';
+import { MuseAccount } from '../models/muse-account';
+
 @Injectable()
 export class MuseService {
 
   constructor(
-    private alertService: AlertService
+    private alertService: AlertService,
+    private auth: AuthService,
   ) { }
+
+  account: MuseAccount = new MuseAccount();
 
   setMuseSocket() {
     muse.config.set('websocket', 'wss://api.muse.blckchnd.com');
@@ -173,40 +180,90 @@ export class MuseService {
     });
   }
 
-  postContent(authKey, muserName, content) {
+
+  // loadPrivateKeys(muserName: string) {
+  //   const password = this.auth.user.getPassword();
+  //   this.auth.getPrivateKeys(muserName, password).then((keys: MuseKeys) => {
+  //     this.account.keys.active = keys.active;
+  //   });
+  // }
+
+  postContent(password, muserName, content) {
     this.setMuseSocket();
-    const privateKeys = muse.auth.getPrivateKeys(muserName, authKey);
-
+    const that = this;
     return new Promise(function (resolve, reject) {
-        console.log(content);
-        muse.broadcast.content(
-          privateKeys.active,
-          muserName,
-          content.url,
-          content.album_meta,
-          content.track_meta,
-          content.comp_meta,
-          content.distributions,
-          content.management,
-          content.management_threshold,
-          content.distributionsComp,
-          content.managementComp,
-          content.management_threshold_comp,
-          content.playing_reward,
-          content.publishers_share,
-          function (err, success) {
+      that.auth.getPrivateKeys(muserName, password).then((keys: MuseKeys) => {
+        
+      muse.broadcast.content(
+        keys.active,
+        muserName,
+        content.url,
+        {
+          part_of_album: content.album_meta.partOfAlbum,
+          album_title: content.album_meta.albumTitle,
+          album_artist: content.album_meta.albumArtists,
+          genre_1: content.album_meta.albumGenre1,
+          genre_2: content.album_meta.albumGenre2,
+          country_of_origin: content.album_meta.countryOrigin,
+          explicit_: content.album_meta.explicit,
+          p_line: content.album_meta.albumPLine,
+          c_line: content.album_meta.albumCLine,
+          upc_or_ean: content.album_meta.upcEan,
+          release_date: content.album_meta.releaseDate,
+          release_year: content.album_meta.releaseYear,
+          sales_start_date: content.album_meta.salesStartDate,
+          album_producer: content.album_meta.albumProducer,
+          album_type: content.album_meta.albumType,
+          master_label_name: content.album_meta.masterLabelName,
+          display_label_name: content.album_meta.displayLabelName,
+        },
+        {
+          track_title: content.track_meta.trackTitle,
+          ISRC: content.track_meta.isrc,
+          track_artists: content.track_meta.trackArtists,
+          featured_artist: content.track_meta.featuredArtist,
+          featured_artist_ISNI: content.track_meta.featuredArtistIsni,
+          track_producer: content.track_meta.trackProducer,
+          genre_1: content.track_meta.trackGenre1,
+          genre_2: content.track_meta.trackGenre2,
+          p_line: content.track_meta.trackPLine,
+          track_no: content.track_meta.trackNo,
+          track_volume: content.track_meta.trackVolumeNo,
+          copyright: content.track_meta.copyright,
+          track_duration: content.track_meta.trackDuration,
+          samples: content.track_meta.hasSample,
+        },
+        {
+          composition_title: content.comp_meta.compTitle,
+          alternate_composition_title: content.comp_meta.compTitleAlt,
+          ISWC: content.comp_meta.compTitleIswc,
+          third_party_publishers: content.comp_meta.isThirdPartyPublishers,
+          publishers: content.comp_meta.publishers,
+          writers: content.comp_meta.writers,
+          PRO: content.comp_meta.performingRightsOrg,
+        },
+        
+        content.distributions,
+        content.management,
+        content.management_threshold,
+        content.distributionsComp,
+        content.managementComp,
+        content.management_threshold_comp,
+        content.playing_reward,
+        content.publishers_share,
 
-            if (err) {
-              reject(err);
-            } else {
-              resolve(success);
-            }
-          });
+        function (err, success) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(success);
+          }
+        });
     }).catch((err) => {
       this.alertService.showErrorMessage('postContent(): ' + err);
     });
+  });
   }
-
 
   muserExist(muserName): Promise<any> {
     return this.getAccount(muserName).then(

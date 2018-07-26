@@ -39,8 +39,8 @@
       this.form = fb.group({
         writer: fb.control(''),
         IPI_CAE: fb.control(''),
-        ISNI: fb.control(0),
-        publisher: fb.control('Self'),
+        ISNI: fb.control(''),
+        publisher: fb.control(''),
         role: fb.control(''),
       });
     }

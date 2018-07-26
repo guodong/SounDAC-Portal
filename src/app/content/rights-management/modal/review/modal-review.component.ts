@@ -27,10 +27,10 @@ export class ModalReviewComponent implements OnInit {
 
   ngOnInit() {
     this.formData = this.data[0];
-    this.trackArtists = this.data[1];
-    this.albumArtists = this.data[2];
-    this.writers = this.data[3];
-    this.publishers = this.data[4];
+    this.trackArtists = this.data[1].value;
+    this.albumArtists = this.data[2].value;
+    this.writers = this.data[3].value;
+    this.publishers = this.data[4].value;
     this.masterRoyalty = this.data[5];
     this.compRoyalty = this.data[6];
   }
@@ -43,7 +43,6 @@ export class ModalReviewComponent implements OnInit {
         break;
       default:
         this.dialogRef.close();
-      // this.ui.hideLoading();
     }
   }
 
