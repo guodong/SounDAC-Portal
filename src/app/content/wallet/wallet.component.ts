@@ -185,33 +185,39 @@ export class WalletComponent implements OnInit, OnDestroy {
 
     this.dialogRefTrans = this.dialog.open(ModalTransferComponent);
     this.dialogRefTrans.afterClosed().subscribe(data => {
-      this.ui.showLoading();
-      this.museService.transferMuse(this.muserName, this.account.keys.active, data.transferto, data.amount, data.memo); // ... - Change active key back to password once blockchain fork happens
+      if (data) {
+        this.ui.showLoading();
+        this.museService.transferMuse(this.muserName, this.account.keys.active, data.transferto, data.amount, data.memo); // ... - Change active key back to password once blockchain fork happens
+      }
     });
 
   }
 
   vestMuse() {
     this.dialogRefVest = this.dialog.open(ModalDialogVestComponent);
-    const authPassword = this.auth.user.getPassword();
+    // const authPassword = this.auth.user.getPassword();
     this.dialogRefVest.afterClosed().subscribe(data => {
-      this.ui.showLoading();
-      this.museService.transferMusetoVest(this.muserName, this.account.keys.active, data); // ... - Change active key back to password once blockchain fork happens
+      if (data) {
+        this.ui.showLoading();
+        this.museService.transferMusetoVest(this.muserName, this.account.keys.active, data); // ... - Change active key back to password once blockchain fork happens
+      }
     });
   }
 
   withdrawVest() {
     this.dialogRefWithd = this.dialog.open(ModalWithdrawComponent);
-    const authPassword = this.auth.user.getPassword();
+    // const authPassword = this.auth.user.getPassword();
     this.dialogRefWithd.afterClosed().subscribe(data => {
-      this.ui.showLoading();
-      this.museService.withdrawVesting(this.muserName, this.account.keys.active, data); // ... - Change active key back to password once blockchain fork happens
+      if (data) {
+        this.ui.showLoading();
+        this.museService.withdrawVesting(this.muserName, this.account.keys.active, data); // ... - Change active key back to password once blockchain fork happens
+      }
     });
   }
 
   cancelWithdraw() {
     this.ui.showLoading();
-    const authPassword = this.auth.user.getPassword();
+    // const authPassword = this.auth.user.getPassword();
     this.museService.withdrawVesting(this.muserName, this.account.keys.active, 0); // ... - Change active key back to password once blockchain fork happens
   }
 
