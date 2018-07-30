@@ -823,7 +823,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
 
               const normDistBp = this.normalizeSplitVal(this.contentForm.get('tempDistributionsComp.bp').value);
 
-              this.distributions.push(
+              this.distributionsComp.push(
                 this.fb.control({
                   payee: this.contentForm.get('tempDistributionsComp.payee').value,
                   bp: normDistBp,
