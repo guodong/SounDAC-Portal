@@ -22,7 +22,7 @@ export class LoginComponent {
 
     // Build Form
     this.form = fb.group({
-      muserName: fb.control('', Validators.required),
+      userName: fb.control('', Validators.required),
       password: fb.control('', Validators.required)
     });
 
@@ -34,7 +34,7 @@ export class LoginComponent {
 
     // Building new User
     const user = new User();
-    user.musername = this.form.get('muserName').value; // Can pass email in this field too for museconnect
+    user.musername = this.form.get('userName').value; // Can pass email in this field too for sdac gateway
     user.password = this.form.get('password').value;
 
     // Login with User

@@ -1,4 +1,4 @@
-export class MuseKeys {
+export class SdacKeys {
 
     constructor() {
         this.active = '';

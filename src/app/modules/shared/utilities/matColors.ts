@@ -5,7 +5,7 @@ const white12 = 'rgba(white, 0.12)';
 const black6 = 'rgba(black, 0.06)';
 const white6 = 'rgba(white, 0.06)';
 const matColors = {
-    'muse': { A100: '#B1387D' },
+    'sdac': { A100: '#B1387D' },
     'red': {
         50: '#ffebee',
         100: '#ffcdd2',

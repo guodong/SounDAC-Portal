@@ -10,7 +10,7 @@ import { ModalPublishersComponent } from '../modal/publishers/modal-publishers.c
 import { ModalArtistComponent } from '../modal/artist/modal-artist.component';
 import { ModalWritersComponent } from '../modal/writers/modal-writers.component';
 import { AuthService } from '../../../services/auth.service';
-import { MuseService } from '../../../services/muse.service';
+import { SdacService } from '../../../services/sdac.service';
 import { AlertService } from '../../../services/alert.service';
 import { AlertBtnText } from '../../../modules/shared/utilities/alert-btn-text.enums';
 import { ErrorCodes } from '../../../modules/shared/utilities/error-codes.enums';
@@ -32,7 +32,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
   constructor(
     private auth: AuthService,
     private fb: FormBuilder,
-    private museService: MuseService,
+    private sdacService: SdacService,
     private alert: AlertService,
     private dialog: MatDialog,
     private datePipe: DatePipe,
@@ -50,7 +50,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
   dialogRefArtist: MatDialogRef<ModalArtistComponent>;
   dialogRefWriters: MatDialogRef<ModalWritersComponent>;
   dialogRefReview: MatDialogRef<ModalReviewComponent>;
-  muserName: string;
+  userName: string;
   maxDate: Date;
   maxYear: number;
   maxBp: number;
@@ -84,7 +84,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
   compRoyaltySplit = [];
 
   // masterManagesContract = false;
-  // managesCompContract = false;
+  // compManagesContract = false;
   isOneOwner = false;
   // soleOwner = false;
   // endregion
@@ -195,7 +195,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
     trackProducer: 'A PARTY RESPONSIBLE FOR AN ARTISTIC INPUT TO THE PRODUCTION OF A RESOURCE (E.G. A SOUNDRECORDING OR AUDIOVISUAL RECORDING).',
     releaseDate: 'THE ORIGINAL RELEASE DATE (YYYY/MM/DD) MUST BE THE EARLIEST DATE THAT THE ORIGINAL PRODUCT WAS FIRST RELEASED REGARDLESS OF THE RELEASING LABEL, OR FORMAT TYPE.',
     releaseYear: 'THE ORIGINAL RELEASE DATE YEAR (YYYY)',
-    salesStartDate: 'THE SALES START DATE (YYYY/MM/DD) IS THE DATE WHEN CONTENT BECOMES AVAILABLE ON MUSE.',
+    salesStartDate: 'THE SALES START DATE (YYYY/MM/DD) IS THE DATE WHEN CONTENT BECOMES AVAILABLE ON SOUNDAC.',
     upcEan: 'SET OF NUMBERS THAT IDENTIFY A PACKAGED COLLECTION OF MUSIC',
     albumTitle: 'ALBUM TITLE MUST MATCH THE ORIGINAL TITLE UPON ITS INITIAL RELEASE.',
     partOfAlbum: 'CHECK IF DOES THE TRACK BELONGS TO AN ALBUM',
@@ -224,7 +224,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.subscription = this.auth.user$.subscribe(user => {
       if (user) {
-        this.muserName = user.musername;
+        this.userName = user.musername;
       }
     });
 
@@ -381,7 +381,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
 
       soleOwner: false,
       masterManagesContract: false,
-      managesCompContract: false,
+      compManagesContract: false,
 
 
       // isOneOwner: false, // TODO: Move variable to inside form - here
@@ -478,12 +478,12 @@ export class ContentComponent implements OnInit, AfterViewInit {
     this.dialogRefWriters.afterClosed().subscribe(
       data => {
         if (data !== undefined) {
-          if (data.ISNI === ''){
+          if (data.ISNI === '') {
             data.ISNI = 0;
           }
 
           this.writers.push(
-            
+
             this.fb.control({
               writer: data.writer,
               IPI_CAE: data.IPI_CAE,
@@ -578,10 +578,10 @@ export class ContentComponent implements OnInit, AfterViewInit {
 
   updateManagesCompsContract(value?) {
     if (value) {
-      this.contentForm.patchValue({ masterManagesContract: true });
+      this.contentForm.patchValue({ compManagesContract: true });
     }
     else {
-      this.contentForm.patchValue({ masterManagesContract: false });
+      this.contentForm.patchValue({ compManagesContract: false });
       this.contentForm.get('tempManagementComp').patchValue({ percentage: null });
     }
   }
@@ -684,7 +684,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
       this.contentForm.get('management_threshold_comp').value === null ||
       this.contentForm.get('management_threshold_comp').value === '' ||
 
-      (this.contentForm.get('managesCompContract').value === true &&
+      (this.contentForm.get('compManagesContract').value === true &&
         (
           this.contentForm.get('tempManagementComp.percentage').value === null ||
           this.contentForm.get('tempManagementComp.percentage').value === '' ||
@@ -731,22 +731,14 @@ export class ContentComponent implements OnInit, AfterViewInit {
   addRoyaltySplit(listName) {
     switch (listName) {
       case 'masterRoyaltySplit':
-        this.museService.muserExist(this.contentForm.get('tempDistributions.payee').value).then(
-          muser => {
+        this.sdacService.userExist(this.contentForm.get('tempDistributions.payee').value).then(
+          user => {
             if (this.isOneOwner === true) {
-              muser = true;
+              user = true;
             }
-            if (muser === true) {
-              // if (this.contentForm.get('tempDistributions.bp').value !== null || this.contentForm.get('tempDistributions.bp').value !== undefined || this.contentForm.get('tempDistributions.bp').value !== 0) {
-              //   this.masterIncomeTotal = this.masterIncomeTotal + this.contentForm.get('tempDistributions.bp').value;
-              // }
-              // if (this.contentForm.get('tempManagement.percentage').value !== null || this.contentForm.get('tempManagement.percentage').value !== undefined || this.contentForm.get('tempManagement.percentage').value !== 0) {
-              //   this.masterWeightTotal = this.masterWeightTotal + this.contentForm.get('tempManagement.percentage').value;
-              // }
-
+            if (user === true) {
               let managementValue = '';
 
-              // if (this.masterManagesContract === true) {
               if (this.contentForm.get('masterManagesContract').value === true) {
                 this.contentForm.patchValue({ masterManagesContract: true });
                 managementValue = 'Contract Manager';
@@ -755,7 +747,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
               }
 
               this.masterRoyaltySplit.push({
-                muserName: this.contentForm.get('tempDistributions.payee').value,
+                userName: this.contentForm.get('tempDistributions.payee').value,
                 income: this.contentForm.get('tempDistributions.bp').value,
                 management: managementValue,
                 weight: this.contentForm.get('tempManagement.percentage').value,
@@ -767,19 +759,13 @@ export class ContentComponent implements OnInit, AfterViewInit {
               if (this.contentForm.get('tempManagement.percentage').value !== null || this.contentForm.get('tempManagement.percentage').value !== undefined || this.contentForm.get('tempManagement.percentage').value !== 0) {
                 this.masterWeightTotal = this.masterWeightTotal + this.contentForm.get('tempManagement.percentage').value;
               }
-              
 
-
-
-              // alert('TD: ' + this.contentForm.get('tempDistributions.bp').value);
               const normDistBp = this.normalizeSplitVal(this.contentForm.get('tempDistributions.bp').value);
-              // this.contentForm.patchValue({ publishers_share: normDistBp });
 
               this.distributions.push(
                 this.fb.control({
                   payee: this.contentForm.get('tempDistributions.payee').value,
                   bp: normDistBp,
-                  // bp: this.contentForm.get('tempDistributions.bp').value,
                 }));
 
 
@@ -793,53 +779,58 @@ export class ContentComponent implements OnInit, AfterViewInit {
                   this.showMasterThreshold();
                 }
               }
+
               this.contentForm.get('tempDistributions').patchValue({ payee: null });
               this.contentForm.get('tempDistributions').patchValue({ bp: '' });
               this.contentForm.get('tempManagement').patchValue({ voter: null });
               this.contentForm.get('tempManagement').patchValue({ percentage: '' });
+              this.contentForm.patchValue({ masterManagesContract: false });
+
             }
 
             else {
-              this.alert.showErrorMessage(ErrorCodes.muserNameNotFound);
+              this.alert.showErrorMessage(ErrorCodes.userNameNotFound);
             }
           });
         break;
       case 'compRoyaltySplit':
-        this.museService.muserExist(this.contentForm.get('tempDistributionsComp.payee').value).then(
-          muser => {
-            if (muser === true) {
-              if (this.contentForm.get('tempDistributionsComp.bp').value !== null || this.contentForm.get('tempDistributionsComp.bp').value !== undefined) {
-                this.compIncomeTotal = this.compIncomeTotal + this.contentForm.get('tempDistributionsComp.bp').value;
-              }
-              if (this.contentForm.get('tempManagementComp.percentage').value !== null || this.contentForm.get('tempManagementComp.percentage').value !== undefined) {
-                this.compWeightTotal = this.compWeightTotal + this.contentForm.get('tempManagementComp.percentage').value;
-              }
+        this.sdacService.userExist(this.contentForm.get('tempDistributionsComp.payee').value).then(
+          user => {
+            if (user === true) {
 
               let managementCompValue = '';
 
-              if (this.contentForm.get('managesCompContract').value === true) {
+              if (this.contentForm.get('compManagesContract').value === true) {
+                this.contentForm.patchValue({ compManagesContract: true });
                 managementCompValue = 'Contract Manager';
               } else {
                 this.contentForm.get('tempManagementComp').patchValue({ percentage: 0 });
               }
 
               this.compRoyaltySplit.push({
-                muserName: this.contentForm.get('tempDistributionsComp.payee').value,
+                userName: this.contentForm.get('tempDistributionsComp.payee').value,
                 income: this.contentForm.get('tempDistributionsComp.bp').value,
                 management: managementCompValue,
                 weight: this.contentForm.get('tempManagementComp.percentage').value,
               });
 
+              if (this.compRoyaltySplit.length !== 0) {
+                this.compIncomeTotal = this.compIncomeTotal + this.contentForm.get('tempDistributionsComp.bp').value;
+              }
+              if (this.contentForm.get('tempManagementComp.percentage').value !== null || this.contentForm.get('tempManagementComp.percentage').value !== undefined || this.contentForm.get('tempManagementComp.percentage').value !== 0) {
+                this.compWeightTotal = this.compWeightTotal + this.contentForm.get('tempManagementComp.percentage').value;
+              }
+
               const normDistBp = this.normalizeSplitVal(this.contentForm.get('tempDistributionsComp.bp').value);
 
-              this.distributionsComp.push(
+              this.distributions.push(
                 this.fb.control({
                   payee: this.contentForm.get('tempDistributionsComp.payee').value,
                   bp: normDistBp,
-                  // bp: this.contentForm.get('tempDistributionsComp.bp').value,
                 }));
 
-              if (this.contentForm.get('managesCompContract').value === true) {
+
+              if (this.contentForm.get('compManagesContract').value === true) {
                 this.managementComp.push(
                   this.fb.control({
                     voter: this.contentForm.get('tempDistributionsComp.payee').value,
@@ -854,9 +845,10 @@ export class ContentComponent implements OnInit, AfterViewInit {
               this.contentForm.get('tempDistributionsComp').patchValue({ bp: '' });
               this.contentForm.get('tempManagementComp').patchValue({ voter: null });
               this.contentForm.get('tempManagementComp').patchValue({ percentage: '' });
+              this.contentForm.patchValue({ compManagesContract: false });
             }
             else {
-              this.alert.showErrorMessage(ErrorCodes.muserNameNotFound);
+              this.alert.showErrorMessage(ErrorCodes.userNameNotFound);
             }
           });
         break;
@@ -870,59 +862,49 @@ export class ContentComponent implements OnInit, AfterViewInit {
         let masterWeight = 0;
 
         if (this.masterRoyaltySplit.length !== 0) {
-          this.masterRoyaltySplit.splice(i, 1);
+          masterIncome = this.masterRoyaltySplit[i].income;
+          masterWeight = this.masterRoyaltySplit[i].weight;
 
-          if (this.distributions.at(i).value.bp !== undefined || this.distributions.at(i).value.bp !== null || this.distributions.at(i).value.bp !== 0) {
-            masterIncome = this.denormalizeSplitVal(this.distributions.at(i).value.bp);
-            // masterIncome = this.distributions.at(i).value.bp;
-          }
+          this.masterRoyaltySplit.splice(i, 1);
 
           if (this.distributions.at(i) !== undefined || this.distributions.at(i) !== null) {
             this.distributions.removeAt(i);
           }
 
           if (this.management.length !== 0) {
-            masterWeight = this.management.at(i).value.percentage;
             this.management.removeAt(i);
           }
 
           this.masterIncomeTotal = this.masterIncomeTotal - masterIncome;
           this.masterWeightTotal = this.masterWeightTotal - masterWeight;
-
-          // console.log('005: ' + this.masterIncomeTotal);
-          // console.log('006: ' + this.masterWeightTotal);
         }
         break;
       case 'compRoyaltySplit':
         let compIncome = 0;
         let compWeight = 0;
+
         if (this.compRoyaltySplit.length !== 0) {
+          compIncome = this.compRoyaltySplit[i].income;
+          compWeight = this.compRoyaltySplit[i].weight;
+
           this.compRoyaltySplit.splice(i, 1);
-          if (this.distributionsComp.at(i).value.bp !== undefined || this.distributionsComp.at(i).value.bp !== null || this.distributionsComp.at(i).value.bp !== 0) {
-            compIncome = this.denormalizeSplitVal(this.distributionsComp.at(i).value.bp);
-          }
 
           if (this.distributionsComp.at(i) !== undefined || this.distributionsComp.at(i) !== null) {
             this.distributionsComp.removeAt(i);
           }
 
           if (this.managementComp.length !== 0) {
-            compWeight = this.managementComp.at(i).value.percentage;
             this.managementComp.removeAt(i);
           }
 
           this.compIncomeTotal = this.compIncomeTotal - compIncome;
           this.compWeightTotal = this.compWeightTotal - compWeight;
-
-          // this.compIncomeTotal = compIncome - this.compIncomeTotal;
-          // this.compWeightTotal = compWeight - this.compWeightTotal;
         }
         break;
       default:
         this[listName].removeAt(i);
     }
   }
-
 
   denormalizeForView() {
     if (this.contentForm.get('publishers_share').value !== 0) {
@@ -949,13 +931,13 @@ export class ContentComponent implements OnInit, AfterViewInit {
         this.normalizeFormValues().then((results) => {
           if (results !== undefined) {
             const authPassword = this.auth.user.getPassword();
-            this.museService.postContent(authPassword, this.auth.user.musername, results).then((success) => {
+            this.sdacService.postContent(authPassword, this.auth.user.musername, results).then((success) => {
               console.log('Success!');
               if (success !== undefined) {
                 const answer = this.alert.showSuccessMessage('Success!', 'Your content has been posted to SounDAC.');
                 this.resetValues(); // TODO: Pass in 'yes'/'no' reset partial or all based on answer
                 this.ui.hideLoading();
-              } else{
+              } else {
                 this.denormalizeForView();
               }
             }).catch((err) => {
@@ -1076,112 +1058,5 @@ export class ContentComponent implements OnInit, AfterViewInit {
       }
     });
   }
-
-
-  // region Original - Workingish
-  // normalizeFormValues() { // TODO: Double check all values are correct!!!
-  //   return new Promise((resolve, reject) => {
-  //     const isValid = this.customValidation();
-  //     if (isValid) {
-
-  //       const num_releaseDate = Number.parseInt(this.datePipe.transform(this.contentForm.value.album_meta.releaseDate, 'yyyyMMdd'));
-  //       const releaseYear = num_releaseDate.toString().substring(0, 4);
-  //       const num_releaseYear = Number.parseInt(releaseYear);
-  //       this.contentForm.get('album_meta').patchValue({ releaseYear: num_releaseYear });
-
-  //       const normPubShar = this.normalizeSplitVal(this.contentForm.value.publishers_share);
-  //       const normPlayReward = this.normalizeSplitVal(this.contentForm.value.playing_reward);
-
-  //       this.contentForm.patchValue({ publishers_share: normPubShar });
-  //       this.contentForm.patchValue({ playing_reward: normPlayReward });
-
-  //       // region Album
-  //       if (this.contentForm.value.album_meta.albumTitle === '') {
-  //         this.contentForm.get('album_meta').patchValue({ albumTitle: this.contentForm.value.track_meta.trackTitle });
-  //       }
-  //       if (this.contentForm.value.album_meta.albumGenre1 === '') {
-  //         this.contentForm.get('album_meta').patchValue({ albumGenre1: 0 });
-  //       }
-  //       if (this.contentForm.value.album_meta.albumGenre2 === '') {
-  //         this.contentForm.get('album_meta').patchValue({ albumGenre2: null });
-  //       }
-  //       // if (this.contentForm.value.album_meta.countryOrigin === '') {
-  //       //   this.contentForm.get('album_meta').patchValue({ countryOrigin: 'Undefined' });
-  //       // }
-  //       if (this.contentForm.value.album_meta.explicit === '') {
-  //         this.contentForm.get('album_meta').patchValue({ explicit: 0 });
-  //       }
-  //       if (this.contentForm.value.album_meta.upcEan === '') {
-  //         this.contentForm.get('album_meta').patchValue({ upcEan: 0 });
-  //       }
-  //       // endregion
-
-  //       // region Track
-  //       if (this.contentForm.value.track_meta.featuredArtistIsni === '') {
-  //         this.contentForm.get('track_meta').patchValue({ featuredArtistIsni: undefined });
-  //       }
-  //       if (this.contentForm.value.track_meta.trackGenre1 === '') {
-  //         this.contentForm.get('track_meta').patchValue({ trackGenre1: 0 });
-  //       }
-  //       if (this.contentForm.value.track_meta.trackGenre2 === '') {
-  //         this.contentForm.get('track_meta').patchValue({ trackGenre2: undefined });
-  //       }
-  //       if (this.contentForm.value.track_meta.trackNo === '') {
-  //         this.contentForm.get('track_meta').patchValue({ trackNo: 0 });
-  //       }
-  //       if (this.contentForm.value.track_meta.trackVolumeNo === '') {
-  //         this.contentForm.get('track_meta').patchValue({ trackVolumeNo: 0 });
-  //       }
-  //       if (this.contentForm.value.track_meta.trackDuration === '') {
-  //         this.contentForm.get('track_meta').patchValue({ trackDuration: 0 });
-  //       }
-  //       if (this.contentForm.value.track_meta.hasSample === '') {
-  //         this.contentForm.get('track_meta').patchValue({ hasSample: false });
-  //       }
-  //       // endregion
-
-  //       // region Comp
-  //       if (this.publishers.length === 0) {
-  //         this.publishers.push(
-  //           this.fb.control({
-  //             publisher: ' ',
-  //             IPI_CAE: '',
-  //             ISNI: undefined
-  //           }));
-  //       }
-  //       // endregion
-
-  //       // region Distributions and Management
-
-  //       if (this.management.length === 1) {
-  //         this.contentForm.patchValue({
-  //           management_threshold: 100
-  //         });
-  //       }
-
-  //       if (this.managementComp.length === 1) {
-  //         this.contentForm.patchValue({
-  //           management_threshold_comp: 100,
-  //         });
-  //       }
-  //       // endregion
-  //       console.log(this.contentForm.value),
-  //         setTimeout(() => {
-
-  //           resolve(true);
-  //         },
-  //           5000);
-
-
-  //       // resolve(true);
-  //     } else {
-
-  //       this.alert.showErrorMessage(ErrorCodes.invalidContentForm);
-  //       reject(false);
-  //     }
-  //   });
-  // }
   // endregion
-
-    // endregion
 }

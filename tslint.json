@@ -112,13 +112,13 @@
     "directive-selector": [
       true,
       "attribute",
-      "muse",
+      "sdac",
       "camelCase"
     ],
     // "component-selector": [
     //     true,
     //     "element",
-    //     "muse",
+    //     "sdac",
     //     "kebabCase"
     // ],
     "use-input-property-decorator": true,

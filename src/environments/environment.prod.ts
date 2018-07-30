@@ -1,4 +1,4 @@
-import { faucet, faucetConfig, rightsManagementPortal, museConnect } from './private-config';
+import { faucet, faucetConfig, rightsManagementPortal, sdacApi } from './private-config';
 
 export const environment = {
   production: true,
@@ -6,5 +6,5 @@ export const environment = {
   blockchainFaucet: faucet,
   blockchainFaucetConfig: faucetConfig,
   rightsManagementPortal: rightsManagementPortal,
-  museConnect: museConnect
+  sdacApi: sdacApi
 };

@@ -7,7 +7,7 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 
 @NgModule({
   imports: [
-    AngularFireModule.initializeApp(environment.museConnect),
+    AngularFireModule.initializeApp(environment.sdacApi),
     AngularFireAuthModule,
   ],
   exports: [

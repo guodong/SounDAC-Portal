@@ -1,6 +1,9 @@
-<video autoplay muted loop id="videoBackground">
-  <source src="/assets/peertracks.mp4" type="video/mp4">
-</video>
+<section id="video_overlays">
+  <video id="videoBackground" playsinline="true" autoplay="true" muted="true" loop="true">
+    <source src="/assets/video.mp4" type="video/mp4">
+  </video>
+</section>
+
 
 <div class="container mt-5">
   <div class="row">
@@ -11,7 +14,7 @@
 
             <!--Image-->
             <div class="col-12 mb-3 text-center">
-              <img src="assets/img/muse.png" class="img-fluid logo">
+              <img src="assets/img/logo-txt-blk.png" class="logo">
             </div>
 
             <!--Form-->
@@ -22,9 +25,9 @@
                   <div class="col-12">
 
                     <mat-form-field>
-                      <input matInput type="text" placeholder="Musername or Email" formControlName="muserName" required>
-                      <mat-error *ngIf="form.controls.muserName.hasError('required')">
-                        <strong>Musername or Email is required</strong>
+                      <input matInput type="text" placeholder="Username or Email" formControlName="userName" required>
+                      <mat-error *ngIf="form.controls.userName.hasError('required')">
+                        <strong>Username or Email is required</strong>
                       </mat-error>
                     </mat-form-field>
 
