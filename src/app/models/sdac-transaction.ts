@@ -1,4 +1,4 @@
-export class MuseTransaction {
+export class SdacTransaction {
     transactionType: string;
     account: string;
     amount: string;

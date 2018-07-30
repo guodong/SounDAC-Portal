@@ -4,13 +4,13 @@ import { Router } from '@angular/router';
 
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore } from 'angularfire2/firestore';
-import * as muse from 'museblockchain-js';
+import * as sdac from 'museblockchain-js';
 
 import { AlertService } from './alert.service';
 import { UIService } from './ui.service';
 
 import { environment } from '../../environments/environment';
-import { MuseKeys } from '../models/muse-keys';
+import { SdacKeys } from '../models/sdac-keys';
 import { User } from '../models/user';
 import { Observable } from 'rxjs/Observable';
 import { UserService } from './user.service';
@@ -58,7 +58,7 @@ export class AuthService {
 
     this.ui.showLoading();
 
-    // Muse Connect Register
+    // Sdac API Register
     this.http.post(this.url + 'register', user).subscribe((response: any) => {
 
       // Firebase Login
@@ -101,7 +101,7 @@ export class AuthService {
 
     this.ui.showLoading();
 
-    // Muse Connect Login
+    // Sdac API Login
     this.http.post(this.url + 'login', user).subscribe((response: any) => {
 
       this.afAuth.auth.setPersistence('session').then(() => {
@@ -205,21 +205,21 @@ export class AuthService {
 
   // endregion
 
-  // region Muse
+  // region SDAC
 
   setSocket() {
-    muse.config.set('websocket', 'wss://api.muse.blckchnd.com');
+    sdac.config.set('websocket', 'wss://api.muse.blckchnd.com');
   }
 
-  getPrivateKeys(musername, password): Promise<void | MuseKeys> {
+  getPrivateKeys(musername, password): Promise<void | SdacKeys> {
 
     // Set Socket
     this.setSocket();
 
     // Get Keys
-    return new Promise<MuseKeys>(function (resolve, reject) {
+    return new Promise<SdacKeys>(function (resolve, reject) {
 
-      const keys = muse.auth.getPrivateKeys(musername, password, ['owner', 'active', 'basic', 'memo']);
+      const keys = sdac.auth.getPrivateKeys(musername, password, ['owner', 'active', 'basic', 'memo']);
 
       if (!keys) {
         reject('Failed to load keys.');
@@ -233,7 +233,7 @@ export class AuthService {
 
   }
 
-  updateAccountKeys(muserName, password, newPassword, ownerPubkey, activePubkey, basicPubkey, memoPubkey): Promise<void | boolean> {
+  updateAccountKeys(userName, password, newPassword, ownerPubkey, activePubkey, basicPubkey, memoPubkey): Promise<void | boolean> {
 
     const user = this.user;
     const alert = this.alert;
@@ -241,7 +241,7 @@ export class AuthService {
 
     return new Promise<boolean>(function (resolve, reject) {
 
-      muse.updateAccountKeys(muserName, password, ownerPubkey, activePubkey, basicPubkey, memoPubkey, (code, message) => {
+      sdac.updateAccountKeys(userName, password, ownerPubkey, activePubkey, basicPubkey, memoPubkey, (code, message) => {
 
         if (code === 0) {
 

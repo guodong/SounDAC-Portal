@@ -1,20 +1,20 @@
-import { MuseTransaction } from './muse-transaction';
+import { SdacTransaction } from './sdac-transaction';
 
-export class MuseAccountHistory {
+export class SdacAccountHistory {
 
     constructor(){}
 
     id: string;
     date: Date;
     block: number;
-    transaction: MuseTransaction;
+    transaction: SdacTransaction;
 
     mapHistory(accountHistory: any){
         // console.log(accountHistory); // Blockchain Object
         this.id = accountHistory.id;
         this.date = accountHistory.timestamp;
         this.block = accountHistory.block;
-        this.transaction = new MuseTransaction();
+        this.transaction = new SdacTransaction();
         this.transaction.mapTransaction(accountHistory.op);
     }
 

@@ -1,5 +1,5 @@
 export enum ErrorCodes {
-    muserNameAlreadyInUse = 'auth/app-deleted',
+    userNameAlreadyInUse = 'auth/app-deleted',
     emailAlreadyInUse = 'auth/app-not-authorized',
     argumentError = 'auth/argument-error',
     invalidApiKey = 'auth/invalid-api-key',
@@ -17,7 +17,7 @@ export enum ErrorCodes {
     invalidCredential = 'auth/invalid-credential',
     invalidVerificationCode = 'auth/invalid-verification-code',
     invalidVerificationId = 'auth/invalid-verification-id',
-    muserNameNotFound = 'muserNameNotFound',
+    userNameNotFound = 'userNameNotFound',
     wrongPassword = 'auth/wrong-password',
     invalidTesterKey = 'invalid-testerKey',
     invalidContentForm = 'invalidContentForm'

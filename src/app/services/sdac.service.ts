@@ -7,39 +7,39 @@ import { AlertService } from './alert.service';
 import { AuthService } from './auth.service';
 
 // Api
-import * as muse from 'museblockchain-js';
-import { MuseAccountHistory } from '../models/muse-account-history';
+import * as sdac from 'museblockchain-js';
+import { SdacAccountHistory } from '../models/sdac-account-history';
 
-import { MuseKeys } from '../models/muse-keys';
-import { MuseAccount } from '../models/muse-account';
+import { SdacKeys } from '../models/sdac-keys';
+import { SdacAccount } from '../models/sdac-account';
 
 @Injectable()
-export class MuseService {
+export class SdacService {
 
   constructor(
     private alertService: AlertService,
     private auth: AuthService,
   ) { }
 
-  account: MuseAccount = new MuseAccount();
+  account: SdacAccount = new SdacAccount();
 
-  setMuseSocket() {
-    muse.config.set('websocket', 'wss://api.muse.blckchnd.com');
-    // muse.config.set('websocket', 'ws://rpc.museblockchain.com');
+  setWebSocket() {
+    sdac.config.set('websocket', 'wss://api.muse.blckchnd.com');
+    // sdac.config.set('websocket', 'ws://rpc.museblockchain.com');
   }
 
-  getAccount(muserName): Promise<any> {
-    this.setMuseSocket();
-    return muse.api.getAccounts([muserName]).catch((err) => {
+  getAccount(userName): Promise<any> {
+    this.setWebSocket();
+    return sdac.api.getAccounts([userName]).catch((err) => {
       this.alertService.showErrorMessage('getAccount(): ' + err);
     });
   }
 
-  streamAccountInfo$(muserName): Observable<any> {
-    this.setMuseSocket();
+  streamAccountInfo$(userName): Observable<any> {
+    this.setWebSocket();
     return new Observable((observer: Observer<any>) => {
-      muse.api.streamOperationsAsync((err, result) => {
-        muse.api.getAccounts([muserName]).then((results => {
+      sdac.api.streamOperationsAsync((err, result) => {
+        sdac.api.getAccounts([userName]).then((results => {
           observer.next(results);
         }), error => {
           this.alertService.showErrorMessage('streamAccountInfo$(): ' + error);
@@ -48,11 +48,11 @@ export class MuseService {
     });
   }
 
-  getAccountHistory(muserName): Promise<void | MuseAccountHistory[]> {
-    this.setMuseSocket();
+  getAccountHistory(userName): Promise<void | SdacAccountHistory[]> {
+    this.setWebSocket();
 
-    return new Promise<MuseAccountHistory[]>(function (resolve, reject) {
-      muse.api.getAccountHistory(muserName, 9999, 24, function (error, result) {
+    return new Promise<SdacAccountHistory[]>(function (resolve, reject) {
+      sdac.api.getAccountHistory(userName, 9999, 24, function (error, result) {
 
 
         if (error) {
@@ -61,15 +61,15 @@ export class MuseService {
 
         if (!error) {
 
-          const MuseAccountHistories: MuseAccountHistory[] = [];
+          const SdacAccountHistories: SdacAccountHistory[] = [];
 
-          result.forEach(museHistory => {
-            const accountHistory: MuseAccountHistory = new MuseAccountHistory();
-            accountHistory.mapHistory(museHistory[1]);
-            MuseAccountHistories.push(accountHistory);
+          result.forEach(sdacHistory => {
+            const accountHistory: SdacAccountHistory = new SdacAccountHistory();
+            accountHistory.mapHistory(sdacHistory[1]);
+            SdacAccountHistories.push(accountHistory);
           });
 
-          resolve(MuseAccountHistories.reverse());
+          resolve(SdacAccountHistories.reverse());
 
         }
 
@@ -81,9 +81,9 @@ export class MuseService {
   }
 
   getWitnesses() {
-    this.setMuseSocket();
+    this.setWebSocket();
     return new Promise(function (resolve, reject) {
-      muse.api.getWitnessesByVote('', 100, function (err, success) {
+      sdac.api.getWitnessesByVote('', 100, function (err, success) {
         if (err) {
           reject(err);
         } else {
@@ -95,10 +95,10 @@ export class MuseService {
     });
   }
 
-  transferMuse(muserName, password, transferTo, amount, memo) {
-    this.setMuseSocket();
+  transferXsd(userName, password, transferTo, amount, memo) {
+    this.setWebSocket();
     return new Promise(function (resolve, reject) {
-      muse.transferFunds(muserName, password, transferTo, amount, memo, function (err, success) {
+      sdac.transferFunds(userName, password, transferTo, amount, memo, function (err, success) {
         if (err === -1) {
           reject(err);
         } else {
@@ -110,10 +110,10 @@ export class MuseService {
     });
   }
 
-  transferMusetoVest(muserName, password, amount) {
-    this.setMuseSocket();
+  transferXsdtoVest(userName, password, amount) {
+    this.setWebSocket();
     return new Promise(function (resolve, reject) {
-      muse.transferFundsToVestings(muserName, password, null, amount, function (err, success) {
+      sdac.transferFundsToVestings(userName, password, null, amount, function (err, success) {
         if (err === -1) {
           reject(err);
         } else {
@@ -121,14 +121,14 @@ export class MuseService {
         }
       });
     }).catch((err) => {
-      this.alertService.showErrorMessage('transferMusetoVest(): ' + err);
+      this.alertService.showErrorMessage('transferXsdtoVest(): ' + err);
     });
   }
 
-  withdrawVesting(muserName, password, amount) {
-    this.setMuseSocket();
+  withdrawVesting(userName, password, amount) {
+    this.setWebSocket();
     return new Promise(function (resolve, reject) {
-      muse.withdrawVesting(muserName, password, amount, function (err, success) {
+      sdac.withdrawVesting(userName, password, amount, function (err, success) {
         if (err === -1) {
           reject(err);
         } else {
@@ -140,10 +140,10 @@ export class MuseService {
     });
   }
 
-  voteWitness(muserName, password, witnessOwner: string, vote: boolean) {
-    this.setMuseSocket();
+  voteWitness(userName, password, witnessOwner: string, vote: boolean) {
+    this.setWebSocket();
     return new Promise(function (resolve, reject) {
-      muse.witnessVote(muserName, password, witnessOwner, vote, (code, message) => {
+      sdac.witnessVote(userName, password, witnessOwner, vote, (code, message) => {
         if (code === 1) {
           resolve(true);
         } else {
@@ -155,11 +155,11 @@ export class MuseService {
     });
   }
 
-  claimBalance(muserName, wif) {
-    this.setMuseSocket();
+  claimBalance(userName, wif) {
+    this.setWebSocket();
     return new Promise(function (resolve, reject) {
 
-      // muse.claimBalance(muserName, wif, (code, message) => {
+      // sdac.claimBalance(userName, wif, (code, message) => {
       //   if (code === 1) {
       //     resolve(true);
       //   } else {
@@ -167,7 +167,7 @@ export class MuseService {
       //   }
       // });
 
-      // muse.broadcast.balance_claim(musername, balance_to_claim, balance_owner_key, total_claimed, function (err, result) {
+      // sdac.broadcast.balance_claim(musername, balance_to_claim, balance_owner_key, total_claimed, function (err, result) {
       //   if (err) {
       //     reject(err);
       //   } else {
@@ -181,22 +181,22 @@ export class MuseService {
   }
 
 
-  // loadPrivateKeys(muserName: string) {
+  // loadPrivateKeys(userName: string) {
   //   const password = this.auth.user.getPassword();
-  //   this.auth.getPrivateKeys(muserName, password).then((keys: MuseKeys) => {
+  //   this.auth.getPrivateKeys(userName, password).then((keys: SdacKeys) => {
   //     this.account.keys.active = keys.active;
   //   });
   // }
 
-  postContent(password, muserName, content) {
-    this.setMuseSocket();
+  postContent(password, userName, content) {
+    this.setWebSocket();
     const that = this;
     return new Promise(function (resolve, reject) {
-      that.auth.getPrivateKeys(muserName, password).then((keys: MuseKeys) => {
+      that.auth.getPrivateKeys(userName, password).then((keys: SdacKeys) => {
         
-      muse.broadcast.content(
+      sdac.broadcast.content(
         keys.active,
-        muserName,
+        userName,
         content.url,
         {
           part_of_album: content.album_meta.partOfAlbum,
@@ -265,10 +265,10 @@ export class MuseService {
   });
   }
 
-  muserExist(muserName): Promise<any> {
-    return this.getAccount(muserName).then(
-      muser => {
-        if (muser.length !== 0) {
+  userExist(userName): Promise<any> {
+    return this.getAccount(userName).then(
+      user => {
+        if (user.length !== 0) {
           return true;
         } else {
           return false;

@@ -22,7 +22,7 @@ import { AlertService } from './services/alert.service';
 import { AuthService } from './services/auth.service';
 import { CoinMarketCapService } from './services/coin-market-cap.service';
 import { FirestoreService } from './services/firestore.service';
-import { MuseService } from './services/muse.service';
+import { SdacService } from './services/sdac.service';
 import { UIService } from './services/ui.service';
 import { UserService } from './services/user.service';
 
@@ -51,6 +51,7 @@ import { ModalDialogVestComponent } from './content/wallet/modal/modal-vest.comp
 import { ModalWithdrawComponent } from './content/wallet/modal/modal-withdraw.component';
 import { PageNotFoundComponent } from './content/defaults/page-not-found/page-not-found.component';
 import { RegisterComponent } from './content/defaults/register/register.component';
+import { RegisterExternalComponent } from './content/defaults/register-external/register-external.component';
 import { TacComponent } from './content/defaults/register/terms-conditions/tac.component';
 import { WalletComponent } from './content/wallet/wallet.component';
 import { RightsManagementComponent } from './content/rights-management/rights-management.component';
@@ -69,11 +70,12 @@ import { ModalWritersComponent } from './content/rights-management/modal/writers
 
 // Firebase Initialization
 firebase.initializeApp(environment.rightsManagementPortal, 'rightsManagementPortal'); // Rights Management Portal
-firebase.initializeApp(environment.museConnect, 'museConnect'); // Muse Connect
+firebase.initializeApp(environment.sdacApi, 'sdacApi'); // Sdac API
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'register-external', component: RegisterExternalComponent },
   {
     path: '', component: LayoutComponent, canActivate: [UserGuard], children: [
       { path: '', component: HomeComponent },
@@ -118,6 +120,7 @@ const routes: Routes = [
     HomeComponent,
     LoginComponent,
     RegisterComponent,
+    RegisterExternalComponent,
     SearchComponent,
     TacComponent,
     PageNotFoundComponent,
@@ -153,7 +156,7 @@ const routes: Routes = [
     AuthService,
     CoinMarketCapService,
     FirestoreService,
-    MuseService,
+    SdacService,
     UIService,
     UserService,
     DatePipe

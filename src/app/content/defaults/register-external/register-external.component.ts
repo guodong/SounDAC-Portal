@@ -14,22 +14,18 @@ import { UIService } from '../../../services/ui.service';
 
 // Components
 import { LoadingDialogComponent } from '../../../layout/dialogs/loading/loading.dialog.component';
-import { TacComponent } from './terms-conditions/tac.component';
+import { TacComponent } from '../register/terms-conditions/tac.component';
 
 // Models
 import { User } from '../../../models/user';
 
 @Component({
-  selector: 'register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
-
-  // host: {
-  //   '[@fadeInAnimation]': 'true'
-  // },
+  selector: 'register-external',
+  templateUrl: './register-external.component.html',
+  styleUrls: ['./register-external.component.scss'],
   animations: [fadeInAnimation]
 })
-export class RegisterComponent {
+export class RegisterExternalComponent {
 
   constructor(
     private auth: AuthService,
@@ -59,7 +55,7 @@ export class RegisterComponent {
       disableClose: true,
       data: {
         title: 'Terms and Conditions',
-        message: '\<p>\<b>Disclaimer: The Rights Management Portal ("RMP") is currently in its Beta stage.</b></p>\n<p> By accessing the RMP, you acknowledge and agree to be bound by the Disclaimer.\n If you do not agree to the Disclaimer, please do not use the RMP.\n Your use of the RMP constitutes your agreement to the Disclaimer.\n </p>\n<p><b>This is a Beta Release of the Rights Management Portal. While we have done our best to ensure the accuracy\n of the application, any data presented by the RMP is offered \n with the assumption that you understand the RMP may be erroneous. </b></p>\n<p>By proceeding with usage of the RMP Application, you agree that the RMP and affiliated companies are not liable for \n any lost assets or the accuracy of its data. \n We would like to thank you for taking part in this Beta Release.\nYour feedback will help us greatly improve the quality of the Rights Management Portal.\n</p>\n',
+        message: '\<p>\<b>Disclaimer: PeerTracks is currently in its Beta stage.</b></p>\n<p> By accessing the PeerTracks, you acknowledge and agree to be bound by the Disclaimer.\n If you do not agree to the Disclaimer, please do not use PeerTracks.\n Your use of the PeerTracks constitutes your agreement to the Disclaimer.\n </p>\n<p><b>This is a Beta Release of PeerTracks. While we have done our best to ensure the accuracy\n of the application, any data presented by PeerTracks is offered \n with the assumption that you understand PeerTracks may be erroneous. </b></p>\n<p>By proceeding with usage of the PeerTracks Application, you agree that PeerTracks and affiliated companies are not liable for \n any lost assets or the accuracy of its data. \n We would like to thank you for taking part in this Beta Release.\nYour feedback will help us greatly improve the quality of PeerTracks.\n</p>\n',
         btnEnd: AlertBtnText.Close
       }
     });
@@ -83,6 +79,7 @@ export class RegisterComponent {
 
     // Register
     this.auth.register(user);
+
   }
 
 }

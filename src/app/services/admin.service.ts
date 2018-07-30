@@ -34,14 +34,14 @@ export class AdminService {
       let i: number = 0;
 
       RmpUsers.forEach(rmpAuthUsers => {
-        firebase.app('rightsManagementPortal').database().ref('musers/' + rmpAuthUsers.localId).once('value').then(function (snapshot) {
+        firebase.app('rightsManagementPortal').database().ref('users/' + rmpAuthUsers.localId).once('value').then(function (snapshot) {
           if (snapshot.val()) {
 
-            const user: User = new User(snapshot.val().uid, snapshot.val().muserName.toLowerCase(), snapshot.val().email);
+            const user: User = new User(snapshot.val().uid, snapshot.val().userName.toLowerCase(), snapshot.val().email);
             user.dateCreated = snapshot.val().dateAdded;
             user.roles = Object.assign({}, user.roles);
 
-            firebase.app('museConnect').firestore().collection('users').doc(user.id).set(Object.assign({}, user)).then(function () {
+            firebase.app('sdacApi').firestore().collection('users').doc(user.id).set(Object.assign({}, user)).then(function () {
 
               // Increment for Progress
               i++;

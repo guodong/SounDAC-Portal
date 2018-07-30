@@ -305,7 +305,7 @@
                 <div class="col-12 my-2">
                   <mat-checkbox matInput formControlName="soleOwner" [matTooltip]="toolTips.oneOwner" [matTooltipShowDelay]="toolTips.delay"
                     [disabled]="masterRoyaltySplit.length > 1" (change)="oneOwner()">
-                    <span [innerHtml]="'Content is 100% owned and managed by ' + muserName"></span>
+                    <span [innerHtml]="'Content is 100% owned and managed by ' + userName"></span>
                   </mat-checkbox>
                 </div>
               </div>
@@ -371,22 +371,19 @@
                     <mat-form-field>
                       <input matInput type="number" min=1 [max]="playRewardMax" formControlName="playing_reward" [innerHtml]="contentForm.get('playing_reward').value">
                     </mat-form-field>
-                    <mat-error *ngIf="contentForm.get('playing_reward').value > contentForm.get('master_share').value || contentForm.get('playing_reward').value === ''|| contentForm.get('playing_reward').value === null">
+                    <mat-error *ngIf="contentForm.get('playing_reward').value > contentForm.get('master_share').value || contentForm.get('playing_reward').value === ''|| contentForm.get('playing_reward').value === null || contentForm.get('playing_reward').value === 0">
                       <strong>Streaming Platform income must be 1 to {{playRewardMax}}</strong>
                     </mat-error>
                   </div>
-
                 </div>
-
 
               </div>
 
               <h1>Master Side Royalty Split:</h1>
-
               <div class="row my-1">
                 <div class="col-12 my-2">
                   <mat-form-field formGroupName="tempDistributions">
-                    <input matInput placeholder="Muser Name" formControlName="payee" [attr.disabled]="sliderDisabled?'':null">
+                    <input matInput placeholder="Username" formControlName="payee" [attr.disabled]="sliderDisabled?'':null">
                   </mat-form-field>
                   <mat-form-field formGroupName="tempDistributions">
                     <input type="number" min=0 max=100 matInput placeholder="Percentage of Income" formControlName="bp" [attr.disabled]="sliderDisabled?'':null">
@@ -447,7 +444,7 @@
                   <div class="col-md-12">
                     <mat-list *ngIf="masterRoyaltySplit.length !== 0">
                       <div class="row my-1">
-                        <div class="col-md-1">User Name</div>
+                        <div class="col-md-1">Username</div>
                         <div class="col-md-1">Income</div>
                         <div class="col-md-2">Management</div>
                         <div class="col-md-1">Weight</div>
@@ -455,7 +452,7 @@
                       </div>
                       <mat-divider class="col-md-6"></mat-divider>
                       <mat-list-item *ngFor="let data of masterRoyaltySplit,  index as i">
-                        <div class="col-md-1" [innerHtml]="data.muserName"></div>
+                        <div class="col-md-1" [innerHtml]="data.userName"></div>
                         <div class="col-md-1">
                           <div class="col-md-1" *ngIf="data.income !== 0" [innerHtml]="data.income"></div>
                         </div>
@@ -490,19 +487,19 @@
                     <div class="row my-1">
                       <div class="col-12 my-2">
                         <mat-form-field formGroupName="tempDistributionsComp">
-                          <input matInput placeholder="Muser Name" formControlName="payee">
+                          <input matInput placeholder="Username" formControlName="payee">
                         </mat-form-field>
                         <mat-form-field formGroupName="tempDistributionsComp">
                           <input type="number" min=0 max=100 matInput placeholder="Percentage of Income" formControlName="bp">
                         </mat-form-field>
 
                         <mat-checkbox class="margin" 
-                        formControlName="managesCompContract" 
-                        #managesCompContract id="managesCompContract" 
-                        (change)="updateManagesCompsContract(managesCompContract.checked)">
+                        formControlName="compManagesContract" 
+                        #compManagesContract id="compManagesContract" 
+                        (change)="updateManagesCompsContract(compManagesContract.checked)">
                           Manages Contract</mat-checkbox>
 
-                        <mat-form-field formGroupName="tempManagementComp" class="margin-right" *ngIf="managesCompContract.checked">
+                        <mat-form-field formGroupName="tempManagementComp" class="margin-right" *ngIf="compManagesContract.checked">
                           <input type="number" min=0 max=100 matInput placeholder="Weight" formControlName="percentage">
                         </mat-form-field>
                         <button mat-raised-button class="mat-purple-bg mt-16 mt-sm-0" (click)="addRoyaltySplit('compRoyaltySplit')" color="primary"
@@ -551,7 +548,7 @@
                     <div class="col-md-12">
                       <mat-list *ngIf="compRoyaltySplit.length !== 0">
                         <div class="row my-1">
-                          <div class="col-md-1">User Name</div>
+                          <div class="col-md-1">Username</div>
                           <div class="col-md-1">Income</div>
                           <div class="col-md-2">Management</div>
                           <div class="col-md-1">Weight</div>
@@ -559,7 +556,7 @@
                         </div>
                         <mat-divider class="col-md-6"></mat-divider>
                         <mat-list-item *ngFor="let data of compRoyaltySplit,  index as i">
-                          <div class="col-md-1" [innerHtml]="data.muserName"></div>
+                          <div class="col-md-1" [innerHtml]="data.userName"></div>
                           <div class="col-md-1">
                             <div class="col-md-1" *ngIf="data.income !== 0" [innerHtml]="data.income"></div>
                           </div>

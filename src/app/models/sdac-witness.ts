@@ -1,4 +1,4 @@
-export class MuseWitness {
+export class SdacWitness {
 
     constructor(){}
 
