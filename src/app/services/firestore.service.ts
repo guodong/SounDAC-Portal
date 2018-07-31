@@ -51,7 +51,7 @@ export class FirestoreService {
   }
 
   get timestamp() {
-    return firebase.firestore.FieldValue.serverTimestamp()
+    return firebase.firestore.FieldValue.serverTimestamp();
   }
 
   add<T>(ref: CollectionPredicate<T>, data, snackbarDisplay) {

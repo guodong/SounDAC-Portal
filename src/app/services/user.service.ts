@@ -27,7 +27,7 @@ export class UserService {
     }
 
     getUser(id: string): Observable<User> {
-        return this.http.get(this.url + id).map((res: User) => res = new User(res.id, res.musername, res.email, res.key, res.roles));
+        return this.http.get(this.url + id).map((res: User) => res = new User(res.id, res.username, res.email, res.key, res.roles));
     }
 
     addUser(user: User) {

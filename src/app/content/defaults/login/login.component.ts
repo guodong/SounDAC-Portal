@@ -22,8 +22,9 @@ export class LoginComponent {
 
     // Build Form
     this.form = fb.group({
-      userName: fb.control('', Validators.required),
-      password: fb.control('', Validators.required)
+      username: fb.control('', Validators.required),
+      password: fb.control('', Validators.required),
+      key: fb.control('')
     });
 
   }
@@ -34,11 +35,14 @@ export class LoginComponent {
 
     // Building new User
     const user = new User();
-    user.musername = this.form.get('userName').value; // Can pass email in this field too for sdac gateway
+    user.username = this.form.get('username').value; // Can pass email in this field too for sdac gateway
     user.password = this.form.get('password').value;
 
+    // Invitation Key
+    const key = this.form.get('key').value;
+
     // Login with User
-    this.auth.login(user);
+    this.auth.login(user, key);
 
   }
 

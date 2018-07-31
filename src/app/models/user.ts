@@ -5,16 +5,16 @@ import { Timestamp } from '../../../node_modules/@firebase/firestore-types';
 
 export class User {
 
-    constructor(id?: string, musername?: string, email?: string, key?: string, roles?: Roles) {
+    constructor(id?: string, username?: string, email?: string, key?: string, roles?: Roles) {
         id ? this.id = id : this.id = null;
-        musername ? this.musername = musername : this.musername = '';
+        username ? this.username = username : this.username = '';
         email ? this.email = email : this.email = '';
         key ? this.key = key : this.key = null;
         roles ? this.roles = roles : this.roles = new Roles();
     }
 
     id: string;
-    musername: string;
+    username: string;
     email: string;
     password: string;
     key: string;

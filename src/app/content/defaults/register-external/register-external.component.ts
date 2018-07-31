@@ -37,7 +37,7 @@ export class RegisterExternalComponent {
 
     // Build Form
     this.form = fb.group({
-      userName: fb.control('', Validators.required),
+      username: fb.control('', Validators.required),
       email: fb.control('', [Validators.required, Validators.email]),
       password: fb.control('', Validators.required),
       passwordConfirm: fb.control('', Validators.required),
@@ -73,7 +73,7 @@ export class RegisterExternalComponent {
 
     const user = new User();
 
-    user.musername = this.form.get('userName').value;
+    user.username = this.form.get('username').value;
     user.email = this.form.get('email').value;    
     user.password = this.form.get('password').value;
 

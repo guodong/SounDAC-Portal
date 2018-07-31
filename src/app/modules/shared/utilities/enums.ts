@@ -7,7 +7,7 @@ export enum AlertBtnText {
 }
 
 export enum ErrorCodes {
-    userNameAlreadyInUse = 'auth/app-deleted',
+    usernameAlreadyInUse = 'auth/app-deleted',
     emailAlreadyInUse = 'auth/app-not-authorized',
     argumentError = 'auth/argument-error',
     invalidApiKey = 'auth/invalid-api-key',

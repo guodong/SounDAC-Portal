@@ -7,7 +7,7 @@ export class MiniUser {
     this.logged = false;
   }
 
-  userName: string;
+  username: string;
   password: string;
   key: string;
   logged: boolean;
@@ -32,10 +32,10 @@ export class MiniUser {
   login(): boolean {
 
     // Verification of complete user
-    if (this.userName && this.password && this.key) {
+    if (this.username && this.password && this.key) {
 
       // Local Storage
-      localStorage.setItem('userName', this.userName);
+      localStorage.setItem('username', this.username);
       localStorage.setItem('password', this.password);
       localStorage.setItem('key', this.key);
 

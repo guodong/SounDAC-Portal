@@ -40,11 +40,11 @@
                   Transfer
                 </button>
                 <button mat-raised-button class="mat-purple-bg" (click)="vestXsd()">
-                  Transfer to Vesting
+                  Upgrade to VIP
                 </button>
               </div>
               <div class="col-12 my-2">
-                Tradeable tokens that may be transferred anywhere at anytime. XSD can be vested by clicking transfer to Vesting.
+                Tradeable tokens that may be transferred anywhere at anytime. XSD can be vested by clicking Upgrade to VIP.
               </div>
               <div class="col-12 my-1">
                 <mat-divider></mat-divider>
@@ -54,15 +54,15 @@
             <!--Vesting Balance-->
             <div class="row my-1">
               <div class="col-12 my-2">
-                <h3>Vests Balance:</h3>
+                <h3>VIP Balance:</h3>
                 <span [innerHtml]="account.Vestbalance"></span>
               </div>
               <div class="col-12 my-2">
                 <button mat-raised-button (click)="withdrawVest()" class="mat-purple-bg">
-                  Withdraw
+                  Downgrade VIP
                 </button>
                 <button mat-raised-button (click)="cancelWithdraw()" class="mat-purple-bg">
-                  Cancel Withdrawal
+                  Cancel Downgrade
                 </button>
               </div>
               <div class="col-12 my-2">
@@ -122,32 +122,32 @@
                     <mat-cell *matCellDef="let history">
 
                       <!--Created Account-->
-                      <ng-template [ngIf]="history.transaction.transactionType == 'account_create' && history.transaction.creator == userName">
+                      <ng-template [ngIf]="history.transaction.transactionType == 'account_create' && history.transaction.creator == username">
                         <span [innerHtml]="'Created Account ' + history.transaction.newAccountName"></span>
                       </ng-template>
 
                       <!--Account Creation-->
-                      <ng-template [ngIf]="history.transaction.transactionType == 'account_create' && history.transaction.newAccountName == userName">
+                      <ng-template [ngIf]="history.transaction.transactionType == 'account_create' && history.transaction.newAccountName == username">
                         <span [innerHtml]="'Account Creation'"></span>
                       </ng-template>
 
                       <!--Transfer - Received-->
-                      <ng-template [ngIf]="history.transaction.transactionType == 'transfer' && history.transaction.to == userName">
+                      <ng-template [ngIf]="history.transaction.transactionType == 'transfer' && history.transaction.to == username">
                         <span [innerHtml]="'Received ' + history.transaction.amount + ' XSD from ' + history.transaction.from"></span>
                       </ng-template>
 
                       <!--Transfer - Sent-->
-                      <ng-template [ngIf]="history.transaction.transactionType == 'transfer' && history.transaction.to != userName">
+                      <ng-template [ngIf]="history.transaction.transactionType == 'transfer' && history.transaction.to != username">
                         <span [innerHtml]="'Sent ' + history.transaction.amount + ' XSD to ' + history.transaction.to"></span>
                       </ng-template>
 
                       <!--Vesting - Transfer-->
-                      <ng-template [ngIf]="history.transaction.transactionType == 'transfer_to_vesting' && history.transaction.to == userName">
+                      <ng-template [ngIf]="history.transaction.transactionType == 'transfer_to_vesting' && history.transaction.to == username">
                         <span [innerHtml]="'Transferred ' + history.transaction.amount + '  XSD to VEST'"></span>
                       </ng-template>
 
                       <!--Vesting - Sent-->
-                      <ng-template [ngIf]="history.transaction.transactionType == 'transfer_to_vesting' && history.transaction.to != userName">
+                      <ng-template [ngIf]="history.transaction.transactionType == 'transfer_to_vesting' && history.transaction.to != username">
                         <span [innerHtml]="'Sent ' + history.transaction.amount + ' VEST to ' + history.transaction.to"></span>
                       </ng-template>
 
@@ -213,7 +213,7 @@
             <div class="row my-1">
               <div class="col-12 mt-2">
                 <small class="text-danger font-weight-bold">This feature is currently disabled</small>
-                <h3 [innerHtml]="'Reset '+ userName +'\'s Password'"></h3>
+                <h3 [innerHtml]="'Reset '+ username +'\'s Password'"></h3>
               </div>
               <div class="col-12">
                 <ul class="pl-0 list-unstyled">

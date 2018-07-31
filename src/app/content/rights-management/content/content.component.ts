@@ -50,7 +50,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
   dialogRefArtist: MatDialogRef<ModalArtistComponent>;
   dialogRefWriters: MatDialogRef<ModalWritersComponent>;
   dialogRefReview: MatDialogRef<ModalReviewComponent>;
-  userName: string;
+  username: string;
   maxDate: Date;
   maxYear: number;
   maxBp: number;
@@ -224,7 +224,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.subscription = this.auth.user$.subscribe(user => {
       if (user) {
-        this.userName = user.musername;
+        this.username = user.username;
       }
     });
 
@@ -283,7 +283,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
 
   createContentForm() {
     return this.fb.group({
-      uploader: this.auth.user.musername,
+      uploader: this.auth.user.username,
       url: 'ipfs://' + Utils.generateGUID(),
       album_meta: this.fb.group({
         partOfAlbum: false,
@@ -427,7 +427,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
       this.contentForm.patchValue({ master_share: 100 });
       this.contentForm.patchValue({ playing_reward: 5 });
       this.contentForm.patchValue({ publishers_share: 0 });
-      this.contentForm.get('tempDistributions').patchValue({ payee: this.auth.user.musername });
+      this.contentForm.get('tempDistributions').patchValue({ payee: this.auth.user.username });
       this.updateMasterManagesContract(true);
       this.contentForm.get('tempDistributions').patchValue({ bp: 100 });
       this.contentForm.get('tempManagement').patchValue({ percentage: 100 });
@@ -747,7 +747,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
               }
 
               this.masterRoyaltySplit.push({
-                userName: this.contentForm.get('tempDistributions.payee').value,
+                username: this.contentForm.get('tempDistributions.payee').value,
                 income: this.contentForm.get('tempDistributions.bp').value,
                 management: managementValue,
                 weight: this.contentForm.get('tempManagement.percentage').value,
@@ -789,7 +789,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
             }
 
             else {
-              this.alert.showErrorMessage(ErrorCodes.userNameNotFound);
+              this.alert.showErrorMessage(ErrorCodes.usernameNotFound);
             }
           });
         break;
@@ -808,7 +808,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
               }
 
               this.compRoyaltySplit.push({
-                userName: this.contentForm.get('tempDistributionsComp.payee').value,
+                username: this.contentForm.get('tempDistributionsComp.payee').value,
                 income: this.contentForm.get('tempDistributionsComp.bp').value,
                 management: managementCompValue,
                 weight: this.contentForm.get('tempManagementComp.percentage').value,
@@ -848,7 +848,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
               this.contentForm.patchValue({ compManagesContract: false });
             }
             else {
-              this.alert.showErrorMessage(ErrorCodes.userNameNotFound);
+              this.alert.showErrorMessage(ErrorCodes.usernameNotFound);
             }
           });
         break;
@@ -931,7 +931,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
         this.normalizeFormValues().then((results) => {
           if (results !== undefined) {
             const authPassword = this.auth.user.getPassword();
-            this.sdacService.postContent(authPassword, this.auth.user.musername, results).then((success) => {
+            this.sdacService.postContent(authPassword, this.auth.user.username, results).then((success) => {
               console.log('Success!');
               if (success !== undefined) {
                 const answer = this.alert.showSuccessMessage('Success!', 'Your content has been posted to SounDAC.');

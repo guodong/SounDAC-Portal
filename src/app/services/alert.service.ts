@@ -27,7 +27,7 @@ export class AlertService {
     weakPassword: { title: 'Weak Password!', message: 'Sorry, you have entered a weak password.' },
     providerAlreadyLinked: { title: 'Already Linked!', message: 'Sorry, your account is already linked to this credential.' },
     credentialAlreadyInUse: { title: 'Credential Not Available!', message: 'Sorry, this credential is already used by another user.' },
-    userNameAlreadyInUse: { title: 'Username Not Available!', message: 'Sorry, this Username is already in use.' },
+    usernameAlreadyInUse: { title: 'Username Not Available!', message: 'Sorry, this Username is already in use.' },
 
     // Catch all error
     default: { title: 'Error', message: 'Please contact support with the following error message: ' }
@@ -94,12 +94,12 @@ export class AlertService {
           }
         });
         break;
-      case ErrorCodes.userNameAlreadyInUse:
+      case ErrorCodes.usernameAlreadyInUse:
         this.dialog.open(AlertDialogComponent, {
           disableClose: true,
           data: {
-            title: this.errorMessages.userNameAlreadyInUse['title'],
-            message: this.errorMessages.userNameAlreadyInUse['message'],
+            title: this.errorMessages.usernameAlreadyInUse['title'],
+            message: this.errorMessages.usernameAlreadyInUse['message'],
             btnEnd: AlertBtnText.OK
           }
         });

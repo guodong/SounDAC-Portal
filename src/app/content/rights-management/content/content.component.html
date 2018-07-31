@@ -305,7 +305,7 @@
                 <div class="col-12 my-2">
                   <mat-checkbox matInput formControlName="soleOwner" [matTooltip]="toolTips.oneOwner" [matTooltipShowDelay]="toolTips.delay"
                     [disabled]="masterRoyaltySplit.length > 1" (change)="oneOwner()">
-                    <span [innerHtml]="'Content is 100% owned and managed by ' + userName"></span>
+                    <span [innerHtml]="'Content is 100% owned and managed by ' + username"></span>
                   </mat-checkbox>
                 </div>
               </div>
@@ -452,7 +452,7 @@
                       </div>
                       <mat-divider class="col-md-6"></mat-divider>
                       <mat-list-item *ngFor="let data of masterRoyaltySplit,  index as i">
-                        <div class="col-md-1" [innerHtml]="data.userName"></div>
+                        <div class="col-md-1" [innerHtml]="data.username"></div>
                         <div class="col-md-1">
                           <div class="col-md-1" *ngIf="data.income !== 0" [innerHtml]="data.income"></div>
                         </div>
@@ -556,7 +556,7 @@
                         </div>
                         <mat-divider class="col-md-6"></mat-divider>
                         <mat-list-item *ngFor="let data of compRoyaltySplit,  index as i">
-                          <div class="col-md-1" [innerHtml]="data.userName"></div>
+                          <div class="col-md-1" [innerHtml]="data.username"></div>
                           <div class="col-md-1">
                             <div class="col-md-1" *ngIf="data.income !== 0" [innerHtml]="data.income"></div>
                           </div>

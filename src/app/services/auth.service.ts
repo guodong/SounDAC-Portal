@@ -74,7 +74,7 @@ export class AuthService {
           this.alert.showSuccessMessage('Success', 'A confirmation email has been sent, please verify your address before login.');
 
           // Redirect
-          this.router.navigateByUrl('/login');          
+          this.router.navigateByUrl('/login');
 
         }).catch(error => {
           this.ui.hideLoading();
@@ -97,7 +97,7 @@ export class AuthService {
 
   }
 
-  login(user: User) {
+  login(user: User, key: string) {
 
     this.ui.showLoading();
 
@@ -108,24 +108,42 @@ export class AuthService {
 
         this.afAuth.auth.signInWithCustomToken(response.token).then(authUser => {
 
-          // Get user Informations & Update it in client
-          this.userService.getUser(authUser.user.uid).subscribe((res: User) => {
+          const auth = this;
 
-            // Set User
-            this.user = new User(res.id, res.musername, res.email, res.key, res.roles);
-            this.user.encryptPassword(user.password);
-            this.user$ = Observable.of(this.user);
-            this.userService.updateUser(this.user).subscribe((usr: User) => {              
+          // Get Invite Key
+          this.afs.collection('keys').doc('invite').ref.get().then(function (keyDoc) {
 
-              // Redirect
-              this.ui.hideLoading();
-              this.router.navigateByUrl('/');
+            // Get user Informations & Update it in client
+            auth.userService.getUser(authUser.user.uid).subscribe((res: User) => {
 
-            }, error => {
-              this.ui.hideLoading();
-              this.alert.showErrorMessage(error);
+              console.log(keyDoc.data());
+
+              // Set User
+              auth.user = new User(res.id, res.username, res.email, res.key, res.roles);
+              auth.user.encryptPassword(user.password);
+
+              if (key && key !== '') {
+                if (key === keyDoc.data().key) {
+                  auth.user.roles.management = true;
+                }
+              }
+
+              auth.user$ = Observable.of(auth.user);
+              auth.userService.updateUser(auth.user).subscribe((usr: User) => {
+
+                // Redirect
+                auth.ui.hideLoading();
+                auth.router.navigateByUrl('/');
+
+              }, error => {
+                auth.ui.hideLoading();
+                auth.alert.showErrorMessage(error);
+              });
+
             });
 
+          }).catch(function (error) {
+            console.log('Error getting document:', error);
           });
 
         }).catch(error => {
@@ -211,7 +229,7 @@ export class AuthService {
     sdac.config.set('websocket', 'wss://api.muse.blckchnd.com');
   }
 
-  getPrivateKeys(musername, password): Promise<void | SdacKeys> {
+  getPrivateKeys(username, password): Promise<void | SdacKeys> {
 
     // Set Socket
     this.setSocket();
@@ -219,7 +237,7 @@ export class AuthService {
     // Get Keys
     return new Promise<SdacKeys>(function (resolve, reject) {
 
-      const keys = sdac.auth.getPrivateKeys(musername, password, ['owner', 'active', 'basic', 'memo']);
+      const keys = sdac.auth.getPrivateKeys(username, password, ['owner', 'active', 'basic', 'memo']);
 
       if (!keys) {
         reject('Failed to load keys.');
@@ -233,7 +251,7 @@ export class AuthService {
 
   }
 
-  updateAccountKeys(userName, password, newPassword, ownerPubkey, activePubkey, basicPubkey, memoPubkey): Promise<void | boolean> {
+  updateAccountKeys(username, password, newPassword, ownerPubkey, activePubkey, basicPubkey, memoPubkey): Promise<void | boolean> {
 
     const user = this.user;
     const alert = this.alert;
@@ -241,7 +259,7 @@ export class AuthService {
 
     return new Promise<boolean>(function (resolve, reject) {
 
-      sdac.updateAccountKeys(userName, password, ownerPubkey, activePubkey, basicPubkey, memoPubkey, (code, message) => {
+      sdac.updateAccountKeys(username, password, ownerPubkey, activePubkey, basicPubkey, memoPubkey, (code, message) => {
 
         if (code === 0) {
 

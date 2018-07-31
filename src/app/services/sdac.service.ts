@@ -28,18 +28,18 @@ export class SdacService {
     // sdac.config.set('websocket', 'ws://rpc.museblockchain.com');
   }
 
-  getAccount(userName): Promise<any> {
+  getAccount(username): Promise<any> {
     this.setWebSocket();
-    return sdac.api.getAccounts([userName]).catch((err) => {
+    return sdac.api.getAccounts([username]).catch((err) => {
       this.alertService.showErrorMessage('getAccount(): ' + err);
     });
   }
 
-  streamAccountInfo$(userName): Observable<any> {
+  streamAccountInfo$(username): Observable<any> {
     this.setWebSocket();
     return new Observable((observer: Observer<any>) => {
       sdac.api.streamOperationsAsync((err, result) => {
-        sdac.api.getAccounts([userName]).then((results => {
+        sdac.api.getAccounts([username]).then((results => {
           observer.next(results);
         }), error => {
           this.alertService.showErrorMessage('streamAccountInfo$(): ' + error);
@@ -48,11 +48,11 @@ export class SdacService {
     });
   }
 
-  getAccountHistory(userName): Promise<void | SdacAccountHistory[]> {
+  getAccountHistory(username): Promise<void | SdacAccountHistory[]> {
     this.setWebSocket();
 
     return new Promise<SdacAccountHistory[]>(function (resolve, reject) {
-      sdac.api.getAccountHistory(userName, 9999, 24, function (error, result) {
+      sdac.api.getAccountHistory(username, 9999, 24, function (error, result) {
 
 
         if (error) {
@@ -95,10 +95,10 @@ export class SdacService {
     });
   }
 
-  transferXsd(userName, password, transferTo, amount, memo) {
+  transferXsd(username, password, transferTo, amount, memo) {
     this.setWebSocket();
     return new Promise(function (resolve, reject) {
-      sdac.transferFunds(userName, password, transferTo, amount, memo, function (err, success) {
+      sdac.transferFunds(username, password, transferTo, amount, memo, function (err, success) {
         if (err === -1) {
           reject(err);
         } else {
@@ -110,10 +110,10 @@ export class SdacService {
     });
   }
 
-  transferXsdtoVest(userName, password, amount) {
+  transferXsdtoVest(username, password, amount) {
     this.setWebSocket();
     return new Promise(function (resolve, reject) {
-      sdac.transferFundsToVestings(userName, password, null, amount, function (err, success) {
+      sdac.transferFundsToVestings(username, password, null, amount, function (err, success) {
         if (err === -1) {
           reject(err);
         } else {
@@ -125,10 +125,10 @@ export class SdacService {
     });
   }
 
-  withdrawVesting(userName, password, amount) {
+  withdrawVesting(username, password, amount) {
     this.setWebSocket();
     return new Promise(function (resolve, reject) {
-      sdac.withdrawVesting(userName, password, amount, function (err, success) {
+      sdac.withdrawVesting(username, password, amount, function (err, success) {
         if (err === -1) {
           reject(err);
         } else {
@@ -140,10 +140,10 @@ export class SdacService {
     });
   }
 
-  voteWitness(userName, password, witnessOwner: string, vote: boolean) {
+  voteWitness(username, password, witnessOwner: string, vote: boolean) {
     this.setWebSocket();
     return new Promise(function (resolve, reject) {
-      sdac.witnessVote(userName, password, witnessOwner, vote, (code, message) => {
+      sdac.witnessVote(username, password, witnessOwner, vote, (code, message) => {
         if (code === 1) {
           resolve(true);
         } else {
@@ -155,11 +155,11 @@ export class SdacService {
     });
   }
 
-  claimBalance(userName, wif) {
+  claimBalance(username, wif) {
     this.setWebSocket();
     return new Promise(function (resolve, reject) {
 
-      // sdac.claimBalance(userName, wif, (code, message) => {
+      // sdac.claimBalance(username, wif, (code, message) => {
       //   if (code === 1) {
       //     resolve(true);
       //   } else {
@@ -167,7 +167,7 @@ export class SdacService {
       //   }
       // });
 
-      // sdac.broadcast.balance_claim(musername, balance_to_claim, balance_owner_key, total_claimed, function (err, result) {
+      // sdac.broadcast.balance_claim(username, balance_to_claim, balance_owner_key, total_claimed, function (err, result) {
       //   if (err) {
       //     reject(err);
       //   } else {
@@ -181,22 +181,22 @@ export class SdacService {
   }
 
 
-  // loadPrivateKeys(userName: string) {
+  // loadPrivateKeys(username: string) {
   //   const password = this.auth.user.getPassword();
-  //   this.auth.getPrivateKeys(userName, password).then((keys: SdacKeys) => {
+  //   this.auth.getPrivateKeys(username, password).then((keys: SdacKeys) => {
   //     this.account.keys.active = keys.active;
   //   });
   // }
 
-  postContent(password, userName, content) {
+  postContent(password, username, content) {
     this.setWebSocket();
     const that = this;
     return new Promise(function (resolve, reject) {
-      that.auth.getPrivateKeys(userName, password).then((keys: SdacKeys) => {
+      that.auth.getPrivateKeys(username, password).then((keys: SdacKeys) => {
         
       sdac.broadcast.content(
         keys.active,
-        userName,
+        username,
         content.url,
         {
           part_of_album: content.album_meta.partOfAlbum,
@@ -265,8 +265,8 @@ export class SdacService {
   });
   }
 
-  userExist(userName): Promise<any> {
-    return this.getAccount(userName).then(
+  userExist(username): Promise<any> {
+    return this.getAccount(username).then(
       user => {
         if (user.length !== 0) {
           return true;

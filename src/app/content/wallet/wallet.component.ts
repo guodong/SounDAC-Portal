@@ -59,7 +59,7 @@ export class WalletComponent implements OnInit, OnDestroy {
   @ViewChild('paginatorWitness') paginatorWitness: MatPaginator;
 
   subscription: Subscription;
-  userName: any;
+  username: any;
   passwordForm: FormGroup;
   account: SdacAccount = new SdacAccount();
   defaultDate: Date = new Date('1969-12-31T23:59:59');
@@ -99,7 +99,7 @@ export class WalletComponent implements OnInit, OnDestroy {
       if (user) {
 
         // this.auth.user = user; // Update User
-        this.userName = user.musername;
+        this.username = user.username;
 
         // Get Account Infos
         this.getAccount();
@@ -127,13 +127,13 @@ export class WalletComponent implements OnInit, OnDestroy {
   getAccount() {
 
     // Get Initial Account Info
-    this.sdacService.getAccount(this.userName).then(response => {
+    this.sdacService.getAccount(this.username).then(response => {
       this.account.mapAccount(response[0]);
       this.ui.hideLoading();
     });
 
     // Stream Account info for changes
-    this.sdacService.streamAccountInfo$(this.userName).subscribe(response => {
+    this.sdacService.streamAccountInfo$(this.username).subscribe(response => {
       this.account.mapAccount(response[0]);
       this.getAccountHistory();
       this.ui.hideLoading();
@@ -143,7 +143,7 @@ export class WalletComponent implements OnInit, OnDestroy {
 
   getPrivateKeys() {
     const password = this.auth.user.getPassword();
-    this.auth.getPrivateKeys(this.userName, password).then((keys: SdacKeys) => {
+    this.auth.getPrivateKeys(this.username, password).then((keys: SdacKeys) => {
 
       this.account.keys.basic = keys.basic;
       this.account.keys.active = keys.active;
@@ -154,7 +154,7 @@ export class WalletComponent implements OnInit, OnDestroy {
   }
 
   getAccountHistory() {
-    this.sdacService.getAccountHistory(this.userName).then((response: SdacAccountHistory[]) => {
+    this.sdacService.getAccountHistory(this.username).then((response: SdacAccountHistory[]) => {
       this.account.history = response;
       this.dataSource.data = response;
       this.dataSource.paginator = this.paginator;
@@ -187,7 +187,7 @@ export class WalletComponent implements OnInit, OnDestroy {
     this.dialogRefTrans.afterClosed().subscribe(data => {
       if (data) {
         this.ui.showLoading();
-        this.sdacService.transferXsd(this.userName, this.account.keys.active, data.transferto, data.amount, data.memo); // ... - Change active key back to password once blockchain fork happens
+        this.sdacService.transferXsd(this.username, this.account.keys.active, data.transferto, data.amount, data.memo); // ... - Change active key back to password once blockchain fork happens
       }
     });
 
@@ -199,7 +199,7 @@ export class WalletComponent implements OnInit, OnDestroy {
     this.dialogRefVest.afterClosed().subscribe(data => {
       if (data) {
         this.ui.showLoading();
-        this.sdacService.transferXsdtoVest(this.userName, this.account.keys.active, data); // ... - Change active key back to password once blockchain fork happens
+        this.sdacService.transferXsdtoVest(this.username, this.account.keys.active, data); // ... - Change active key back to password once blockchain fork happens
       }
     });
   }
@@ -210,7 +210,7 @@ export class WalletComponent implements OnInit, OnDestroy {
     this.dialogRefWithd.afterClosed().subscribe(data => {
       if (data) {
         this.ui.showLoading();
-        this.sdacService.withdrawVesting(this.userName, this.account.keys.active, data); // ... - Change active key back to password once blockchain fork happens
+        this.sdacService.withdrawVesting(this.username, this.account.keys.active, data); // ... - Change active key back to password once blockchain fork happens
       }
     });
   }
@@ -218,7 +218,7 @@ export class WalletComponent implements OnInit, OnDestroy {
   cancelWithdraw() {
     this.ui.showLoading();
     // const authPassword = this.auth.user.getPassword();
-    this.sdacService.withdrawVesting(this.userName, this.account.keys.active, 0); // ... - Change active key back to password once blockchain fork happens
+    this.sdacService.withdrawVesting(this.username, this.account.keys.active, 0); // ... - Change active key back to password once blockchain fork happens
   }
 
   generatePassword() {
@@ -263,10 +263,10 @@ export class WalletComponent implements OnInit, OnDestroy {
     if (!errors) {
 
       // Get a set of new Keys based on the new generated password
-      this.auth.getPrivateKeys(this.userName, newPassword).then((keys: SdacKeys) => {
+      this.auth.getPrivateKeys(this.username, newPassword).then((keys: SdacKeys) => {
 
         // Update the actual keys with the new password
-        this.auth.updateAccountKeys(this.userName, password, newPassword, keys.ownerPubkey, keys.activePubkey, keys.basicPubkey, keys.memoPubkey)
+        this.auth.updateAccountKeys(this.username, password, newPassword, keys.ownerPubkey, keys.activePubkey, keys.basicPubkey, keys.memoPubkey)
           .then((response: boolean) => {
             this.ui.hideLoading();
 
@@ -285,7 +285,7 @@ export class WalletComponent implements OnInit, OnDestroy {
 
   loadPrivateKeys() {
     const password = this.auth.user.getPassword();
-    this.auth.getPrivateKeys(this.userName, password).then((keys: SdacKeys) => {
+    this.auth.getPrivateKeys(this.username, password).then((keys: SdacKeys) => {
       this.account.keys.basic = keys.basic;
       this.account.keys.active = keys.active;
       this.account.keys.owner = keys.owner;
@@ -344,21 +344,21 @@ export class WalletComponent implements OnInit, OnDestroy {
   voteWitness(witnessOwner: string, vote: boolean) {
     this.ui.showLoading();
     const password = this.auth.user.getPassword();
-    this.auth.getPrivateKeys(this.userName, password).then((keys: SdacKeys) => {
+    this.auth.getPrivateKeys(this.username, password).then((keys: SdacKeys) => {
 
       this.account.keys.basic = keys.basic;
       this.account.keys.active = keys.active;
       this.account.keys.owner = keys.owner;
       this.account.keys.memo = keys.memo;
 
-      this.sdacService.voteWitness(this.userName, this.account.keys.active, witnessOwner, vote);
+      this.sdacService.voteWitness(this.username, this.account.keys.active, witnessOwner, vote);
 
     });
   }
 
   claimWIF() {
     this.ui.showLoading();
-    // this.sdacService.claimBalance(this.userName, this.inputWIF); // ToDo: Check Muse-js library to figure source of current error
+    // this.sdacService.claimBalance(this.username, this.inputWIF); // ToDo: Check Muse-js library to figure source of current error
   }
 
 }
