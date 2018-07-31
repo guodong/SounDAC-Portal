@@ -18,9 +18,9 @@
         <mat-tab-group>
           <mat-tab label="Master Side">
             <div class="container-fluid">
+                <!-- {{ contentForm.value | json }} -->
               <div class="row my-1">
                 <div class="col-12 my-2">
-                  <!-- {{contentForm.value | json}} -->
                   <h1>Track Info:</h1>
                   <div formGroupName="album_meta">
                     <mat-checkbox matInput formControlName="partOfAlbum" [matTooltip]="toolTips.partOfAlbum" [matTooltipShowDelay]="toolTips.delay">
@@ -162,55 +162,64 @@
                 </mat-form-field>
               </div>
 
-              <div class="row my-1">
-                <div class="col-12 my-2">
-                  <h1>Album Info:</h1>
+              <div formGroupName="album_meta">
+
+                <div *ngIf="contentForm.get('album_meta.partOfAlbum').value">
+
+
+
+                  <div class="row my-1">
+                    <div class="col-12 my-2">
+                      <h1>Album Info:</h1>
+                    </div>
+                  </div>
+
+                  <div class="row my-1">
+                    <mat-form-field class="col-4 my-2">
+                      <input matInput formControlName="albumTitle" placeholder="Album Title" [matTooltip]="toolTips.albumTitle" [matTooltipShowDelay]="toolTips.delay">
+                    </mat-form-field>
+
+                    <mat-form-field class="col-4 my-2">
+                      <mat-select formControlName="albumType" placeholder="Album Type" [matTooltip]="toolTips.albumType" [matTooltipShowDelay]="toolTips.delay">
+                        <mat-option *ngFor="let type of productType" [value]="type.value">
+                          {{ type.value }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="col-4 my-2">
+                      <input matInput formControlName="albumProducer" placeholder="Album Producer" [matTooltip]="toolTips.albumProducer" [matTooltipShowDelay]="toolTips.delay">
+                    </mat-form-field>
+                  </div>
+
+                  <div class="row my-1">
+                    <div class="col-4 my-2">
+                      <mat-label class="spacing">Album Artist</mat-label>
+                      <button mat-raised-button class="mat-purple-bg mt-16 mt-sm-0" mat-raised-button (click)="addArtist('Album Artist')" [matTooltip]="toolTips.albumArtist"
+                        [matTooltipShowDelay]="toolTips.delay">Add</button>
+
+                      <mat-chip-list matPrefix>
+                        <mat-chip class="chip" *ngFor="let data of albumArtists.value; index as i" removable="true" (removed)="removeFromList('albumArtists', i)">
+                          {{ data.artist }} {{data.isni}} {{data.aliases}}
+                          <mat-icon matChipRemove>cancel</mat-icon>
+                        </mat-chip>
+                      </mat-chip-list>
+                    </div>
+
+                    <mat-form-field class="col-4 my-2">
+                      <input matInput formControlName="albumPLine" placeholder="Album P Line" [matTooltip]="toolTips.albumPLine" [matTooltipShowDelay]="toolTips.delay">
+                    </mat-form-field>
+                    <mat-form-field class="col-4 my-2">
+                      <input matInput formControlName="albumCLine" placeholder="Album C Line" [matTooltip]="toolTips.albumCLine" [matTooltipShowDelay]="toolTips.delay">
+                    </mat-form-field>
+                  </div>
+
+                  <div class="row my-1">
+                    <genre class="col-6 my-2" #albumGenre1>{{ albumGenre1.selectorParam('albumGenre1') }}</genre>
+                    <genre class="col-6 my-2" #albumGenre2>{{ albumGenre2.selectorParam('albumGenre2') }}</genre>
+                  </div>
+
                 </div>
-              </div>
-
-              <div class="row my-1" formGroupName="album_meta">
-                <mat-form-field class="col-4 my-2">
-                  <input matInput formControlName="albumTitle" placeholder="Album Title" [matTooltip]="toolTips.albumTitle" [matTooltipShowDelay]="toolTips.delay">
-                </mat-form-field>
-
-                <mat-form-field class="col-4 my-2">
-                  <mat-select formControlName="albumType" placeholder="Album Type" [matTooltip]="toolTips.albumType" [matTooltipShowDelay]="toolTips.delay">
-                    <mat-option *ngFor="let type of productType" [value]="type.value">
-                      {{ type.value }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-
-                <mat-form-field class="col-4 my-2">
-                  <input matInput formControlName="albumProducer" placeholder="Album Producer" [matTooltip]="toolTips.albumProducer" [matTooltipShowDelay]="toolTips.delay">
-                </mat-form-field>
-              </div>
-
-              <div class="row my-1" formGroupName="album_meta">
-                <div class="col-4 my-2">
-                  <mat-label class="spacing">Album Artist</mat-label>
-                  <button mat-raised-button class="mat-purple-bg mt-16 mt-sm-0" mat-raised-button (click)="addArtist('Album Artist')" [matTooltip]="toolTips.albumArtist"
-                    [matTooltipShowDelay]="toolTips.delay">Add</button>
-
-                  <mat-chip-list matPrefix>
-                    <mat-chip class="chip" *ngFor="let data of albumArtists.value; index as i" removable="true" (removed)="removeFromList('albumArtists', i)">
-                      {{ data.artist }} {{data.isni}} {{data.aliases}}
-                      <mat-icon matChipRemove>cancel</mat-icon>
-                    </mat-chip>
-                  </mat-chip-list>
-                </div>
-
-                <mat-form-field class="col-4 my-2">
-                  <input matInput formControlName="albumPLine" placeholder="Album P Line" [matTooltip]="toolTips.albumPLine" [matTooltipShowDelay]="toolTips.delay">
-                </mat-form-field>
-                <mat-form-field class="col-4 my-2">
-                  <input matInput formControlName="albumCLine" placeholder="Album C Line" [matTooltip]="toolTips.albumCLine" [matTooltipShowDelay]="toolTips.delay">
-                </mat-form-field>
-              </div>
-
-              <div class="row my-1">
-                <genre class="col-6 my-2" #albumGenre1>{{ albumGenre1.selectorParam('albumGenre1') }}</genre>
-                <genre class="col-6 my-2" #albumGenre2>{{ albumGenre2.selectorParam('albumGenre2') }}</genre>
               </div>
 
               <div class="row my-1" formGroupName="album_meta">
@@ -230,6 +239,7 @@
 
           <mat-tab label="Composition Side">
             <div class="container-fluid">
+              <!-- {{ contentForm.value | json }} -->
               <div class="row my-1" formGroupName="comp_meta">
                 <mat-form-field class="col-4 my-2">
                   <input matInput formControlName="compTitle" placeholder="Composition Title">
@@ -285,21 +295,12 @@
 
           <mat-tab label="Management & Royalty Splits">
             <div class="container-fluid">
-              <div class="row my-1">
-                <div class="col-12 my-2">
-                  <!-- {{ contentForm.value | json }} -->
-                </div>
-              </div>
-
+              <!-- {{ contentForm.value | json }} -->
               <div class="row my-1">
                 <div class="col-12 my-2">
                   <h1>General Royalty Splits:</h1>
                 </div>
               </div>
-
-              <!-- <mat-error *ngIf="!genSplitTotal">
-                <strong>General Royalty Splits must total 100%</strong>
-              </mat-error> -->
 
               <div class="row my-1">
                 <div class="col-12 my-2">
@@ -346,11 +347,8 @@
 
                   <div class="col-1 my-2">
                     <mat-form-field>
-                      <input matInput type="number" min=0 
-                        [max]="max" formControlName="publishers_share" 
-                        [innerHtml]="contentForm.value.publishers_share"
-                        (change)="onGenCompSplitChange()"
-                        [attr.disabled]="sliderDisabled?'':null">
+                      <input matInput type="number" min=0 [max]="max" formControlName="publishers_share" [innerHtml]="contentForm.value.publishers_share"
+                        (change)="onGenCompSplitChange()" [attr.disabled]="sliderDisabled?'':null">
                     </mat-form-field>
                     <mat-error *ngIf="contentForm.get('publishers_share').hasError('max') || contentForm.get('publishers_share').hasError('min') && contentForm.get('publishers_share').touched">
                       <strong>Composition Side income must be 0 - 100</strong>
@@ -389,8 +387,8 @@
                     <input type="number" min=0 max=100 matInput placeholder="Percentage of Income" formControlName="bp" [attr.disabled]="sliderDisabled?'':null">
                   </mat-form-field>
 
-                  <mat-checkbox class="margin" formControlName="masterManagesContract" #masterManagesContract [disabled]="isOneOwner" id="masterManagesContract" [checked]="masterManagesContract.checked"
-                    (change)="updateMasterManagesContract(masterManagesContract.checked)">
+                  <mat-checkbox class="margin" formControlName="masterManagesContract" #masterManagesContract [disabled]="isOneOwner" id="masterManagesContract"
+                    [checked]="masterManagesContract.checked" (change)="updateMasterManagesContract(masterManagesContract.checked)">
                     Manages Contract</mat-checkbox>
 
                   <mat-form-field formGroupName="tempManagement" *ngIf="masterManagesContract.checked && !isOneOwner">
@@ -493,10 +491,7 @@
                           <input type="number" min=0 max=100 matInput placeholder="Percentage of Income" formControlName="bp">
                         </mat-form-field>
 
-                        <mat-checkbox class="margin" 
-                        formControlName="compManagesContract" 
-                        #compManagesContract id="compManagesContract" 
-                        (change)="updateManagesCompsContract(compManagesContract.checked)">
+                        <mat-checkbox class="margin" formControlName="compManagesContract" #compManagesContract id="compManagesContract" (change)="updateManagesCompsContract(compManagesContract.checked)">
                           Manages Contract</mat-checkbox>
 
                         <mat-form-field formGroupName="tempManagementComp" class="margin-right" *ngIf="compManagesContract.checked">
