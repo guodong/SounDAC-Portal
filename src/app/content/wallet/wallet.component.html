@@ -59,10 +59,10 @@
               </div>
               <div class="col-12 my-2">
                 <button mat-raised-button (click)="withdrawVest()" class="mat-purple-bg">
-                  Downgrade VIP
+                  Exit VIP
                 </button>
                 <button mat-raised-button (click)="cancelWithdraw()" class="mat-purple-bg">
-                  Cancel Downgrade
+                  Cancel Exit
                 </button>
               </div>
               <div class="col-12 my-2">
@@ -73,27 +73,33 @@
               </div>
             </div>
 
-            <!--RYTL Dollar-->
+            <!--RYLT Dollar-->
             <div class="row my-1">
               <div class="col-12 mt-2">
-                <h3>RYTL Balance:</h3>
+                <h3>RYLT Balance:</h3>
               </div>
+
               <div class="col-12 my-2">
                 <span [innerHtml]="'Tokens worth about'"></span>
                 <span [innerHtml]="account.MBDbalance | currency:'USD':'symbol':'0.2-2'"></span>
                 <span [innerHtml]="' of XSD'"></span>
               </div>
-              <div class="col-12 my-1">
-                <mat-divider></mat-divider>
-              </div>
             </div>
-
+            <div class="row my-1">
+                <div class="col-12 my-2">
+                  <span [innerHtml]="'1 RYLT token can be redeemed for about 1 USD worth of XSD tokens.'"></span>
+                </div>
+            </div>
+            <div class="col-12 my-1">
+              <mat-divider></mat-divider>
+            </div>
+            
             <!--Next Withdrawal-->
             <div class="row my-1">
               <div class="col-12 my-2">
-                <h3>Next Withdrawal:</h3>
+                <h3>Next Exit:</h3>
                 <span *ngIf="account.NextwithDraw && account.NextwithDraw.getDate() != defaultDate.getDate()" [innerHtml]="account.NextwithDraw | date:'MM/dd/yy hh:mm a z'"></span>
-                <span *ngIf="account.NextwithDraw && account.NextwithDraw.getDate() == defaultDate.getDate()" [innerHtml]="'No pending Withdrawal'"></span>
+                <span *ngIf="account.NextwithDraw && account.NextwithDraw.getDate() == defaultDate.getDate()" [innerHtml]="'No pending Exits'"></span>
               </div>
               <div class="col-12 my-1">
                 <mat-divider></mat-divider>
@@ -143,17 +149,17 @@
 
                       <!--Vesting - Transfer-->
                       <ng-template [ngIf]="history.transaction.transactionType == 'transfer_to_vesting' && history.transaction.to == username">
-                        <span [innerHtml]="'Transferred ' + history.transaction.amount + '  XSD to VEST'"></span>
+                        <span [innerHtml]="'Transferred ' + history.transaction.amount + '  XSD to VIP'"></span>
                       </ng-template>
 
                       <!--Vesting - Sent-->
                       <ng-template [ngIf]="history.transaction.transactionType == 'transfer_to_vesting' && history.transaction.to != username">
-                        <span [innerHtml]="'Sent ' + history.transaction.amount + ' VEST to ' + history.transaction.to"></span>
+                        <span [innerHtml]="'Sent ' + history.transaction.amount + ' VIP to ' + history.transaction.to"></span>
                       </ng-template>
 
                       <!--Vesting - Widthdraw-->
                       <ng-template [ngIf]="history.transaction.transactionType == 'withdraw_vesting'">
-                        <span [innerHtml]="'Withdrawing ' + history.transaction.vestingShares + ' VEST'"></span>
+                        <span [innerHtml]="'Withdrawing ' + history.transaction.vestingShares + ' VIP'"></span>
                       </ng-template>
 
                       <!--Witness Voted-->
@@ -183,7 +189,7 @@
 
                       <!--Fill Vesting Withdraw-->
                       <ng-template [ngIf]="history.transaction.transactionType == 'fill_vesting_withdraw'">
-                        <span [innerHtml]="'Withdrawal of VESTS from ' + history.transaction.fromAccount + ' to ' + history.transaction.toAccount + ' of ' + history.transaction.deposited"></span>
+                        <span [innerHtml]="'Exit of VIP from ' + history.transaction.fromAccount + ' to ' + history.transaction.toAccount + ' of ' + history.transaction.deposited"></span>
                       </ng-template>
 
                       <!--Content-->
