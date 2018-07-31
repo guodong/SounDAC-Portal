@@ -1,5 +1,5 @@
 {
   "projects": {
-    "default": "rmp-launchpad" // "rights-management-portal" // "api-museblockchain"
+    "default": "rmp-launchpad" // "rights-management-portal" // "api-museblockchain" // "rmp-launchpad"
   }
 }

@@ -187,7 +187,7 @@ export class WalletComponent implements OnInit, OnDestroy {
     this.dialogRefTrans.afterClosed().subscribe(data => {
       if (data) {
         this.ui.showLoading();
-        this.sdacService.transferXsd(this.username, this.account.keys.active, data.transferto, data.amount, data.memo); // ... - Change active key back to password once blockchain fork happens
+        this.sdacService.transferXsd(this.username, this.account.keys.active, data.transferto.toLowerCase(), data.amount, data.memo); // ... - Change active key back to password once blockchain fork happens
       }
     });
 
