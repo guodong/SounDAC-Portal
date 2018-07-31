@@ -79,9 +79,9 @@
             <br>
             <div class="row">
                 <div class="col-md-3">Release Date:</div>
-                <div class="col-md-3" [innerHtml]="formData.album_meta.releaseDate"></div>
+                <div class="col-md-3" [innerHtml]="formData.album_meta.releaseDate | date:'shortDate'" ></div>
                 <div class="col-md-3">Sales Start Date:</div>
-                <div class="col-md-3" [innerHtml]="formData.album_meta.salesStartDate"></div>
+                <div class="col-md-3" [innerHtml]="formData.album_meta.salesStartDate | date:'shortDate'"></div>
             </div>
             <br>
             <div class="row">
@@ -191,9 +191,9 @@
                     <mat-list-item *ngFor="let val of writers,  index as i">
                         <div class="col-md-3" [innerHtml]="val.writer"></div>
                         <div class="col-md-3" [innerHtml]="val.IPI_CAE"></div>
-                        <div class="col-md-3" [innerHtml]="val.ISNI"></div>
-                        <div class="col-md-3" [innerHtml]="val.publisher"></div>
-                        <div class="col-md-3" [innerHtml]="val.role"></div>
+                        <div class="col-md-2" [innerHtml]="val.ISNI"></div>
+                        <div class="col-md-2" [innerHtml]="val.publisher"></div>
+                        <div class="col-md-2" [innerHtml]="val.role"></div>
                     </mat-list-item>
                 </mat-list>
                 <mat-divider *ngIf="data[3].lenght !== 0"></mat-divider>

@@ -279,8 +279,6 @@ export class ContentComponent implements OnInit, AfterViewInit {
 
   // region functions
 
-  // region GOOD
-
   createContentForm() {
     return this.fb.group({
       uploader: this.auth.user.musername,
@@ -368,7 +366,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
       }),
 
       management_threshold_comp: [100, [Validators.min(0), Validators.max(100)]],
-      // 
+
       master_share: [50, [Validators.min(1), Validators.max(100), Validators.pattern('[0-9]+(\.[0-9][0-9]?)?')]], // Only used for clarification in UI.
       // The master_share value doesnt need to be submitted to the chain,
       // the value is inferred from the total balance minus the
@@ -399,24 +397,6 @@ export class ContentComponent implements OnInit, AfterViewInit {
       if (control && control.dirty && !control.valid) {
         this.formErrors[field] = control.errors;
       }
-    }
-  }
-
-  showMasterThreshold() {
-    if (this.management.length > 1) {
-      return true;
-    }
-    else {
-      return false;
-    }
-  }
-
-  showCompThreshold() {
-    if (this.managementComp.length > 1) {
-      return true;
-    }
-    else {
-      return false;
     }
   }
 
@@ -528,205 +508,6 @@ export class ContentComponent implements OnInit, AfterViewInit {
         }
       });
   }
-
-  setCountry(country) {
-    this.contentForm.get('album_meta').patchValue({ countryOrigin: country });
-  }
-
-  mapGenre(selectorParam: string, genre: number) {
-    switch (selectorParam) {
-      case 'albumGenre1':
-        this.contentForm.get('album_meta').patchValue({ albumGenre1: genre });
-        break;
-      case 'albumGenre2':
-        this.contentForm.get('album_meta').patchValue({ albumGenre2: genre });
-        break;
-      case 'trackGenre1':
-        this.contentForm.get('track_meta').patchValue({ trackGenre1: genre });
-        break;
-      case 'trackGenre2':
-        this.contentForm.get('track_meta').patchValue({ trackGenre2: genre });
-        break;
-    }
-  }
-
-  currentDate() {
-    const today = new Date();
-    this.maxDate = new Date(this.datePipe.transform(today, 'yyyy/MM/dd'));
-    this.maxYear = Number.parseInt(this.datePipe.transform(today, 'yyyy'));
-  }
-
-  normalizeSplitVal(num: number) {
-    return (num * 100);
-  }
-
-  denormalizeSplitVal(num: number) {
-    return (num / 100);
-  }
-
-  updateMasterManagesContract(value?) {
-    if (value) {
-      // this.masterManagesContract = true;
-      this.contentForm.patchValue({ masterManagesContract: true });
-    }
-    else {
-      // this.masterManagesContract = false;
-      this.contentForm.patchValue({ masterManagesContract: false });
-      this.contentForm.get('tempManagement').patchValue({ percentage: null });
-    }
-  }
-
-  updateManagesCompsContract(value?) {
-    if (value) {
-      this.contentForm.patchValue({ compManagesContract: true });
-    }
-    else {
-      this.contentForm.patchValue({ compManagesContract: false });
-      this.contentForm.get('tempManagementComp').patchValue({ percentage: null });
-    }
-  }
-
-  onGenMasterSplitChange() {
-    this.contentForm.patchValue({ publishers_share: (this.max - this.contentForm.get('master_share').value) });
-    this.onGenSplitChange();
-  }
-
-  onGenCompSplitChange() {
-    this.contentForm.patchValue({ master_share: (this.max - this.contentForm.get('publishers_share').value) });
-    this.onGenSplitChange();
-  }
-
-  onGenSplitChange() {
-    this.contentForm.patchValue({ publishers_share: (this.max - this.contentForm.get('master_share').value) });
-    this.contentForm.patchValue({ master_share: (this.max - this.contentForm.get('publishers_share').value) });
-    this.playRewardMax = this.contentForm.get('master_share').value;
-    this.setCompRoyalty();
-  }
-
-  setCompRoyalty() {
-    this.pubShareValue = this.contentForm.get('publishers_share').value;
-    if (this.pubShareValue === 0) {
-      this.setCompRoyaltyNotRequired();
-    } else {
-      this.compRoyaltyRequired = true;
-      this.contentForm.get('comp_meta').patchValue({ isThirdPartyPublishers: true });
-    }
-  }
-
-  customValidation() { // TODO: this is not needed with the refactor - Remove
-    if (this.distributions.length === 0 ||
-      this.trackArtists.length === 0 ||
-      this.writers.length === 0 ||
-      this.masterIncomeTotal !== 100 ||
-      this.masterWeightTotal !== 100 ||
-      (this.compRoyaltyRequired && this.distributionsComp.length === 0) ||
-      (this.compRoyaltyRequired && (this.compIncomeTotal !== 100 || this.compWeightTotal !== 100))) {
-      return false;
-    }
-    else {
-      return true;
-    }
-  }
-
-  setCompRoyaltyNotRequired() {
-    this.compRoyaltySplit = [];
-    this.contentForm.get('tempDistributionsComp').patchValue({ payee: null });
-    this.contentForm.get('tempDistributionsComp').patchValue({ bp: null });
-    this.contentForm.get('tempManagementComp').patchValue({ voter: null });
-    this.contentForm.get('tempManagementComp').patchValue({ percentage: null });
-
-    this.contentForm.get('comp_meta').patchValue({ isThirdPartyPublishers: false });
-
-    this.contentForm.patchValue({ distributionsComp: [] });
-    this.contentForm.patchValue({ managementComp: [] });
-    this.compIncomeTotal = 0;
-    this.compWeightTotal = 0;
-    this.compRoyaltyRequired = false;
-  }
-
-  mastInputValid() {
-    if (this.contentForm.get('tempDistributions.payee').value === null ||
-      this.contentForm.get('tempDistributions.payee').value === '' ||
-
-      this.contentForm.get('tempDistributions.bp').value === null ||
-      this.contentForm.get('tempDistributions.bp').value === '' ||
-      this.contentForm.get('tempDistributions.bp').value < 0 ||
-      this.contentForm.get('tempDistributions.bp').value > 100 ||
-
-      this.contentForm.get('management_threshold').value === null ||
-      this.contentForm.get('management_threshold').value === '' ||
-      this.contentForm.get('playing_reward').value > this.contentForm.get('master_share').value ||
-
-      // (this.masterManagesContract === true &&
-      (this.contentForm.get('masterManagesContract').value === true &&
-        (
-          this.contentForm.get('tempManagement.percentage').value === null ||
-          this.contentForm.get('tempManagement.percentage').value === '' ||
-          this.contentForm.get('tempManagement.percentage').value < 0 ||
-          this.contentForm.get('tempManagement.percentage').value > 100
-        )
-      )
-    ) {
-      return false;
-    }
-    return true;
-  }
-
-  compInputValid() {
-    if (this.contentForm.get('tempDistributionsComp.payee').value === null ||
-      this.contentForm.get('tempDistributionsComp.payee').value === '' ||
-
-      this.contentForm.get('tempDistributionsComp.bp').value === null ||
-      this.contentForm.get('tempDistributionsComp.bp').value === '' ||
-      this.contentForm.get('tempDistributionsComp.bp').value < 0 ||
-      this.contentForm.get('tempDistributionsComp.bp').value > 100 ||
-
-      this.contentForm.get('management_threshold_comp').value === null ||
-      this.contentForm.get('management_threshold_comp').value === '' ||
-
-      (this.contentForm.get('compManagesContract').value === true &&
-        (
-          this.contentForm.get('tempManagementComp.percentage').value === null ||
-          this.contentForm.get('tempManagementComp.percentage').value === '' ||
-          this.contentForm.get('tempManagementComp.percentage').value < 0 ||
-          this.contentForm.get('tempManagementComp.percentage').value > 100
-        )
-      )
-    ) {
-      return false;
-    }
-    return true;
-  }
-
-  resetValues(val?: boolean) {
-    this.max = 100;
-    this.splitMax = 99;
-    this.splitMin = 1;
-    this.pubShareValue = 50;
-    this.playRewardMax = 50;
-
-    this.masterIncomeMax = 100;
-    this.compIncomeMax = 100;
-
-    this.masterWeightMax = 100;
-    this.compWeightMax = 100;
-
-    this.masterIncomeTotal = 0;
-    this.masterWeightTotal = 0;
-    this.compIncomeTotal = 0;
-    this.compWeightTotal = 0;
-
-    this.masterRoyaltySplit = [];
-    this.compRoyaltySplit = [];
-
-    this.isOneOwner = false;
-    this.sliderDisabled = false;
-
-    this.contentForm.reset();
-    this.ngOnInit();
-  }
-
-  // endregion
 
   addRoyaltySplit(listName) {
     switch (listName) {
@@ -906,67 +687,67 @@ export class ContentComponent implements OnInit, AfterViewInit {
     }
   }
 
-  denormalizeForView() {
-    if (this.contentForm.get('publishers_share').value !== 0) {
-      const pubShr = (this.contentForm.get('publishers_share').value / 100);
-      this.contentForm.patchValue({ publishers_share: pubShr });
+  showMasterThreshold() {
+    if (this.management.length > 1) {
+      return true;
     }
-
-    const plyRew = (this.contentForm.get('playing_reward').value / 100);
-    this.contentForm.patchValue({ playing_reward: plyRew });
+    else {
+      return false;
+    }
   }
 
-  reviewContent() {
-    this.prepReview();
-    this.dialogRefReview = this.dialog.open(ModalReviewComponent, {
-      width: '60%',
-      disableClose: true,
-      data: [this.contentForm.getRawValue(), this.trackArtists, this.albumArtists, this.writers, this.publishers, this.masterRoyaltySplit, this.compRoyaltySplit]
-    });
-
-    this.dialogRefReview.afterClosed().subscribe(data => {
-
-      if (data !== undefined) {
-        this.ui.showLoading();
-        this.normalizeFormValues().then((results) => {
-          if (results !== undefined) {
-            const authPassword = this.auth.user.getPassword();
-            this.sdacService.postContent(authPassword, this.auth.user.musername, results).then((success) => {
-              console.log('Success!');
-              if (success !== undefined) {
-                const answer = this.alert.showSuccessMessage('Success!', 'Your content has been posted to SounDAC.');
-                this.resetValues(); // TODO: Pass in 'yes'/'no' reset partial or all based on answer
-                this.ui.hideLoading();
-              } else {
-                this.denormalizeForView();
-              }
-            }).catch((err) => {
-              this.denormalizeForView();
-              this.alert.showErrorMessage('Failed to Post Content - Error: ' + err);
-              this.ui.hideLoading();
-            });
-          }
-          else {
-            this.alert.showErrorMessage('Unable to finalize content.');
-          }
-          this.ui.hideLoading();
-        });
-      }
-    });
+  showCompThreshold() {
+    if (this.managementComp.length > 1) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
-  prepReview() {
-    const num_releaseDate = Number.parseInt(this.datePipe.transform(this.contentForm.value.album_meta.releaseDate, 'yyyyMMdd'));
-    this.contentForm.get('album_meta').patchValue({ releaseDate: num_releaseDate });
+  setCountry(country) {
+    this.contentForm.get('album_meta').patchValue({ countryOrigin: country });
+  }
 
-    const num_salesStartDate = Number.parseInt(this.datePipe.transform(this.contentForm.value.album_meta.salesStartDate, 'yyyyMMdd'));
-    this.contentForm.get('album_meta').patchValue({ salesStartDate: num_salesStartDate });
+  mapGenre(selectorParam: string, genre: number) {
+    switch (selectorParam) {
+      case 'albumGenre1':
+        this.contentForm.get('album_meta').patchValue({ albumGenre1: genre });
+        break;
+      case 'albumGenre2':
+        this.contentForm.get('album_meta').patchValue({ albumGenre2: genre });
+        break;
+      case 'trackGenre1':
+        this.contentForm.get('track_meta').patchValue({ trackGenre1: genre });
+        break;
+      case 'trackGenre2':
+        this.contentForm.get('track_meta').patchValue({ trackGenre2: genre });
+        break;
+    }
+  }
+
+  currentDate() {
+    const today = new Date();
+    this.maxDate = new Date(this.datePipe.transform(today, 'yyyy/MM/dd'));
+    this.maxYear = Number.parseInt(this.datePipe.transform(today, 'yyyy'));
+  }
+
+  normalizeSplitVal(num: number) {
+    return (num * 100);
   }
 
   normalizeFormValues() { // TODO: Double check all values are correct!!!
     return new Promise((resolve, reject) => {
       const isValid = this.customValidation();
       if (isValid) {
+        ////
+        const releaseDate = Number.parseInt(this.datePipe.transform(this.contentForm.value.album_meta.releaseDate, 'yyyyMMdd'));
+        this.contentForm.get('album_meta').patchValue({ releaseDate: releaseDate });
+    
+        const num_salesStartDate = Number.parseInt(this.datePipe.transform(this.contentForm.value.album_meta.salesStartDate, 'yyyyMMdd'));
+        this.contentForm.get('album_meta').patchValue({ salesStartDate: num_salesStartDate });
+/////
+
         const num_releaseDate = this.contentForm.get('album_meta.releaseDate').value;
         const releaseYear = num_releaseDate.toString().substring(0, 4);
         const num_releaseYear = Number.parseInt(releaseYear);
@@ -1022,6 +803,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
         // endregion
 
         // region Comp
+        
         if (this.publishers.length === 0) {
           this.publishers.push(
             this.fb.control({
@@ -1030,13 +812,10 @@ export class ContentComponent implements OnInit, AfterViewInit {
               ISNI: undefined
             }));
         }
+
         // endregion
 
         // region Distributions and Management
-
-        // this.management.forEach(element => {
-
-        // });
 
         if (this.management.length === 1) {
           this.contentForm.patchValue({
@@ -1057,6 +836,219 @@ export class ContentComponent implements OnInit, AfterViewInit {
         reject(false);
       }
     });
+  }
+
+  denormalizeSplitVal(num: number) {
+    return (num / 100);
+  }
+
+  denormalizeForView() {
+    if (this.contentForm.get('publishers_share').value !== 0) {
+      const pubShr = (this.contentForm.get('publishers_share').value / 100);
+      this.contentForm.patchValue({ publishers_share: pubShr });
+    }
+
+    const plyRew = (this.contentForm.get('playing_reward').value / 100);
+    this.contentForm.patchValue({ playing_reward: plyRew });
+  }
+
+  updateMasterManagesContract(value?) {
+    if (value) {
+      this.contentForm.patchValue({ masterManagesContract: true });
+    }
+    else {
+      this.contentForm.patchValue({ masterManagesContract: false });
+      this.contentForm.get('tempManagement').patchValue({ percentage: null });
+    }
+  }
+
+  updateManagesCompsContract(value?) {
+    if (value) {
+      this.contentForm.patchValue({ compManagesContract: true });
+    }
+    else {
+      this.contentForm.patchValue({ compManagesContract: false });
+      this.contentForm.get('tempManagementComp').patchValue({ percentage: null });
+    }
+  }
+
+  onGenMasterSplitChange() {
+    this.contentForm.patchValue({ publishers_share: (this.max - this.contentForm.get('master_share').value) });
+    this.onGenSplitChange();
+  }
+
+  onGenCompSplitChange() {
+    this.contentForm.patchValue({ master_share: (this.max - this.contentForm.get('publishers_share').value) });
+    this.onGenSplitChange();
+  }
+
+  onGenSplitChange() {
+    this.contentForm.patchValue({ publishers_share: (this.max - this.contentForm.get('master_share').value) });
+    this.contentForm.patchValue({ master_share: (this.max - this.contentForm.get('publishers_share').value) });
+    this.playRewardMax = this.contentForm.get('master_share').value;
+    this.setCompRoyalty();
+  }
+
+  setCompRoyalty() {
+    this.pubShareValue = this.contentForm.get('publishers_share').value;
+    if (this.pubShareValue === 0) {
+      this.setCompRoyaltyNotRequired();
+    } else {
+      this.compRoyaltyRequired = true;
+      this.contentForm.get('comp_meta').patchValue({ isThirdPartyPublishers: true });
+    }
+  }
+
+  setCompRoyaltyNotRequired() {
+    this.compRoyaltySplit = [];
+    this.contentForm.get('tempDistributionsComp').patchValue({ payee: null });
+    this.contentForm.get('tempDistributionsComp').patchValue({ bp: null });
+    this.contentForm.get('tempManagementComp').patchValue({ voter: null });
+    this.contentForm.get('tempManagementComp').patchValue({ percentage: null });
+
+    this.contentForm.get('comp_meta').patchValue({ isThirdPartyPublishers: false });
+
+    this.contentForm.patchValue({ distributionsComp: [] });
+    this.contentForm.patchValue({ managementComp: [] });
+    this.compIncomeTotal = 0;
+    this.compWeightTotal = 0;
+    this.compRoyaltyRequired = false;
+  }
+
+  mastInputValid() {
+    if (this.contentForm.get('tempDistributions.payee').value === null ||
+      this.contentForm.get('tempDistributions.payee').value === '' ||
+
+      this.contentForm.get('tempDistributions.bp').value === null ||
+      this.contentForm.get('tempDistributions.bp').value === '' ||
+      this.contentForm.get('tempDistributions.bp').value < 0 ||
+      this.contentForm.get('tempDistributions.bp').value > 100 ||
+
+      this.contentForm.get('management_threshold').value === null ||
+      this.contentForm.get('management_threshold').value === '' ||
+      this.contentForm.get('playing_reward').value > this.contentForm.get('master_share').value ||
+
+      // (this.masterManagesContract === true &&
+      (this.contentForm.get('masterManagesContract').value === true &&
+        (
+          this.contentForm.get('tempManagement.percentage').value === null ||
+          this.contentForm.get('tempManagement.percentage').value === '' ||
+          this.contentForm.get('tempManagement.percentage').value < 0 ||
+          this.contentForm.get('tempManagement.percentage').value > 100
+        )
+      )
+    ) {
+      return false;
+    }
+    return true;
+  }
+
+  compInputValid() {
+    if (this.contentForm.get('tempDistributionsComp.payee').value === null ||
+      this.contentForm.get('tempDistributionsComp.payee').value === '' ||
+
+      this.contentForm.get('tempDistributionsComp.bp').value === null ||
+      this.contentForm.get('tempDistributionsComp.bp').value === '' ||
+      this.contentForm.get('tempDistributionsComp.bp').value < 0 ||
+      this.contentForm.get('tempDistributionsComp.bp').value > 100 ||
+
+      this.contentForm.get('management_threshold_comp').value === null ||
+      this.contentForm.get('management_threshold_comp').value === '' ||
+
+      (this.contentForm.get('compManagesContract').value === true &&
+        (
+          this.contentForm.get('tempManagementComp.percentage').value === null ||
+          this.contentForm.get('tempManagementComp.percentage').value === '' ||
+          this.contentForm.get('tempManagementComp.percentage').value < 0 ||
+          this.contentForm.get('tempManagementComp.percentage').value > 100
+        )
+      )
+    ) {
+      return false;
+    }
+    return true;
+  }
+
+  customValidation() {
+    if (this.distributions.length === 0 ||
+      this.trackArtists.length === 0 ||
+      this.writers.length === 0 ||
+      this.masterIncomeTotal !== 100 ||
+      this.masterWeightTotal !== 100 ||
+      (this.compRoyaltyRequired && this.distributionsComp.length === 0) ||
+      (this.compRoyaltyRequired && (this.compIncomeTotal !== 100 || this.compWeightTotal !== 100))) {
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
+
+  reviewContent() {
+    this.dialogRefReview = this.dialog.open(ModalReviewComponent, {
+      width: '60%',
+      disableClose: true,
+      data: [this.contentForm.getRawValue(), this.trackArtists, this.albumArtists, this.writers, this.publishers, this.masterRoyaltySplit, this.compRoyaltySplit]
+    });
+
+    this.dialogRefReview.afterClosed().subscribe(data => {
+
+      if (data !== undefined) {
+        this.ui.showLoading();
+        alert('001');
+        this.normalizeFormValues().then((results) => {
+          if (results !== undefined) {
+            const authPassword = this.auth.user.getPassword();
+            this.sdacService.postContent(authPassword, this.auth.user.musername, results).then((success) => {
+              console.log('Success!');
+              if (success !== undefined) {
+                const answer = this.alert.showSuccessMessage('Success!', 'Your content has been posted to SounDAC.');
+                this.resetValues(); // TODO: Pass in 'yes'/'no' reset partial or all based on answer
+                this.ui.hideLoading();
+              } else {
+                this.denormalizeForView();
+              }
+            }).catch((err) => {
+              this.denormalizeForView();
+              this.alert.showErrorMessage('Failed to Post Content - Error: ' + err);
+              this.ui.hideLoading();
+            });
+          }
+          else {
+            this.alert.showErrorMessage('Unable to finalize content.');
+          }
+          this.ui.hideLoading();
+        });
+      }
+    });
+  }
+
+  resetValues(val?: boolean) {
+    this.max = 100;
+    this.splitMax = 99;
+    this.splitMin = 1;
+    this.pubShareValue = 50;
+    this.playRewardMax = 50;
+
+    this.masterIncomeMax = 100;
+    this.compIncomeMax = 100;
+
+    this.masterWeightMax = 100;
+    this.compWeightMax = 100;
+
+    this.masterIncomeTotal = 0;
+    this.masterWeightTotal = 0;
+    this.compIncomeTotal = 0;
+    this.compWeightTotal = 0;
+
+    this.masterRoyaltySplit = [];
+    this.compRoyaltySplit = [];
+
+    this.isOneOwner = false;
+    this.sliderDisabled = false;
+
+    this.contentForm.reset();
+    this.ngOnInit();
   }
   // endregion
 }

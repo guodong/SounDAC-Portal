@@ -18,9 +18,9 @@
         <mat-tab-group>
           <mat-tab label="Master Side">
             <div class="container-fluid">
+                <!-- {{ contentForm.value | json }} -->
               <div class="row my-1">
                 <div class="col-12 my-2">
-                  <!-- {{contentForm.value | json}} -->
                   <h1>Track Info:</h1>
                   <div formGroupName="album_meta">
                     <mat-checkbox matInput formControlName="partOfAlbum" [matTooltip]="toolTips.partOfAlbum" [matTooltipShowDelay]="toolTips.delay">
@@ -239,6 +239,7 @@
 
           <mat-tab label="Composition Side">
             <div class="container-fluid">
+              <!-- {{ contentForm.value | json }} -->
               <div class="row my-1" formGroupName="comp_meta">
                 <mat-form-field class="col-4 my-2">
                   <input matInput formControlName="compTitle" placeholder="Composition Title">
@@ -294,21 +295,12 @@
 
           <mat-tab label="Management & Royalty Splits">
             <div class="container-fluid">
-              <div class="row my-1">
-                <div class="col-12 my-2">
-                  <!-- {{ contentForm.value | json }} -->
-                </div>
-              </div>
-
+              <!-- {{ contentForm.value | json }} -->
               <div class="row my-1">
                 <div class="col-12 my-2">
                   <h1>General Royalty Splits:</h1>
                 </div>
               </div>
-
-              <!-- <mat-error *ngIf="!genSplitTotal">
-                <strong>General Royalty Splits must total 100%</strong>
-              </mat-error> -->
 
               <div class="row my-1">
                 <div class="col-12 my-2">
