@@ -995,7 +995,6 @@ export class ContentComponent implements OnInit, AfterViewInit {
 
       if (data !== undefined) {
         this.ui.showLoading();
-        alert('001');
         this.normalizeFormValues().then((results) => {
           if (results !== undefined) {
             const authPassword = this.auth.user.getPassword();
