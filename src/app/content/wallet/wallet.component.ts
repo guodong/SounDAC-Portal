@@ -210,7 +210,11 @@ export class WalletComponent implements OnInit, OnDestroy {
     this.dialogRefWithd.afterClosed().subscribe(data => {
       if (data) {
         this.ui.showLoading();
-        this.sdacService.withdrawVesting(this.username, this.account.keys.active, data); // ... - Change active key back to password once blockchain fork happens
+        this.sdacService.withdrawVesting(this.username, this.account.keys.active, data).then(response => {
+          if (response === 'Success'){
+            this.alert.showCustomMessage('', 'Success!');
+          }
+        }); // ... - Change active key back to password once blockchain fork happens
       }
     });
   }
@@ -218,7 +222,14 @@ export class WalletComponent implements OnInit, OnDestroy {
   cancelWithdraw() {
     this.ui.showLoading();
     // const authPassword = this.auth.user.getPassword();
-    this.sdacService.withdrawVesting(this.username, this.account.keys.active, 0); // ... - Change active key back to password once blockchain fork happens
+    this.sdacService.withdrawVesting(this.username, this.account.keys.active, 0).then(response => {
+      if (response === 'Success'){
+        this.alert.showCustomMessage('', 'Success!');
+      } else{
+        this.alert.showCustomMessage('Alert', 'No VIP Exits pending.');
+      }
+
+    }); // ... - Change active key back to password once blockchain fork happens
   }
 
   generatePassword() {

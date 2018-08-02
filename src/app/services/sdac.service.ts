@@ -136,7 +136,7 @@ export class SdacService {
         }
       });
     }).catch((err) => {
-      this.alertService.showErrorMessage('withdrawVesting(): ' + err);
+      // this.alertService.showErrorMessage('withdrawVesting(): ' + err);
     });
   }
 

@@ -83,7 +83,7 @@ export class AdminService {
         firebase.app('sdacApi').firestore().collection('users').doc(doc.data().id).update(user).then( result => {
           console.log(user.username + ' updated!');
         }).catch(error => {
-          console.log('fuck');
+          console.log('error', error);
         });
 
       });

@@ -68,7 +68,7 @@ export class AlertService {
     });
   }
 
-  showSuccessMessage(title: string, message: string) {
+  showCustomMessage(title: string, message: string) {
     this.dialog.open(AlertDialogComponent, {
       disableClose: true,
       data: {
