@@ -87,12 +87,17 @@ export class AuthService {
       });
 
     }, error => {
+
       this.ui.hideLoading();
+
       if (error.error.error && error.error.error.message) {
         this.alert.showErrorMessage(error.error.error.message);
+      } else if (error.error.error) {
+        this.alert.showErrorMessage(error.error.error);
       } else {
-        this.alert.showErrorMessage(error.message);
+        this.alert.showErrorMessage(error.error);
       }
+
     });
 
   }
@@ -115,8 +120,6 @@ export class AuthService {
 
             // Get user Informations & Update it in client
             auth.userService.getUser(authUser.user.uid).subscribe((res: User) => {
-
-              console.log(keyDoc.data());
 
               // Set User
               auth.user = new User(res.id, res.username, res.email, res.key, res.roles);
@@ -157,12 +160,65 @@ export class AuthService {
       });
 
     }, error => {
+
       this.ui.hideLoading();
+
       if (error.error.error && error.error.error.message) {
         this.alert.showErrorMessage(error.error.error.message);
-      } else {
+      } else if (error.error.error) {
         this.alert.showErrorMessage(error.error.error);
+      } else {
+        this.alert.showErrorMessage(error.error);
       }
+
+    });
+
+  }
+
+  email(email: string) {
+
+    this.ui.showLoading();
+
+    // Sdac API Resend Email
+    this.http.post(this.url + 'email', {email: email}).subscribe((response: any) => {
+
+      // Firebase Login
+      this.afAuth.auth.signInWithCustomToken(response.token).then((userRecord) => {
+
+        // Email Verification
+        userRecord.user.sendEmailVerification().then(result => {
+
+          // Hide Loader
+          this.ui.hideLoading();
+
+          // Success Message
+          this.alert.showSuccessMessage('Success', 'A confirmation email has been sent, please verify your address before login.');
+
+          // Redirect
+          this.router.navigateByUrl('/login');
+
+        }).catch(error => {
+          this.ui.hideLoading();
+          this.alert.showErrorMessage(error);
+        });
+
+      }).catch(error => {
+        this.ui.hideLoading();
+        this.alert.showErrorMessage(error);
+      });
+
+    }, error => {
+
+      this.ui.hideLoading();
+
+      if (error.error.error && error.error.error.message) {
+        this.alert.showErrorMessage(error.error.error.message);
+      } else if (error.error.error) {
+        this.alert.showErrorMessage(error.error.error);
+      } else {
+        this.alert.showErrorMessage(error.error);
+      }
+
     });
 
   }

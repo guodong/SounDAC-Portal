@@ -2,7 +2,7 @@ import { faucet, faucetConfig, rightsManagementPortal, sdacApi } from './private
 
 export const environment = {
   production: true,
-  apiUrl: 'https://api.museblockchain.com/api/',
+  apiUrl: 'https://api.soundac.io/api/',
   blockchainFaucet: faucet,
   blockchainFaucetConfig: faucetConfig,
   rightsManagementPortal: rightsManagementPortal,

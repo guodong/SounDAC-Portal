@@ -25,7 +25,7 @@
 
                     <!--Username-->
                     <mat-form-field>
-                      <input matInput type="text" placeholder="Username (Public Wallet Address)" formControlName="username" required>
+                      <input matInput type="text" placeholder="Username (Public Wallet Address)" formControlName="username" autocomplete="username" required>
                       <mat-error *ngIf="form.controls.username.hasError('required')">
                         <strong>Username is required</strong>
                       </mat-error>
@@ -33,7 +33,7 @@
 
                     <!--Email-->
                     <mat-form-field>
-                      <input matInput type="email" placeholder="Email" formControlName="email" required>
+                      <input matInput type="email" placeholder="Email" formControlName="email" autocomplete="email" required>
                       <mat-error *ngIf="form.controls.email.hasError('required')">
                         <strong>Email is required</strong>
                       </mat-error>
@@ -44,7 +44,7 @@
 
                     <!--Password-->
                     <mat-form-field>
-                      <input matInput type="password" placeholder="Password" formControlName="password" required>
+                      <input matInput type="password" placeholder="Password" formControlName="password" autocomplete="password" required>
                       <mat-error *ngIf="form.controls.password.hasError('required')">
                         <strong>Password is required</strong>
                       </mat-error>
@@ -52,7 +52,7 @@
 
                     <!--Password Confirm-->
                     <mat-form-field>
-                      <input matInput type="password" placeholder="Password (Confirm)" formControlName="passwordConfirm" required>
+                      <input matInput type="password" placeholder="Password (Confirm)" formControlName="passwordConfirm" autocomplete="passwordConfirm" required>
                       <mat-error *ngIf="!passwordMatch()">
                         <strong>Password must match</strong>
                       </mat-error>
@@ -86,7 +86,7 @@
                     <div class="mt-3 text-center">
                       <button color="primary" mat-raised-button [disabled]="!form.valid">CREATE ACCOUNT</button>
 
-                      <p class="note mt-1">
+                      <p class="note mt-2">
                         <span>Already have an account?</span>
                         <br />
                         <a [routerLink]="['/login']">Sign in here</a>

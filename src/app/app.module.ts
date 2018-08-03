@@ -46,6 +46,7 @@ import { AdminComponent } from './content/admin/admin.component';
 import { HomeComponent } from './content/home/home.component';
 import { LayoutComponent } from './layout/layout.component';
 import { LoginComponent } from './content/defaults/login/login.component';
+import { EmailComponent } from './content/defaults/email/email.component';
 import { ModalTransferComponent } from './content/wallet/modal/modal-transfer.component';
 import { ModalDialogVestComponent } from './content/wallet/modal/modal-vest.component';
 import { ModalWithdrawComponent } from './content/wallet/modal/modal-withdraw.component';
@@ -75,6 +76,7 @@ firebase.initializeApp(environment.sdacApi, 'sdacApi'); // Sdac API
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'email', component: EmailComponent },
   { path: 'register-external', component: RegisterExternalComponent },
   {
     path: '', component: LayoutComponent, canActivate: [UserGuard], children: [
@@ -106,6 +108,7 @@ const routes: Routes = [
     NavbarComponent,
     SidenavComponent,
     ErrorDialogComponent,
+    EmailComponent,
     AlertDialogComponent,
     LayoutComponent,
     LoadingDialogComponent,
