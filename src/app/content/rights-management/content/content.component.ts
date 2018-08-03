@@ -995,14 +995,13 @@ export class ContentComponent implements OnInit, AfterViewInit {
 
       if (data !== undefined) {
         this.ui.showLoading();
-        alert('001');
         this.normalizeFormValues().then((results) => {
           if (results !== undefined) {
             const authPassword = this.auth.user.getPassword();
             this.sdacService.postContent(authPassword, this.auth.user.username, results).then((success) => {
               console.log('Success!');
               if (success !== undefined) {
-                const answer = this.alert.showSuccessMessage('Success!', 'Your content has been posted to SounDAC.');
+                const answer = this.alert.showCustomMessage('Success!', 'Your content has been posted to SounDAC.');
                 this.resetValues(); // TODO: Pass in 'yes'/'no' reset partial or all based on answer
                 this.ui.hideLoading();
               } else {

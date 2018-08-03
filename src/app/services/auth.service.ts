@@ -71,7 +71,7 @@ export class AuthService {
           this.ui.hideLoading();
 
           // Success Message
-          this.alert.showSuccessMessage('Success', 'A confirmation email has been sent, please verify your address before login.');
+          this.alert.showCustomMessage('Success', 'A confirmation email has been sent, please verify your address before login.');
 
           // Redirect
           this.router.navigateByUrl('/login');
@@ -322,7 +322,7 @@ export class AuthService {
           user.encryptPassword(newPassword);
           this.userService.updateUser(user).subscribe(usr => {
 
-            alert.showSuccessMessage('Password Changed!', 'Your password has been successfully changed.'); // TODO: Set messages in a resource file
+            alert.showCustomMessage('Password Changed!', 'Your password has been successfully changed.'); // TODO: Set messages in a resource file
             resolve(true);
 
           });
