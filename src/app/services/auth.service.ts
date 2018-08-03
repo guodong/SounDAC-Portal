@@ -192,7 +192,7 @@ export class AuthService {
           this.ui.hideLoading();
 
           // Success Message
-          this.alert.showSuccessMessage('Success', 'A confirmation email has been sent, please verify your address before login.');
+          this.alert.showCustomMessage('Success', 'A confirmation email has been sent, please verify your address before login.');
 
           // Redirect
           this.router.navigateByUrl('/login');
