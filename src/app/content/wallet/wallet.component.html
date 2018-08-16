@@ -75,25 +75,32 @@
 
             <!--RYLT Dollar-->
             <div class="row my-1">
-              <div class="col-12 mt-2">
+              <div class="col-12 my-2">
                 <h3>RYLT Balance:</h3>
               </div>
 
               <div class="col-12 my-2">
-                <span [innerHtml]="'Tokens worth about'"></span>
-                <span [innerHtml]="account.MBDbalance | currency:'USD':'symbol':'0.2-2'"></span>
-                <span [innerHtml]="' of XSD'"></span>
+                <!-- <span [innerHtml]="'Tokens worth about'"></span> -->
+                <!-- <span [innerHtml]="account.MBDbalance | currency:'USD':'symbol':'0.2-2'"></span> -->
+                <span [innerHtml]="account.MBDbalance"></span>
+                <!-- <span [innerHtml]="' of XSD'"></span> -->
+              </div>
+
+              <div class="col-12 my-2">
+                <span [innerHtml]="'1 RYLT token can be redeemed for about 1 USD worth of XSD tokens.'"></span>
+              </div>
+
+              <div class="col-12 my-2">
+                <button mat-raised-button (click)="redeemRylt()" class="mat-purple-bg">
+                  Redeem
+                </button>
+              </div>
+
+              <div class="col-12 my-1">
+                <mat-divider></mat-divider>
               </div>
             </div>
-            <div class="row my-1">
-                <div class="col-12 my-2">
-                  <span [innerHtml]="'1 RYLT token can be redeemed for about 1 USD worth of XSD tokens.'"></span>
-                </div>
-            </div>
-            <div class="col-12 my-1">
-              <mat-divider></mat-divider>
-            </div>
-            
+
             <!--Next Withdrawal-->
             <div class="row my-1">
               <div class="col-12 my-2">
@@ -286,7 +293,8 @@
                 </div>
 
                 <div class="col-12 my-2">
-                  <button mat-raised-button class="mat-purple-bg" disabled><!--[disabled]="!passwordForm.valid"-->
+                  <button mat-raised-button class="mat-purple-bg" disabled>
+                    <!--[disabled]="!passwordForm.valid"-->
                     Update Password
                   </button>
                 </div>

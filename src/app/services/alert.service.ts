@@ -69,8 +69,14 @@ export class AlertService {
   }
 
   showCustomMessage(title: string, message: string) {
+    let disable = true;
+    if (message !== '') {
+      disable = true;
+    } else {
+      disable = false;
+    }
     this.dialog.open(AlertDialogComponent, {
-      disableClose: true,
+      disableClose: disable,
       data: {
         title: title,
         message: message,

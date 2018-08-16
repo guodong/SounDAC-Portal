@@ -1,26 +1,25 @@
-import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
+import { Component, Inject } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'modal-vest',
   templateUrl: './modal-vest.component.html'
 })
-
 export class ModalDialogVestComponent {
   
   constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<ModalDialogVestComponent>
   ) { }
 
-  data = '';
+  inputAmount = '';
 
   save() {
-    console.log(this.data);
-    this.dialogRef.close(this.data);
+    // alert(this.data.balance);
+    this.dialogRef.close(this.inputAmount);
   }
 
   close() {
     this.dialogRef.close();
   }
-
 }

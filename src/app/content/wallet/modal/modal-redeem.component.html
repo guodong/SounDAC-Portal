@@ -1,0 +1,34 @@
+<h1 mat-dialog-title>Redeem RYLT</h1>
+<div mat-dialog-content class="container-fluid">
+  <div class="row my-1">
+    <div class="col-12 my-2" *ngIf="data">
+      <strong [innerHtml]="'RYLT Balance: ' + data.balance"></strong>
+    </div>
+  </div>
+
+  <div class="row my-1">
+    <div class="col-12 my-2">
+      <div mat-dialog-content>1 RYLT token can be redeemed for about 1 USD worth of XSD tokens.</div>
+    </div>
+  </div>
+  <div class="row my-1">
+    <mat-slider class="col-12 my-2" [step]="1" [max]="data.balance" [(ngModel)]="inputAmount">
+    </mat-slider>
+  </div>
+
+  <div class="row my-1">
+    <div class="col-12 my-2">
+      <mat-form-field>
+        <input matInput type="number" placeholder="Amount to Redeem" [max]="data.balance" tabindex="1" [(ngModel)]="inputAmount">
+      </mat-form-field>
+      <div *ngIf="inputAmount > data.balance" >
+          <strong [innerHtml]="'Amount to Redeem must be less than RYLT balance.'" style="color: red; font-weight: bold;"></strong>
+        </div>
+    </div>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <button class="mat-raised-button mat-primary" [disabled]="inputAmount === '' || inputAmount === null || inputAmount === 'undefined' || inputAmount > data.balance" (click)="save()">Redeem</button>
+  <button class="mat-raised-button" (click)="close()">Cancel</button>
+</div>

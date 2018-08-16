@@ -15,6 +15,7 @@ import { UIService } from '../../services/ui.service';
 import { ModalTransferComponent } from './modal/modal-transfer.component';
 import { ModalDialogVestComponent } from './modal/modal-vest.component';
 import { ModalWithdrawComponent } from './modal/modal-withdraw.component';
+import { ModalRedeemComponent } from './modal/modal-redeem.component';
 
 // Models
 import { SdacAccountHistory } from '../../models/sdac-account-history';
@@ -76,7 +77,8 @@ export class WalletComponent implements OnInit, OnDestroy {
   dialogRefTrans: MatDialogRef<ModalTransferComponent>;
   dialogRefVest: MatDialogRef<ModalDialogVestComponent>;
   dialogRefWithd: MatDialogRef<ModalWithdrawComponent>;
-
+  dialogRefRedeem: MatDialogRef<ModalRedeemComponent>;
+  
   // Account History
   dataSource = new MatTableDataSource<SdacAccountHistory>(this.account.history);
   displayedColumnsHistory = ['date', 'transaction'];
@@ -193,10 +195,28 @@ export class WalletComponent implements OnInit, OnDestroy {
 
   }
 
+  redeemRylt(){
+    this.dialogRefRedeem = this.dialog.open(ModalRedeemComponent, {
+        data: {
+          balance: this.account.MBDbalance
+        }
+      });
+    this.dialogRefRedeem.afterClosed().subscribe(data => {
+      if (data) {
+        this.ui.showLoading();
+        this.sdacService.redeemRylt(this.username, this.account.keys.active, data); // ... - Change active key back to password once blockchain fork happens
+      }
+    });
+
+  }
+
   vestXsd() {
-    this.dialogRefVest = this.dialog.open(ModalDialogVestComponent);
-    // const authPassword = this.auth.user.getPassword();
-    this.dialogRefVest.afterClosed().subscribe(data => {
+    this.dialogRefVest = this.dialog.open(ModalDialogVestComponent, {
+      data: {
+        balance: this.account.XsdBalance
+      }
+    });
+  this.dialogRefVest.afterClosed().subscribe(data => {
       if (data) {
         this.ui.showLoading();
         this.sdacService.transferXsdtoVest(this.username, this.account.keys.active, data); // ... - Change active key back to password once blockchain fork happens
@@ -205,7 +225,11 @@ export class WalletComponent implements OnInit, OnDestroy {
   }
 
   withdrawVest() {
-    this.dialogRefWithd = this.dialog.open(ModalWithdrawComponent);
+    this.dialogRefWithd = this.dialog.open(ModalWithdrawComponent, {
+      data: {
+        balance: this.account.Vestbalance
+      }
+    });
     // const authPassword = this.auth.user.getPassword();
     this.dialogRefWithd.afterClosed().subscribe(data => {
       if (data) {

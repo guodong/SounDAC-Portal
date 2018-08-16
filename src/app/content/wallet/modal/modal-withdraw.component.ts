@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { MatDialogRef  } from '@angular/material';
+import { Component, Inject } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'modal-withdraw',
@@ -7,15 +7,21 @@ import { MatDialogRef  } from '@angular/material';
 })
 
 export class ModalWithdrawComponent {
-  
-  constructor(
-    public dialogRef: MatDialogRef<ModalWithdrawComponent>
-  ) {}
 
-  data = '';
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public dialogRef: MatDialogRef<ModalWithdrawComponent>
+  ) { }
+
+  inputAmount = '';
+  getWeeklyAmount() {
+    return ((Number.parseFloat(this.inputAmount) / 13) / Math.pow(10, 3)).toFixed(6);
+
+    // console.log(Number(0.01).toFixed(6));
+  }
 
   save() {
-    this.dialogRef.close(this.data);
+    this.dialogRef.close(this.inputAmount);
   }
 
   close() {

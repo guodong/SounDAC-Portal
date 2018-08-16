@@ -21,6 +21,19 @@ export class Utils
         return S4() + S4() + S4() + S4() + S4() + S4() + S4();
     }
 
+    public static generateRequestId()
+    {
+        function S4()
+        {
+            // const randomA = Math.floor(Math.random() * 9000) + 1000;
+            // const randomB = Math.floor(Math.random() * 90000) + 10000;
+            // const requestId = randomA.toString() + randomB.toString();
+            // return Number.parseInt(requestId);
+            return Math.floor(Math.random() * 900000000) + 10000000;
+        }
+        return S4();
+    }
+
     public static handleize(text)
     {
         return text.toString().toLowerCase()
