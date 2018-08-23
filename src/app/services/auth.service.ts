@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore } from 'angularfire2/firestore';
-import * as sdac from 'museblockchain-js';
+import * as sdac from 'soundac-js';
 
 import { AlertService } from './alert.service';
 import { UIService } from './ui.service';

@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
 import { Utils } from '../modules/shared/utilities/utils';
 
 // Api
-import * as sdac from 'museblockchain-js';
+import * as sdac from 'soundac-js';
 import { SdacAccountHistory } from '../models/sdac-account-history';
 
 import { SdacKeys } from '../models/sdac-keys';
