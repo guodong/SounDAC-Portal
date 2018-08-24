@@ -22,22 +22,13 @@ export class SidenavComponent {
   ) { }
 
   artistKeyVerification() {
-    // alert(this.auth.user.roles.management);
     if (!this.auth.user.roles.management) {
       this.dialogRefKey = this.dialog.open(ModalKeyComponent);
       this.dialogRefKey.afterClosed().subscribe(data => {
-        if (data !== '') {
-          // this.sdacService.transferXsd(this.username, this.account.keys.active, data.transferto.toLowerCase(), data.amount, data.memo);
-          this.auth.updateRole(data)
+        if (data.key !== '') {
+          this.auth.updateRole(data);
         }
-      }
-      )
+      });
     }
-    else {
-      // alert("nav goes here")
-      this.router.navigateByUrl('/post-content');
-    }
-
-
   }
 }
