@@ -22,7 +22,7 @@ export class SidenavComponent {
   ) { }
 
   artistKeyVerification() {
-    alert(this.auth.user.roles.management);
+    // alert(this.auth.user.roles.management);
     if (!this.auth.user.roles.management) {
       this.dialogRefKey = this.dialog.open(ModalKeyComponent);
       this.dialogRefKey.afterClosed().subscribe(data => {

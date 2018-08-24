@@ -278,19 +278,86 @@ export class AuthService {
     return false;
   }
 
-  updateRole(key: string) {
-    const auth = this;
-    auth.userService.getUser(authUser.user.uid).subscribe((res: User) => {});
+  // updateRole(key: string) {
+  //   const auth = this;
+  //   auth.userService.getUser(authUser.user.uid).subscribe((res: User) => {});
 
-    
-    this.afs.collection('keys').doc('invite').ref.get().then(function (keyDoc){
-          if (key === keyDoc.data().key) {
-            this.user.roles.management = true;
-            this.user.roles.user = false;
-            // this.afAuth.userService.updateUser(this.afAuth.user.role.management)
-          }
-      })
-    }
+
+  //   this.afs.collection('keys').doc('invite').ref.get().then(function (keyDoc){
+  //         if (key === keyDoc.data().key) {
+  //           this.user.roles.management = true;
+  //           this.user.roles.user = false;
+  //           // this.afAuth.userService.updateUser(this.afAuth.user.role.management)
+  //         }
+  //     })
+  //   }
+
+  updateRole(key: string) {
+
+    this.ui.showLoading();
+
+          const auth = this;
+
+          // Get Invite Key
+          this.afs.collection('keys').doc('invite').ref.get().then(function (keyDoc) {
+
+            // Get user Informations & Update it in client
+            auth.userService.getUser(auth.user.id).subscribe((res: User) => {
+
+              if (key && key !== '') {
+                if (key === keyDoc.data().key) {
+                  auth.user.roles.management = true;
+                }
+              }
+
+              auth.user$ = Observable.of(auth.user);
+              auth.userService.updateUser(auth.user).subscribe((usr: User) => {
+
+                // Redirect
+                auth.ui.hideLoading();
+                auth.router.navigateByUrl('/post-content');
+              }
+              )}
+            )}
+          )}
+
+
+    //           }, error => {
+    //             auth.ui.hideLoading();
+    //             auth.alert.showErrorMessage(error);
+    //           });
+
+    //         });
+
+    //       }).catch(function (error) {
+    //         console.log('Error getting document:', error);
+    //       });
+
+    //     }).catch(error => {
+    //       this.ui.hideLoading();
+    //       this.alert.showErrorMessage(error);
+    //     });
+
+    //   }).catch(error => {
+    //     this.ui.hideLoading();
+    //     this.alert.showErrorMessage(error);
+    //   });
+
+    // }, error => {
+
+    //   this.ui.hideLoading();
+
+    //   if (error.error.error && error.error.error.message) {
+    //     this.alert.showErrorMessage(error.error.error.message);
+    //   } else if (error.error.error) {
+    //     this.alert.showErrorMessage(error.error.error);
+    //   } else {
+    //     this.alert.showErrorMessage(error.error);
+    //   }
+
+    // });
+
+  
 
   // endregion
 
