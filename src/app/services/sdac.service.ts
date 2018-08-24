@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
 import { Utils } from '../modules/shared/utilities/utils';
 
 // Api
-import * as sdac from 'soundac-js';
+import * as sdac from 'museblockchain-js';
 import { SdacAccountHistory } from '../models/sdac-account-history';
 
 import { SdacKeys } from '../models/sdac-keys';
@@ -221,6 +221,8 @@ export class SdacService {
           keys.active,
           username,
           content.url,
+          // content.album_meta,
+
           {
             part_of_album: content.album_meta.partOfAlbum,
             album_title: content.album_meta.albumTitle,

@@ -41,9 +41,9 @@ export class RegisterComponent {
 
     // Build Form
     this.form = fb.group({
-      username: fb.control('', Validators.required),
+      username: fb.control('', [Validators.required, Validators.minLength(3), Validators.maxLength(16), Validators.pattern('a-zA-Z0-9')]),
       email: fb.control('', [Validators.required, Validators.email]),
-      password: fb.control('', Validators.required),
+      password: fb.control('', [Validators.required,  Validators.minLength(6)]),
       passwordConfirm: fb.control('', Validators.required),
       terms: fb.control(false, Validators.required),
       ackLoss: fb.control(false, Validators.required),
