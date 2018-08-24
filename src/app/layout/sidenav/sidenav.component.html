@@ -12,8 +12,10 @@
         <span>Wallet</span>
       </a>
     </li>
-    <li *ngIf="auth.isManagement(auth.user)">
-      <a routerLink="/post-content" routerLinkActive="active">
+    <li>
+      <!-- <a routerLink="/post-content" routerLinkActive="active"> -->
+      <a (click)="artistKeyVerification()" routerLinkActive="active">
+        <!-- <*ngIf=user.role !== Management then popup, else line 16> -->
         <i class="material-icons mx-4 align-middle">line_style</i>
         <span>Rights Management</span>
       </a>

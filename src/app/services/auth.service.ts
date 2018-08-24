@@ -15,6 +15,7 @@ import { User } from '../models/user';
 import { Observable } from 'rxjs/Observable';
 import { UserService } from './user.service';
 
+
 @Injectable()
 export class AuthService {
 
@@ -102,7 +103,7 @@ export class AuthService {
 
   }
 
-  login(user: User, key: string) {
+  login(user: User) {
 
     this.ui.showLoading();
 
@@ -125,11 +126,11 @@ export class AuthService {
               auth.user = new User(res.id, res.username, res.email, res.key, res.roles);
               auth.user.encryptPassword(user.password);
 
-              if (key && key !== '') {
-                if (key === keyDoc.data().key) {
-                  auth.user.roles.management = true;
-                }
-              }
+              // if (key && key !== '') {
+              //   if (key === keyDoc.data().key) {
+              //     auth.user.roles.management = true;
+              //   }
+              // }
 
               auth.user$ = Observable.of(auth.user);
               auth.userService.updateUser(auth.user).subscribe((usr: User) => {
@@ -276,6 +277,20 @@ export class AuthService {
 
     return false;
   }
+
+  updateRole(key: string) {
+    const auth = this;
+    auth.userService.getUser(authUser.user.uid).subscribe((res: User) => {});
+
+    
+    this.afs.collection('keys').doc('invite').ref.get().then(function (keyDoc){
+          if (key === keyDoc.data().key) {
+            this.user.roles.management = true;
+            this.user.roles.user = false;
+            // this.afAuth.userService.updateUser(this.afAuth.user.role.management)
+          }
+      })
+    }
 
   // endregion
 

@@ -49,6 +49,7 @@ import { LoginComponent } from './content/defaults/login/login.component';
 import { EmailComponent } from './content/defaults/email/email.component';
 import { ModalTransferComponent } from './content/wallet/modal/modal-transfer.component';
 import { ModalRedeemComponent } from './content/wallet/modal/modal-redeem.component';
+import { ModalKeyComponent } from './layout/sidenav/modals/artist-key/modal-key.component';
 import { ModalDialogVestComponent } from './content/wallet/modal/modal-vest.component';
 import { ModalWithdrawComponent } from './content/wallet/modal/modal-withdraw.component';
 import { PageNotFoundComponent } from './content/defaults/page-not-found/page-not-found.component';
@@ -97,6 +98,7 @@ const routes: Routes = [
     AlertDialogComponent,
     ModalTransferComponent,
     ModalRedeemComponent,
+    ModalKeyComponent,
     ModalDialogVestComponent,
     ModalWithdrawComponent,
     TacComponent,
@@ -116,6 +118,7 @@ const routes: Routes = [
     LoadingDialogComponent,
     ModalTransferComponent,
     ModalRedeemComponent,
+    ModalKeyComponent,
     ModalDialogVestComponent,
     ModalWithdrawComponent,
     ModalReviewComponent,

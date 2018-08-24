@@ -24,7 +24,7 @@ export class LoginComponent {
     this.form = fb.group({
       username: fb.control('', Validators.required),
       password: fb.control('', Validators.required),
-      key: fb.control('')
+      // key: fb.control('')
     });
 
   }
@@ -32,17 +32,17 @@ export class LoginComponent {
   form: FormGroup;
 
   login() {
-
+  
     // Building new User
     const user = new User();
     user.username = this.form.get('username').value; // Can pass email in this field too for sdac gateway
     user.password = this.form.get('password').value;
 
-    // Invitation Key
-    const key = this.form.get('key').value;
+    // // Invitation Key
+    // const key = this.form.get('key').value;~
 
-    // Login with User
-    this.auth.login(user, key);
+    // // Login with User
+    this.auth.login(user);
 
   }
 

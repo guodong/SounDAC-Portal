@@ -1,0 +1,16 @@
+<h1 mat-dialog-title>Artist Invitation Key</h1>
+<div mat-dialog-content class="container-fluid">
+  <div class="row my-1">
+    <div class="col-12 my-2" *ngIf="data">
+      <strong [innerHtml]="'Please Enter Your Invitation Key: '"></strong>
+    </div>
+  </div>
+
+  <mat-form-field>
+    <input matInput type="text" [(ngModel)]="key" autocomplete="key" />
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button class="mat-raised-button mat-primary" (click)="save()">Submit</button>
+  <button class="mat-raised-button" (click)="close()">Cancel</button>
+</div>
