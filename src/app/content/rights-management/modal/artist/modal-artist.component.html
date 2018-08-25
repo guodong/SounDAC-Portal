@@ -22,12 +22,12 @@
       <div class="row my-1">
         <mat-form-field class="col-6 my-2">
           <!-- <input matInput name="alias" [formControl]="aliasControl" tabindex="1" [(ngModel)]="data.alias" placeholder="Alias"> -->
-          <input matInput tabindex="1" formControlName="alias" [(ngModel)]="data.alias" placeholder="Alias" (keyup.enter)="addAliase()">
+          <input matInput tabindex="1" formControlName="alias" [(ngModel)]="data.alias" placeholder="Alias" (keyup.enter)="addAlias()">
         </mat-form-field>
 
         <div class="col-6 my-2">
-          <span>Add another aliase... </span>
-          <button mat-icon-button (click)="addAliase()">
+          <span>Add another alias... </span>
+          <button mat-icon-button (click)="addAlias()">
             <mat-icon class="icon-sidenav-toggle fade-in-on-icon-sidenav">add_box</mat-icon>
           </button>
         </div>

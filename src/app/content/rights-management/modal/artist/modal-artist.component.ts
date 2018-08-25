@@ -32,7 +32,7 @@ export class ModalArtistComponent implements OnInit {
     this.aliases = [];
   }
 
-  addAliase() {
+  addAlias() {
     if (this.data.alias) {
       this.aliases.push(this.data.alias);
       this.data.alias = '';

@@ -3,7 +3,7 @@ import { AuthService } from '../../services/auth.service';
 import { ModalKeyComponent } from './modals/artist-key/modal-key.component';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { User } from '../../models/user';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-sidenav',
@@ -22,6 +22,9 @@ export class SidenavComponent {
   ) { }
 
   artistKeyVerification() {
+
+    const auth = this;
+
     if (!this.auth.user.roles.management) {
       this.dialogRefKey = this.dialog.open(ModalKeyComponent);
       this.dialogRefKey.afterClosed().subscribe(data => {
@@ -29,6 +32,9 @@ export class SidenavComponent {
           this.auth.updateRole(data);
         }
       });
+    }
+    else {
+      auth.router.navigateByUrl('/post-content'); 
     }
   }
 }

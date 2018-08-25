@@ -15,8 +15,8 @@ export class ModalKeyComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<ModalKeyComponent>,
-    private afs:AngularFirestore,
-    public auth:AngularFireAuth,
+    private afs: AngularFirestore,
+    public auth: AngularFireAuth,
   ) {}
 
   key = '';
