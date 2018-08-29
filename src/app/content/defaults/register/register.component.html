@@ -29,6 +29,9 @@
                       <mat-error *ngIf="form.controls.username.hasError('required')">
                         <strong>Username is required</strong>
                       </mat-error>
+                      <mat-error *ngIf="form.controls.username.errors?.pattern">
+                        <strong>Username not valid</strong>
+                      </mat-error>
                     </mat-form-field>
 
                     <!--Email-->
