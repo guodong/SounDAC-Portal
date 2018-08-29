@@ -291,23 +291,18 @@ export class AuthService {
             // Get user Informations & Update it in client
             auth.userService.getUser(auth.user.id).subscribe((res: User) => {
 
-              // if (key && key !== '') {
                 if (key === keyDoc.data().key) {
                   auth.user.roles.management = true;
                   auth.user.roles.user = false;
-                  auth.user$ = Observable.of(auth.user);
                   auth.userService.updateUser(auth.user).subscribe((usr: User) => {
                   
                 
                 // Redirect
-                // auth.ui.hideLoading();
                 auth.router.navigateByUrl('/post-content');
-              });
-              // this.alert.showCustomMessage('Success!', 'Your invitation key has been validated.');    
+              }); 
             } else {
               
               alert.showCustomMessage('Invalid Invitation Key', 'Please enter a valid invitation key.');
-              // auth.ui.hideLoading();
             }
             });
             auth.ui.hideLoading();
