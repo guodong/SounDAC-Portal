@@ -18,7 +18,7 @@ export class GenreComponent implements OnInit {
     required: string;
 
     toolTips = {
-        genre: 'Tool Tip',
+        genre: 'PLEASE SELECT A PRIMARY AND A SECONDARY GENRE FROM THE LIST PROVIDED.',
         delay: '1000',
     };
 

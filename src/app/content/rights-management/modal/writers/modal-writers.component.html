@@ -32,8 +32,8 @@
         </mat-form-field>
 
         <form [formGroup]="form" class="col-6 my-2">
-          <mat-form-field >
-            <mat-select placeholder="Writer's Role" formControlName="role" name="role" matTooltip= {{toolTips.role}} 
+          <mat-form-field>
+            <mat-select placeholder="Writer's Role" tabindex="1" formControlName="role" name="role" matTooltip= {{toolTips.role}} 
             matTooltipShowDelay= {{toolTips.delay}} required>
               <mat-option *ngFor="let r of roles" [value]="r.value">
                 {{ r.view }}
@@ -49,8 +49,8 @@
     </div>
 
     <mat-dialog-actions align="end">
-      <button *ngIf="data.btnStart" class="mat-raised-button mat-primary" (click)="btnClick(data.btnStart)">{{data.btnStart}}</button>
-      <button *ngIf="data.btnEnd" [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="btnClick(data.btnEnd)">{{data.btnEnd}}</button>
+      <button *ngIf="data.btnStart" class="mat-raised-button mat-primary" (click)="btnClick(data.btnStart)" tabindex="1">{{data.btnStart}}</button>
+      <button *ngIf="data.btnEnd" [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="btnClick(data.btnEnd)" tabindex="1">{{data.btnEnd}}</button>
     </mat-dialog-actions>
   </div>
 </form>

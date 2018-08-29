@@ -242,13 +242,13 @@
               <!-- {{ contentForm.value | json }} -->
               <div class="row my-1" formGroupName="comp_meta">
                 <mat-form-field class="col-4 my-2">
-                  <input matInput formControlName="compTitle" placeholder="Composition Title">
+                  <input matInput formControlName="compTitle" placeholder="Composition Title" [matTooltip]="toolTips.compositionTitle" [matTooltipShowDelay]="toolTips.delay">
                 </mat-form-field>
                 <mat-form-field class="col-4 my-2">
-                  <input matInput formControlName="compTitleAlt" placeholder="Composition Title Alternate">
+                  <input matInput formControlName="compTitleAlt" placeholder="Composition Title Alternate" [matTooltip]="toolTips.compositionTitleAlt" [matTooltipShowDelay]="toolTips.delay">
                 </mat-form-field>
                 <mat-form-field class="col-4 my-2">
-                  <input type="text" matInput formControlName="compTitleIswc" placeholder="Composition ISWC">
+                  <input type="text" matInput formControlName="compTitleIswc" placeholder="Composition ISWC" [matTooltip]="toolTips.compositionTitleIswc" [matTooltipShowDelay]="toolTips.delay">
                 </mat-form-field>
               </div>
 

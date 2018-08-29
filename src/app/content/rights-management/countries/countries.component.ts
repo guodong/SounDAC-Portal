@@ -14,7 +14,7 @@ export class CountriesComponent implements OnInit {
 
     
     toolTips = {
-        countries: 'Tool Tip',
+        countries: 'PLEASE SELECT THE COUNTRY IN WHICH THIS RECORDING WAS FIRST PUBLISHED.',
         delay: '1000',
     };
 

@@ -4,7 +4,7 @@
   </mat-toolbar-row>
   <div mat-dialog-content>
     <div class="row my-1">
-      <mat-form-field class="col-12 my-2" matTooltip= {{toolTips.sample}} matTooltipShowDelay= {{toolTips.delay}}>
+      <mat-form-field class="col-12 my-2" matTooltip= {{toolTips.publisher}} matTooltipShowDelay= {{toolTips.delay}}>
         <input matInput tabindex="1" formControlName="publisher" [(ngModel)]="data.publisher" placeholder="Publisher" required>
 
         <mat-error *ngIf="form.controls.publisher.hasError('required')">
@@ -14,18 +14,18 @@
     </div>
  
     <div class="row my-1">
-      <mat-form-field class="col-6 my-2" matTooltip= {{toolTips.sample}} matTooltipShowDelay= {{toolTips.delay}}>
+      <mat-form-field class="col-6 my-2" matTooltip= {{toolTips.ipi}} matTooltipShowDelay= {{toolTips.delay}}>
         <input matInput tabindex="1" name="IPI_CAE" [(ngModel)]="data.IPI_CAE" formControlName="IPI_CAE" placeholder="Publisher IPI or CAE">
       </mat-form-field>
 
-      <mat-form-field class="col-6 my-2" matTooltip= {{toolTips.sample}} matTooltipShowDelay= {{toolTips.delay}}>
+      <mat-form-field class="col-6 my-2" matTooltip= {{toolTips.isni}} matTooltipShowDelay= {{toolTips.delay}}>
         <input matInput  type="number" min=0  tabindex="1" name="ISNI" formControlName="ISNI" [(ngModel)]="data.ISNI" placeholder="ISNI">
       </mat-form-field>
     </div>
   </div>
 
   <mat-dialog-actions align="end">
-    <button *ngIf="data.btnStart" class="mat-raised-button mat-primary" (click)="btnClick(data.btnStart)">{{data.btnStart}}</button>
-    <button *ngIf="data.btnEnd" [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="btnClick(data.btnEnd)">{{data.btnEnd}}</button>
+    <button *ngIf="data.btnStart" class="mat-raised-button mat-primary" (click)="btnClick(data.btnStart)" tabindex="1">{{data.btnStart}}</button>
+    <button *ngIf="data.btnEnd" [disabled]="!form.valid" class="mat-raised-button mat-primary" (click)="btnClick(data.btnEnd)" tabindex="1">{{data.btnEnd}}</button>
   </mat-dialog-actions>
 </form>

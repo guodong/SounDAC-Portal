@@ -15,6 +15,7 @@ import { User } from '../models/user';
 import { Observable } from 'rxjs/Observable';
 import { UserService } from './user.service';
 
+
 @Injectable()
 export class AuthService {
 
@@ -102,7 +103,7 @@ export class AuthService {
 
   }
 
-  login(user: User, key: string) {
+  login(user: User) {
 
     this.ui.showLoading();
 
@@ -125,11 +126,11 @@ export class AuthService {
               auth.user = new User(res.id, res.username, res.email, res.key, res.roles);
               auth.user.encryptPassword(user.password);
 
-              if (key && key !== '') {
-                if (key === keyDoc.data().key) {
-                  auth.user.roles.management = true;
-                }
-              }
+              // if (key && key !== '') {
+              //   if (key === keyDoc.data().key) {
+              //     auth.user.roles.management = true;
+              //   }
+              // }
 
               auth.user$ = Observable.of(auth.user);
               auth.userService.updateUser(auth.user).subscribe((usr: User) => {
@@ -276,6 +277,43 @@ export class AuthService {
 
     return false;
   }
+
+  updateRole(key: string) {
+
+    this.ui.showLoading();
+
+          const auth = this;
+          const alert = this.alert;
+
+          // Get Invite Key
+          this.afs.collection('keys').doc('invite').ref.get().then(function (keyDoc) {
+
+            // Get user Informations & Update it in client
+            auth.userService.getUser(auth.user.id).subscribe((res: User) => {
+
+              // if (key && key !== '') {
+                if (key === keyDoc.data().key) {
+                  auth.user.roles.management = true;
+                  auth.user.roles.user = false;
+                  auth.user$ = Observable.of(auth.user);
+                  auth.userService.updateUser(auth.user).subscribe((usr: User) => {
+                  
+                
+                // Redirect
+                // auth.ui.hideLoading();
+                auth.router.navigateByUrl('/post-content');
+              });
+              // this.alert.showCustomMessage('Success!', 'Your invitation key has been validated.');    
+            } else {
+              
+              alert.showCustomMessage('Invalid Invitation Key', 'Please enter a valid invitation key.');
+              // auth.ui.hideLoading();
+            }
+            });
+            auth.ui.hideLoading();
+          });
+        }
+
 
   // endregion
 

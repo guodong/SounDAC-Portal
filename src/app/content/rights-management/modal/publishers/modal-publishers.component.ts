@@ -14,7 +14,9 @@ export class ModalPublishersComponent {
   form: FormGroup;
 
   toolTips = {
-    sample: 'HINT.',
+    publisher: 'THE PUBLISHER IS THE PARTY THAT MAKES A RESOURCE OR RECORDING AVAILABLE.',
+    ipi: 'ENTER THE INTERESTED PARTIES INFORMATION NUMBER (ALSO KNOWN AS COMPOSER, AUTHOR, PUBLISHER OR CAE NUMBER) HERE.',
+    isni: 'ENTER THE INTERNATIONAL STANDARD NAME IDENTIFIER HERE.',
     delay: '1000',
   };
   constructor(

@@ -15,6 +15,13 @@ export class ModalArtistComponent implements OnInit {
   aliases: string[];
   form: FormGroup;
 
+  toolTips = {
+    artist: 'ENTER THE NAME OF THE PERFORMING ARTIST.',
+    isni: 'ENTER THE INTERNATIONAL STANDARD NAME IDENTIFIER HERE.',
+    alias: 'ENTER ANY ALIASES OR ALTERNATIVE NAMES THAT THE PERFORMING ARTIST MAY BE KNOWN BY.',
+    delay: '1000',
+  };
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<ModalArtistComponent>,
@@ -32,7 +39,7 @@ export class ModalArtistComponent implements OnInit {
     this.aliases = [];
   }
 
-  addAliase() {
+  addAlias() {
     if (this.data.alias) {
       this.aliases.push(this.data.alias);
       this.data.alias = '';
