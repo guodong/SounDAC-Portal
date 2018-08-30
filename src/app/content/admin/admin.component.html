@@ -42,6 +42,27 @@
               </div>
             </div>
 
+           
+            <div class="row my-1">
+                <div class="col-12 my-2">
+                  <h3>New Artist Invitation Keys</h3>
+                <span>
+                  Use this tool to generate new unique artist invitation keys for onboarding artists.
+                </span></div>
+                <div class="col-12 my-2">
+                  <button mat-raised-button class="mat-purple-bg" (click)="generateInvitationKey()">Generate Key</button>
+                </div>
+
+                <div *ngIf="generatedKey" class="col-12 my-2">
+                    <p class="font-weight-bold" [innerHtml]="generatedKey"></p>
+                  </div>
+
+                <div class="col-12 my-1">
+                  <mat-divider></mat-divider>
+                </div>
+              </div>
+
+
           </div>
         </mat-tab>
 
@@ -60,7 +81,8 @@
         </mat-tab>
 
       </mat-tab-group>
+    
     </div>
-
+    
   </div>
 </div>
