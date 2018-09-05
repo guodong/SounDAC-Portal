@@ -7,17 +7,17 @@
       <h2>Wallet</h2>
       <div *ngIf="marketCap" class="text-right align-middle">
 
-        <span [innerHtml]="marketCap.price_btc"></span>
+        <!-- <span [innerHtml]="marketCap.price_btc"></span>
         <span>BTC / XSD</span>
-        <br />
+        <br /> -->
 
-        <span [innerHtml]="marketCap.price_usd"></span>
+        <span [innerHtml]="marketCap.price_usd | currency:'USD':'symbol':'0.2-4'"></span>
         <span>USD / XSD</span>
         <br />
 
-        <span [innerHtml]="'XSD tokens worth about'"></span>
+        <!-- <span [innerHtml]="'XSD tokens worth about'"></span>
         <span [innerHtml]="(account.XsdBalance * marketCap.price_usd) | currency:'USD':'symbol':'0.2-2'"></span>
-        <span [innerHtml]="'USD'"></span>
+        <span [innerHtml]="'USD'"></span> -->
       </div>
     </div>
 
