@@ -8,8 +8,7 @@ import { AuthService } from '../../../services/auth.service';
 })
 export class NavbarAuthComponent {
 
-  constructor(
-    public auth: AuthService
-  ) { }
-
+  // constructor(
+  //   public auth: AuthService
+  // ) { }
 }
