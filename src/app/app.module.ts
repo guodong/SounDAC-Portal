@@ -37,7 +37,6 @@ import { AlertDialogComponent } from './layout/dialogs/alert/alert.dialog.compon
 import { ErrorDialogComponent } from './layout/dialogs/error/error.dialog.component';
 import { LoadingDialogComponent } from './layout/dialogs/loading/loading.dialog.component';
 import { NavbarComponent } from './layout/navbar/navbar.component';
-import { NavbarAuthComponent } from './layout/navbar/auth/auth.component';
 import { NavbarMenuComponent } from './layout/navbar/menu/menu.component';
 import { SearchComponent } from './layout/navbar/search/search.component';
 import { SidenavComponent } from './layout/sidenav/sidenav.component';
@@ -126,7 +125,6 @@ const routes: Routes = [
     ModalArtistComponent,
     ModalPublishersComponent,
     ModalWritersComponent,
-    NavbarAuthComponent,
     NavbarMenuComponent,
     HomeComponent,
     LoginComponent,
