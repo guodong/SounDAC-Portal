@@ -2,10 +2,9 @@
 import { Injectable } from '@angular/core';
 
 // Modules
-import * as firebase from 'firebase';
-
-// Services
-import { FirestoreService } from './firestore.service';
+import * as firebase from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/database';
 
 // Models
 import { RmpUsers } from '../models/rmp-users';
@@ -16,8 +15,7 @@ import { AuthService } from './auth.service';
 export class AdminService {
 
   constructor(
-    private auth: AuthService,
-    private db: FirestoreService
+    private auth: AuthService
   ) { }
 
   importRMPUsers() {

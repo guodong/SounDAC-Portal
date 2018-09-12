@@ -23,9 +23,6 @@ import { SdacAccount } from '../../models/sdac-account';
 import { SdacKeys } from '../../models/sdac-keys';
 import { SdacWitness } from '../../models/sdac-witness';
 import { Subscription } from '../../../../node_modules/rxjs/Subscription';
-import { timer } from '../../../../node_modules/rxjs/observable/timer';
-import { Observable } from '../../../../node_modules/@firebase/util';
-import { User } from '../../models/user';
 
 @Component({
   selector: 'wallet',
@@ -50,6 +47,7 @@ export class WalletComponent implements OnInit, OnDestroy {
     this.passwordForm = fb.group({
       password: fb.control('', Validators.required),
       newPassword: fb.control('', Validators.required),
+      confirmPassword: fb.control('', Validators.required),
       understand: fb.control(null, Validators.required),
       saved: fb.control(null, Validators.required)
     });
@@ -78,7 +76,7 @@ export class WalletComponent implements OnInit, OnDestroy {
   dialogRefVest: MatDialogRef<ModalDialogVestComponent>;
   dialogRefWithd: MatDialogRef<ModalWithdrawComponent>;
   dialogRefRedeem: MatDialogRef<ModalRedeemComponent>;
-  
+
   // Account History
   dataSource = new MatTableDataSource<SdacAccountHistory>(this.account.history);
   displayedColumnsHistory = ['date', 'transaction'];
@@ -195,12 +193,12 @@ export class WalletComponent implements OnInit, OnDestroy {
 
   }
 
-  redeemRylt(){
+  redeemRylt() {
     this.dialogRefRedeem = this.dialog.open(ModalRedeemComponent, {
-        data: {
-          balance: this.account.MBDbalance
-        }
-      });
+      data: {
+        balance: this.account.MBDbalance
+      }
+    });
     this.dialogRefRedeem.afterClosed().subscribe(data => {
       if (data) {
         this.ui.showLoading();
@@ -216,7 +214,7 @@ export class WalletComponent implements OnInit, OnDestroy {
         balance: this.account.XsdBalance
       }
     });
-  this.dialogRefVest.afterClosed().subscribe(data => {
+    this.dialogRefVest.afterClosed().subscribe(data => {
       if (data) {
         this.ui.showLoading();
         this.sdacService.transferXsdtoVest(this.username, this.account.keys.active, data); // ... - Change active key back to password once blockchain fork happens
@@ -235,7 +233,7 @@ export class WalletComponent implements OnInit, OnDestroy {
       if (data) {
         this.ui.showLoading();
         this.sdacService.withdrawVesting(this.username, this.account.keys.active, data).then(response => {
-          if (response === 'Success'){
+          if (response === 'Success') {
             this.alert.showCustomMessage('', 'Success!');
           }
         }); // ... - Change active key back to password once blockchain fork happens
@@ -247,9 +245,9 @@ export class WalletComponent implements OnInit, OnDestroy {
     this.ui.showLoading();
     // const authPassword = this.auth.user.getPassword();
     this.sdacService.withdrawVesting(this.username, this.account.keys.active, 0).then(response => {
-      if (response === 'Success'){
+      if (response === 'Success') {
         this.alert.showCustomMessage('', 'Success!');
-      } else{
+      } else {
         this.alert.showCustomMessage('Alert', 'No VIP Exits pending.');
       }
 
@@ -270,11 +268,11 @@ export class WalletComponent implements OnInit, OnDestroy {
 
   }
 
-  generatedPasswordMatch() {
-    if (this.passwordForm.get('newPassword').value === this.generatedPassword) {
+  passwordMatch() {
+    if (this.passwordForm.get('newPassword').value === this.passwordForm.get('confirmPassword').value) {
       return true;
     }
-    this.passwordForm.get('newPassword').setErrors({ generatedPasswordMatch: true });
+    this.passwordForm.get('confirmPassword').setErrors({ MatchPassword: true });
     return false;
   }
 
@@ -303,9 +301,11 @@ export class WalletComponent implements OnInit, OnDestroy {
         // Update the actual keys with the new password
         this.auth.updateAccountKeys(this.username, password, newPassword, keys.ownerPubkey, keys.activePubkey, keys.basicPubkey, keys.memoPubkey)
           .then((response: boolean) => {
+
             this.ui.hideLoading();
 
             if (response) {
+              this.alert.showCustomMessage('Password updated!', 'Your password has been updated succesfully.');
               this.generatedPassword = null;
               this.passwordForm.reset();
             }

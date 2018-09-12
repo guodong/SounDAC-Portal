@@ -8,16 +8,16 @@
       <div *ngIf="marketCap" class="text-right align-middle">
 
         <!-- <span [innerHtml]="marketCap.price_btc"></span>
-        <span>BTC / XSD</span>
+        <span> BTC / XSD</span>
         <br /> -->
 
         <span [innerHtml]="marketCap.price_usd | currency:'USD':'symbol':'0.2-4'"></span>
         <span>USD / XSD</span>
         <br />
 
-        <!-- <span [innerHtml]="'XSD tokens worth about'"></span>
+        <!-- <span [innerHtml]="'XSD tokens worth about '"></span>
         <span [innerHtml]="(account.XsdBalance * marketCap.price_usd) | currency:'USD':'symbol':'0.2-2'"></span>
-        <span [innerHtml]="'USD'"></span> -->
+        <span [innerHtml]="' USD'"></span> -->
       </div>
     </div>
 
@@ -36,7 +36,7 @@
                 <span [innerHtml]="account.XsdBalance"></span>
               </div>
               <div class="col-12 my-2">
-                <button mat-raised-button class="mat-purple-bg" (click)="transferXsd()">
+                <button mat-raised-button class="mat-purple-bg mr-1" (click)="transferXsd()">
                   Transfer
                 </button>
                 <button mat-raised-button class="mat-purple-bg" (click)="vestXsd()">
@@ -44,7 +44,8 @@
                 </button>
               </div>
               <div class="col-12 my-2">
-                Tradeable tokens that may be transferred anywhere at anytime. XSD can be vested by clicking Upgrade to VIP.
+                Tradeable tokens that may be transferred anywhere at anytime. XSD can be vested by clicking Upgrade to
+                VIP.
               </div>
               <div class="col-12 my-1">
                 <mat-divider></mat-divider>
@@ -58,7 +59,7 @@
                 <span [innerHtml]="account.Vestbalance"></span>
               </div>
               <div class="col-12 my-2">
-                <button mat-raised-button (click)="withdrawVest()" class="mat-purple-bg">
+                <button mat-raised-button (click)="withdrawVest()" class="mat-purple-bg mr-1">
                   Exit VIP
                 </button>
                 <button mat-raised-button (click)="cancelWithdraw()" class="mat-purple-bg">
@@ -77,23 +78,17 @@
             <div class="row my-1">
               <div class="col-12 my-2">
                 <h3>RYLT Balance:</h3>
-              </div>
-
-              <div class="col-12 my-2">
-                <!-- <span [innerHtml]="'Tokens worth about'"></span> -->
-                <!-- <span [innerHtml]="account.MBDbalance | currency:'USD':'symbol':'0.2-2'"></span> -->
                 <span [innerHtml]="account.MBDbalance"></span>
-                <!-- <span [innerHtml]="' of XSD'"></span> -->
-              </div>
-
-              <div class="col-12 my-2">
-                <span [innerHtml]="'1 RYLT token can be redeemed for about 1 USD worth of XSD tokens.'"></span>
               </div>
 
               <div class="col-12 my-2">
                 <button mat-raised-button (click)="redeemRylt()" class="mat-purple-bg">
                   Redeem
                 </button>
+              </div>
+
+              <div class="col-12 my-2">
+                <span [innerHtml]="'1 RYLT token can be redeemed for about 1 USD worth of XSD tokens.'"></span>
               </div>
 
               <div class="col-12 my-1">
@@ -105,8 +100,10 @@
             <div class="row my-1">
               <div class="col-12 my-2">
                 <h3>Next Exit:</h3>
-                <span *ngIf="account.NextwithDraw && account.NextwithDraw.getDate() != defaultDate.getDate()" [innerHtml]="account.NextwithDraw | date:'MM/dd/yy hh:mm a z'"></span>
-                <span *ngIf="account.NextwithDraw && account.NextwithDraw.getDate() == defaultDate.getDate()" [innerHtml]="'No pending Exits'"></span>
+                <span *ngIf="account.NextwithDraw && account.NextwithDraw.getDate() != defaultDate.getDate()"
+                  [innerHtml]="account.NextwithDraw | date:'MM/dd/yy hh:mm a z'"></span>
+                <span *ngIf="account.NextwithDraw && account.NextwithDraw.getDate() == defaultDate.getDate()"
+                  [innerHtml]="'No pending Exits'"></span>
               </div>
               <div class="col-12 my-1">
                 <mat-divider></mat-divider>
@@ -225,7 +222,7 @@
 
             <div class="row my-1">
               <div class="col-12 mt-2">
-                <small class="text-danger font-weight-bold">This feature is currently disabled</small>
+                <!-- <small class="text-danger font-weight-bold">This feature is currently disabled</small> -->
                 <h3 [innerHtml]="'Reset '+ username +'\'s Password'"></h3>
               </div>
               <div class="col-12">
@@ -247,21 +244,12 @@
 
             <div class="row my-1">
 
-              <div class="col-12 my-2">
-                <button mat-raised-button (click)="generatePassword()">
-                  Generate Password
-                </button>
-              </div>
-
-              <div *ngIf="generatedPassword" class="col-12 my-2">
-                <small class="font-italic font-weight-bold" [innerHtml]="generatedPassword"></small>
-              </div>
-
-              <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
+              <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()" autocomplete="off">
 
                 <div class="col-12 mb-2">
                   <mat-form-field>
-                    <input matInput placeholder="Current Password" formControlName="password">
+                    <input matInput type="password" placeholder="Current Password" formControlName="password"
+                      autocomplete="off">
                     <mat-error *ngIf="passwordForm.controls.password.hasError('required')">
                       <strong>Password is required</strong>
                     </mat-error>
@@ -270,12 +258,23 @@
 
                 <div class="col-12 mb-2">
                   <mat-form-field>
-                    <input matInput placeholder="Generated Password" formControlName="newPassword">
-                    <mat-error *ngIf="!generatedPasswordMatch()">
-                      <strong>Generated password must match</strong>
-                    </mat-error>
+                    <input matInput type="password" placeholder="New Password" formControlName="newPassword"
+                      autocomplete="off">
                     <mat-error *ngIf="passwordForm.controls.newPassword.hasError('required')">
                       <strong>Generated Password is required</strong>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-12 mb-2">
+                  <mat-form-field>
+                    <input matInput type="password" placeholder="Confirm Password" formControlName="confirmPassword"
+                      autocomplete="off">
+                    <mat-error *ngIf="!passwordMatch()">
+                      <strong>Password must match</strong>
+                    </mat-error>
+                    <mat-error *ngIf="passwordForm.controls.confirmPassword.hasError('required')">
+                      <strong>Password confirmation is required</strong>
                     </mat-error>
                   </mat-form-field>
                 </div>
@@ -288,13 +287,12 @@
 
                 <div class="col-12 mb-2">
                   <mat-checkbox formControlName="saved" required>
-                    I HAVE SECURELY SAVED MY GENERATED PASSWORD
+                    I HAVE SECURELY SAVED MY NEW PASSWORD
                   </mat-checkbox>
                 </div>
 
                 <div class="col-12 my-2">
-                  <button mat-raised-button class="mat-purple-bg" disabled>
-                    <!--[disabled]="!passwordForm.valid"-->
+                  <button mat-raised-button class="mat-purple-bg" [disabled]="!passwordForm.valid">
                     Update Password
                   </button>
                 </div>
@@ -323,7 +321,8 @@
                 </button>
               </div>
               <div class="col-12 my-2">
-                The basic key is used for non-financial functions such as voting, connection with other users and approving/declining proposed
+                The basic key is used for non-financial functions such as voting, connection with other users and
+                approving/declining proposed
                 modifications to your data. It should be different from the active and owner keys.
               </div>
               <div class="col-12 my-1">
@@ -346,7 +345,8 @@
                 </button>
               </div>
               <div class="col-12 my-2">
-                The active key is used for financial transactions and the creation of (or updates to) your data. It should be used from a
+                The active key is used for financial transactions and the creation of (or updates to) your data. It
+                should be used from a
                 secure workstation.
               </div>
               <div class="col-12 my-1">
@@ -369,7 +369,8 @@
                 </button>
               </div>
               <div class="col-12 my-2">
-                The owner key is the master key for the account and is required to change the other keys. The private key or password for
+                The owner key is the master key for the account and is required to change the other keys. The private
+                key or password for
                 the owner key should be kept offline as much as possible.
               </div>
               <div class="col-12 my-1">
@@ -406,21 +407,20 @@
             <div class="row my-1">
 
               <div class="col-12 mt-2">
-                <!-- <small class="text-danger font-weight-bold">This feature is currently disabled</small> -->
                 <h3>Witness Voting</h3>
               </div>
 
               <!--Votes Amount-->
               <div class="col-12 my-2">
                 <p>
-                  <span>As a XSD holder you get</span>
+                  <span>As a XSD holder you get </span>
                   <span class="font-weight-bold">30</span>
-                  <span>witness votes, use them wisely.</span>
+                  <span> witness votes, use them wisely.</span>
                   <br />
 
-                  <span>You have</span>
+                  <span>You have </span>
                   <span class="font-weight-bold" [innerHtml]="30 - account.witnessVotes.length"></span>
-                  <span>witness votes left.</span>
+                  <span> witness votes left.</span>
                 </p>
               </div>
 
@@ -429,7 +429,8 @@
                 <div class="row">
                   <div class="col-12">
                     <p>
-                      If you whould like to vote for a witness outside of the top 50, enter the account name below to cast a vote.
+                      If you whould like to vote for a witness outside of the top 50, enter the account name below to
+                      cast a vote.
                     </p>
                   </div>
                   <div class="col-xs-12 col-sm-6 col-md-4">
@@ -453,10 +454,12 @@
                     <th mat-header-cell *matHeaderCellDef>Witness</th>
                     <mat-cell *matCellDef="let witness; let i=index">
                       <span class="mr-3" [innerHtml]="i +1"></span>
-                      <button *ngIf="account.witnessVotes.indexOf(witness.owner) <= -1" mat-button class="mr-3 border purple-border" (click)="voteWitness(witness.owner, true)">
+                      <button *ngIf="account.witnessVotes.indexOf(witness.owner) <= -1" mat-button class="mr-3 border purple-border"
+                        (click)="voteWitness(witness.owner, true)">
                         <mat-icon class="purple-fg" aria-label="thumb_up">thumb_up</mat-icon>
                       </button>
-                      <button *ngIf="account.witnessVotes.indexOf(witness.owner) > -1" mat-button class="mr-3 mat-purple-bg" (click)="voteWitness(witness.owner, false)">
+                      <button *ngIf="account.witnessVotes.indexOf(witness.owner) > -1" mat-button class="mr-3 mat-purple-bg"
+                        (click)="voteWitness(witness.owner, false)">
                         <mat-icon class="mat-icon white-fg" aria-label="thumb_up">thumb_up</mat-icon>
                       </button>
                       <span [innerHtml]="witness.owner"></span>
@@ -480,7 +483,8 @@
                   <mat-header-row *matHeaderRowDef="displayedColumnsWitness"></mat-header-row>
                   <mat-row *matRowDef="let row; columns: displayedColumnsWitness;"></mat-row>
                 </mat-table>
-                <mat-paginator #paginatorWitness [pageSize]="50" [pageSizeOptions]="[50, 100, 200]" [showFirstLastButtons]="true"></mat-paginator>
+                <mat-paginator #paginatorWitness [pageSize]="50" [pageSizeOptions]="[50, 100, 200]"
+                  [showFirstLastButtons]="true"></mat-paginator>
               </div>
             </div>
 
@@ -493,12 +497,13 @@
 
             <div class="row my-1">
               <div class="col-12 mt-2">
-                <small class="text-danger font-weight-bold">This feature is currently disabled</small>
-                <h3>Claim of Stake</h3>
+                <small class="text-danger font-weight-bold">This feature is currently unavailable</small>
+                <h3 class="mt-2">Claim of Stake</h3>
               </div>
               <div class="col-12">
-                <p>Enter the Owner Private Key / WIF of your old Muse account and/or enter the Private Key of the Bitcoin address
-                  from which you participated in the pre-sale</p>
+                <p>Enter the Owner Private Key / WIF of your old Muse account and/or enter the Private Key of the
+                  Bitcoin
+                  address from which you participated in the pre-sale</p>
               </div>
               <div class="col-12 mb-2">
                 <div class="row">
