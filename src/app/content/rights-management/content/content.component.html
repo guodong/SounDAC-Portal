@@ -240,34 +240,19 @@
                   </div>
                 </div>
 
-              <div class="row my-1" formGroupName="album_meta">
-                <mat-form-field class="col-6 my-2">
-                  <input matInput formControlName="masterLabelName" placeholder="Master Label Name*" [matTooltip]="toolTips.masterLabel" [matTooltipShowDelay]="toolTips.delay">
-                  <mat-error *ngIf="contentForm.get('album_meta.masterLabelName').hasError('required') && contentForm.get('album_meta.masterLabelName').touched">
-                    <strong>Master Label Name is required</strong>
-                  </mat-error>
-                </mat-form-field>
-                <mat-form-field class="col-6 my-2">
-                  <input matInput formControlName="displayLabelName" placeholder="Display Label Name (aka imprint label name)" [matTooltip]="toolTips.displayLabel"
-                    [matTooltipShowDelay]="toolTips.delay">
-                </mat-form-field>
-              </div>
-            </div>
-          </mat-tab>
-
-          <mat-tab label="Composition Side">
-            <div class="container-fluid">
-              <!-- {{ contentForm.value | json }} -->
-              <div class="row my-1" formGroupName="comp_meta">
-                <mat-form-field class="col-4 my-2">
-                  <input matInput formControlName="compTitle" placeholder="Composition Title" [matTooltip]="toolTips.compositionTitle" [matTooltipShowDelay]="toolTips.delay">
-                </mat-form-field>
-                <mat-form-field class="col-4 my-2">
-                  <input matInput formControlName="compTitleAlt" placeholder="Composition Title Alternate" [matTooltip]="toolTips.compositionTitleAlt" [matTooltipShowDelay]="toolTips.delay">
-                </mat-form-field>
-                <mat-form-field class="col-4 my-2">
-                  <input type="text" matInput formControlName="compTitleIswc" placeholder="Composition ISWC" [matTooltip]="toolTips.compositionTitleIswc" [matTooltipShowDelay]="toolTips.delay">
-                </mat-form-field>
+                <div class="row my-1" formGroupName="album_meta">
+                  <mat-form-field class="col-6 my-2">
+                    <input matInput formControlName="masterLabelName" placeholder="Master Label Name*" [matTooltip]="toolTips.masterLabel"
+                      [matTooltipShowDelay]="toolTips.delay">
+                    <mat-error *ngIf="contentForm.get('album_meta.masterLabelName').hasError('required') && contentForm.get('album_meta.masterLabelName').touched">
+                      <strong>Master Label Name is required</strong>
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-form-field class="col-6 my-2">
+                    <input matInput formControlName="displayLabelName" placeholder="Display Label Name (aka imprint label name)"
+                      [matTooltip]="toolTips.displayLabel" [matTooltipShowDelay]="toolTips.delay">
+                  </mat-form-field>
+                </div>
               </div>
             </mat-tab>
 
@@ -276,13 +261,16 @@
                 <!-- {{ contentForm.value | json }} -->
                 <div class="row my-1" formGroupName="comp_meta">
                   <mat-form-field class="col-4 my-2">
-                    <input matInput formControlName="compTitle" placeholder="Composition Title">
+                    <input matInput formControlName="compTitle" placeholder="Composition Title" [matTooltip]="toolTips.compositionTitle"
+                      [matTooltipShowDelay]="toolTips.delay">
                   </mat-form-field>
                   <mat-form-field class="col-4 my-2">
-                    <input matInput formControlName="compTitleAlt" placeholder="Composition Title Alternate">
+                    <input matInput formControlName="compTitleAlt" placeholder="Composition Title Alternate"
+                      [matTooltip]="toolTips.compositionTitleAlt" [matTooltipShowDelay]="toolTips.delay">
                   </mat-form-field>
                   <mat-form-field class="col-4 my-2">
-                    <input type="text" matInput formControlName="compTitleIswc" placeholder="Composition ISWC">
+                    <input type="text" matInput formControlName="compTitleIswc" placeholder="Composition ISWC"
+                      [matTooltip]="toolTips.compositionTitleIswc" [matTooltipShowDelay]="toolTips.delay">
                   </mat-form-field>
                 </div>
 
@@ -341,7 +329,6 @@
                   <div class="col-12 my-2">
                     <mat-checkbox matInput formControlName="soleOwner" [matTooltip]="toolTips.oneOwner"
                       [matTooltipShowDelay]="toolTips.delay" [attr.disabled]="masterRoyaltySplit.length > 1" (change)="oneOwner()">
-                      <!--!-->
                       <span [innerHtml]="'Content is 100% owned and managed by ' + username"></span>
                     </mat-checkbox>
                   </div>
@@ -369,13 +356,12 @@
                         <strong>Master Side income must be 1 - 100</strong>
                       </mat-error>
                       <!-- <mat-error *ngIf="contentForm.get('master_share').hasError('pattern') && contentForm.get('master_share').touched">
-                      <strong>Max number of decimal places is 2</strong>
-                    </mat-error> -->
+                        <strong>Max number of decimal places is 2</strong>
+                      </mat-error> -->
                     </div>
                     <div class="col-8 my-2">
                       <mat-slider [attr.disabled]="sliderDisabled" [step]="step" [thumbLabel]="thumbLabel" [max]="max"
                         [min]="splitMin" (change)="onGenSplitChange()" formControlName="master_share">
-                        <!--!-->
                       </mat-slider>
                     </div>
 
@@ -388,8 +374,8 @@
                         <strong>Composition Side income must be 0 - 100</strong>
                       </mat-error>
                       <!-- <mat-error *ngIf="contentForm.get('publishers_share').hasError('pattern') && contentForm.get('publishers_share').touched">
-                      <strong>Max number of decimal places is 2</strong>
-                    </mat-error> -->
+                        <strong>Max number of decimal places is 2</strong>
+                      </mat-error> -->
                     </div>
                   </div>
                   <div class="row my-1">
@@ -444,12 +430,12 @@
                     </mat-error>
 
                     <!-- <mat-error *ngIf="contentForm.get('tempManagement.percentage').hasError('pattern') && contentForm.get('tempManagement.percentage').touched">
-                    <strong>Max number of decimal places is 2</strong>
-                  </mat-error> -->
+                      <strong>Max number of decimal places is 2</strong>
+                    </mat-error> -->
 
                     <!-- <mat-error *ngIf="contentForm.get('tempDistributions.bp').hasError('pattern') && contentForm.get('tempDistributions.bp').touched">
-                    <strong>Max number of decimal places is 2</strong>
-                  </mat-error> -->
+                      <strong>Max number of decimal places is 2</strong>
+                    </mat-error> -->
                   </div>
 
                 </div>
@@ -464,8 +450,8 @@
                   </mat-error>
 
                   <!-- <mat-error *ngIf="contentForm.get('management_threshold').hasError('pattern') && contentForm.get('management_threshold').touched">
-                  <strong>Max number of decimal places is 2</strong>
-                </mat-error> -->
+                    <strong>Max number of decimal places is 2</strong>
+                  </mat-error> -->
                 </div>
                 <mat-error *ngIf="masterIncomeTotal !== 100 && contentForm.get('tempDistributions.bp').touched">
                   <strong>Income must total 100%</strong>
@@ -547,12 +533,12 @@
                           </mat-error>
 
                           <!-- <mat-error *ngIf="contentForm.get('tempDistributionsComp.bp').hasError('pattern') && contentForm.get('tempDistributionsComp.bp').touched">
-                          <strong>Max number of decimal places is 2</strong>
-                        </mat-error> -->
+                            <strong>Max number of decimal places is 2</strong>
+                          </mat-error> -->
 
                           <!-- <mat-error *ngIf="contentForm.get('tempDistributionsComp.percentage').hasError('pattern') && contentForm.get('tempDistributionsComp.percentage').touched">
-                          <strong>Max number of decimal places is 2</strong>
-                        </mat-error> -->
+                            <strong>Max number of decimal places is 2</strong>
+                          </mat-error> -->
                         </div>
                       </div>
                     </div>
@@ -575,8 +561,8 @@
                   </mat-error>
 
                   <!-- <mat-error *ngIf="contentForm.get('management_threshold_comp').hasError('pattern') && contentForm.get('management_threshold_comp').touched">
-                  <strong>Max number of decimal places is 2</strong>
-                </mat-error> -->
+                    <strong>Max number of decimal places is 2</strong>
+                  </mat-error> -->
 
                   <div class="container-fluid">
                     <div class="row my-1">
