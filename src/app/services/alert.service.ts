@@ -22,6 +22,7 @@ export class AlertService {
     userDisabled: { title: 'Account Disabled!', message: 'Sorry! This account has been suspended! Please contact support.' },
     userNotFound: { title: 'Account Not Found!', message: 'Sorry, an account with this credential could not be found.' },
     wrongPassword: { title: 'Incorrect Password!', message: 'Sorry, the password you have entered is incorrect.' },
+    invalidPassword: { title: 'Invalid Password!', message: 'Sorry, the password you have entered is invalid.' },
     invalidEmail: { title: 'Invalid Email!', message: 'Sorry, you have entered an invalid email address.' },
     emailAlreadyInUse: { title: 'Email Not Available!', message: 'Sorry, this email is already in use.' },
     weakPassword: { title: 'Weak Password!', message: 'Sorry, you have entered a weak password.' },

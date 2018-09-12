@@ -19,6 +19,7 @@ import { Utils } from '../../../modules/shared/utilities/utils';
 import { UIService } from '../../../services/ui.service';
 import { Subscription } from '../../../../../node_modules/rxjs/Subscription';
 import { denormalizeWinPath } from 'tslint/lib/utils';
+
 // endregion
 
 @Component({
@@ -42,7 +43,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
     this.auth.user.getPassword();
   }
 
-  // region variables
+  //#region variables
   subscription: Subscription;
   contentForm: FormGroup;
   formErrors: any;
@@ -87,9 +88,9 @@ export class ContentComponent implements OnInit, AfterViewInit {
   // compManagesContract = false;
   isOneOwner = false;
   // soleOwner = false;
-  // endregion
+  //#endregion
 
-  // region to move out of component
+  //#region to move out of component
   productType = [
     { value: 'Album (Live)' },
     { value: 'Album (Compilation)' },
@@ -218,9 +219,9 @@ export class ContentComponent implements OnInit, AfterViewInit {
     delay: '1000',
   };
 
-  // endregion
+  //#endregion
 
-  // region lifecycle 
+  //#region lifecycle 
   ngOnInit() {
     this.subscription = this.auth.user$.subscribe(user => {
       if (user) {
@@ -236,14 +237,14 @@ export class ContentComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    setTimeout(() => {
-      // this.ui.hideLoading();
-      window.dispatchEvent(new Event('resize'));
-    }, 1000);
+    // setTimeout(() => {
+    //   // this.ui.hideLoading();
+    //   window.dispatchEvent(new Event('resize'));
+    // }, 1000);
   }
-  // endregion
+  //#endregion
 
-  // region Get values as FormArray
+  //#region Get values as FormArray
   get trackArtists() {
     return this.contentForm.get('track_meta.trackArtists') as FormArray;
   }
@@ -275,9 +276,9 @@ export class ContentComponent implements OnInit, AfterViewInit {
   get managementComp() {
     return this.contentForm.get('managementComp') as FormArray;
   }
-  // endregion
+  //#endregion
 
-  // region functions
+  //#region functions
 
   createContentForm() {
     return this.fb.group({
@@ -743,10 +744,10 @@ export class ContentComponent implements OnInit, AfterViewInit {
         ////
         const releaseDate = Number.parseInt(this.datePipe.transform(this.contentForm.value.album_meta.releaseDate, 'yyyyMMdd'));
         this.contentForm.get('album_meta').patchValue({ releaseDate: releaseDate });
-    
+
         const num_salesStartDate = Number.parseInt(this.datePipe.transform(this.contentForm.value.album_meta.salesStartDate, 'yyyyMMdd'));
         this.contentForm.get('album_meta').patchValue({ salesStartDate: num_salesStartDate });
-/////
+        /////
 
         const num_releaseDate = this.contentForm.get('album_meta.releaseDate').value;
         const releaseYear = num_releaseDate.toString().substring(0, 4);
@@ -803,7 +804,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
         // endregion
 
         // region Comp
-        
+
         if (this.publishers.length === 0) {
           this.publishers.push(
             this.fb.control({
@@ -1049,5 +1050,5 @@ export class ContentComponent implements OnInit, AfterViewInit {
     this.contentForm.reset();
     this.ngOnInit();
   }
-  // endregion
+  //#endregion
 }

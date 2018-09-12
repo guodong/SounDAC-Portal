@@ -14,6 +14,8 @@ import { SdacKeys } from '../models/sdac-keys';
 import { User } from '../models/user';
 import { Observable } from 'rxjs/Observable';
 import { UserService } from './user.service';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/observable/of';
 
 @Injectable()
 export class AuthService {

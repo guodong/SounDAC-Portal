@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { SafePipe } from './pipes/safe-pipe.component';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
+import { SoundacDisabledControlDirective } from './directives/sdacDisabled.directive';
 
 @NgModule({
   imports: [
@@ -12,14 +13,15 @@ import { ClickOutsideDirective } from './directives/click-outside.directive';
     FormsModule,
     ReactiveFormsModule
   ],
-  declarations: [SafePipe, ClickOutsideDirective],
+  declarations: [SafePipe, ClickOutsideDirective, SoundacDisabledControlDirective],
   exports: [
     FlexLayoutModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     SafePipe,
-    ClickOutsideDirective
+    ClickOutsideDirective,
+    SoundacDisabledControlDirective
   ]
 })
 

@@ -36,7 +36,6 @@ import {
   MatExpansionModule,
   MatFormFieldModule
 } from '@angular/material';
-import 'hammerjs';
 
 @NgModule({
   imports: [

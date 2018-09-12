@@ -14,14 +14,13 @@ import { MaterialModule } from './modules/material/material.module';
 import { SharedModule } from './modules/shared/shared.module';
 
 // Libraries
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
 
 // Services
 import { AdminService } from './services/admin.service';
 import { AlertService } from './services/alert.service';
 import { AuthService } from './services/auth.service';
 import { CoinMarketCapService } from './services/coin-market-cap.service';
-import { FirestoreService } from './services/firestore.service';
 import { SdacService } from './services/sdac.service';
 import { UIService } from './services/ui.service';
 import { UserService } from './services/user.service';
@@ -145,10 +144,10 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    BrowserAnimationsModule,
     MaterialModule,
     FirebaseModule,
     SharedModule,
-    BrowserAnimationsModule,
     HttpClientModule,
     HttpModule,
     RouterModule.forRoot(routes)    
@@ -161,7 +160,6 @@ const routes: Routes = [
     AlertService,
     AuthService,
     CoinMarketCapService,
-    FirestoreService,
     SdacService,
     UIService,
     UserService,
