@@ -34,7 +34,7 @@ export class SidenavComponent {
       });
     }
     else {
-      auth.router.navigateByUrl('/post-content'); 
+      auth.router.navigateByUrl('/content-rights-management'); 
     }
   }
 }

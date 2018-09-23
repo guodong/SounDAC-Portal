@@ -1,61 +1,76 @@
-<div id="rights-management" class="page-layout carded fullwidth">
-
-
+<div id="dashboard" class="page-layout carded fullwidth">
   <div class="top-bg mat-deep-purple-bg"></div>
-
   <div class="center">
     <div class="header white-fg p-24" fxLayout="row" fxLayoutAlign="space-between center">
-      <h2>MetaData</h2>
-      <button mat-raised-button class="mat-white-bg mt-16 mt-sm-0" [routerLink]="'/content'">
-        <span>New</span>
+      <h2>Dashboard</h2>
+      <button mat-raised-button class="mat-white-bg mt-16 mt-sm-0" [routerLink]="'/content-post'">
+        <span>POST CONTENT</span>
       </button>
     </div>
+    <div class="container">
+      <div class="row content-card mat-white-bg mb-5">
+        <mat-card>
+          <mat-card-content>
+            <div class="container-fluid">
+              <div class="col-12 mb-2">
+                <mat-table #contentTable [dataSource]="dataSourceContent" matSort>
 
-    <div class="content-card">
-      <div class="example-header">
-        <mat-form-field>
-          <input class="search-input" matInput (keyup)="applyFilter($event.target.value)" autocomplete="off" spellcheck="false" placeholder="Search for existing content coming soon!">
-        </mat-form-field>
+                  <ng-container matColumnDef="owner">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <mat-cell *matCellDef="let content; let i=index">
+                      <span class="mr-3" [innerHtml]="i +1"></span>
+
+                      <button  mat-button class="mr-3 mat-purple-bg"
+                      (click)="test(content.url)">
+                        <mat-icon class="mat-icon white-fg" aria-label="edit">edit</mat-icon>
+
+                      </button>
+                      <span [innerHtml]="EDIT"></span>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="title">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header mdSortStart="title">Title</th>
+                    <mat-cell *matCellDef="let content">
+                      <span [innerHtml]="content.title"></span>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="url">
+                    <th mat-header-cell *matHeaderCellDef>URL</th>
+                    <mat-cell *matCellDef="let content">
+                      <span [innerHtml]="content.url"></span>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="timesplayed">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header mdSortStart="timesplayed">Times Played</th>
+                    <mat-cell *matCellDef="let content">
+                      <span [innerHtml]="content.timesplayed"></span>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="uploaded">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header mdSortStart="uploaded">Uploaded</th>
+                    <mat-cell *matCellDef="let content">
+                      <span [innerHtml]="content.uploaded"></span>
+                    </mat-cell>
+                  </ng-container>
+
+                  <mat-header-row *matHeaderRowDef="displayedColumnsContent"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: displayedColumnsContent;"></mat-row>
+
+                </mat-table>
+
+                <mat-paginator #paginatorContent [pageSize]="25" [pageSizeOptions]="[25, 50, 100]"
+                  [showFirstLastButtons]="true">
+                </mat-paginator>
+
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
       </div>
-
-      <div class="example-container mat-elevation-z8">
-        <!-- <mat-table [dataSource]="dataSource" matSort> -->
-        <!-- <mat-table>
-
-          <ng-container matColumnDef="id">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
-          </ng-container>
-
-
-          <ng-container matColumnDef="progress">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Progress </mat-header-cell>
-            <mat-cell *matCellDef="let row"> {{row.progress}}% </mat-cell>
-          </ng-container>
-
-
-          <ng-container matColumnDef="name">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
-            <mat-cell *matCellDef="let row"> {{row.name}} </mat-cell>
-          </ng-container>
-
-
-          <ng-container matColumnDef="content">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Content </mat-header-cell>
-            <mat-cell *matCellDef="let row" [style.color]="row.color"> {{row.color}} </mat-cell>
-          </ng-container>
-
-          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumns;">
-          </mat-row>
-        </mat-table> -->
-
-        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
-
-
-      </div>
-
-
     </div>
-
   </div>
 </div>

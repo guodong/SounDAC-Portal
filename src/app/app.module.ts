@@ -84,7 +84,8 @@ const routes: Routes = [
       { path: '', component: HomeComponent },
       { path: 'admin', component: AdminComponent, canActivate: [AdminGuard] },
       { path: 'wallet', component: WalletComponent },
-      { path: 'post-content', component: ContentComponent, canActivate: [ManagementGuard] },      
+      { path: 'content-rights-management', component: RightsManagementComponent, canActivate: [ManagementGuard] },
+      { path: 'content-post', component: ContentComponent, canActivate: [ManagementGuard] },
       { path: '**', component: PageNotFoundComponent }
     ]
   }
@@ -153,7 +154,7 @@ const routes: Routes = [
     SharedModule,
     HttpClientModule,
     HttpModule,
-    RouterModule.forRoot(routes)    
+    RouterModule.forRoot(routes)
   ],
   providers: [
     AdminGuard,

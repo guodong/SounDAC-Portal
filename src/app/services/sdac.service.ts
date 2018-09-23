@@ -50,6 +50,21 @@ export class SdacService {
     });
   }
 
+  getAccountContent(username): Promise<any> {
+    this.setWebSocket();
+    return new Promise(function (resolve, reject) {
+      sdac.api.getContentByUploader(username, function (err, success) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(success);
+        }
+      });
+    }).catch((err) => {
+      this.alertService.showErrorMessage('getAccountContent(): ' + err);
+    });
+  }
+
   getAccountHistory(username): Promise<void | SdacAccountHistory[]> {
     this.setWebSocket();
 
