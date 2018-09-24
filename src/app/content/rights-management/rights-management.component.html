@@ -16,10 +16,9 @@
                 <mat-table #contentTable [dataSource]="dataSourceContent" matSort>
 
                   <ng-container matColumnDef="owner">
-                    <th mat-header-cell *matHeaderCellDef></th>
+                    <th mat-header-cell *matHeaderCellDef>Edit</th>
                     <mat-cell *matCellDef="let content; let i=index">
-                      <span class="mr-3" [innerHtml]="i +1"></span>
-
+                      
                       <button  mat-button class="mr-3 mat-purple-bg"
                       (click)="test(content.url)">
                         <mat-icon class="mat-icon white-fg" aria-label="edit">edit</mat-icon>
