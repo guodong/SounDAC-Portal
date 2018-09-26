@@ -35,7 +35,7 @@ export class RightsManagementComponent implements OnInit, OnDestroy {
   username: any;
   ContentListArray: SdacContent[] = [];
   dataSourceContent = new MatTableDataSource<SdacContent>(this.ContentListArray);
-  displayedColumnsContent = ['owner', 'title', 'url', "timesplayed", 'uploaded',];
+  displayedColumnsContent = ['title', 'url', "timesplayed", 'uploaded',];
 
   ngOnInit(){
 

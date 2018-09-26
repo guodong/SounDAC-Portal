@@ -11,22 +11,9 @@
       <div class="row content-card mat-white-bg mb-5">
         <mat-card>
           <mat-card-content>
-            <div class="container-fluid">
+            <div>
               <div class="col-12 mb-2">
                 <mat-table #contentTable [dataSource]="dataSourceContent" matSort>
-
-                  <ng-container matColumnDef="owner">
-                    <th mat-header-cell *matHeaderCellDef>Edit</th>
-                    <mat-cell *matCellDef="let content; let i=index">
-                      
-                      <button  mat-button class="mr-3 mat-purple-bg"
-                      (click)="test(content.url)">
-                        <mat-icon class="mat-icon white-fg" aria-label="edit">edit</mat-icon>
-
-                      </button>
-                      <span [innerHtml]="EDIT"></span>
-                    </mat-cell>
-                  </ng-container>
 
                   <ng-container matColumnDef="title">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header mdSortStart="title">Title</th>
