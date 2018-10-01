@@ -3,9 +3,11 @@
   <div class="center">
     <div class="header white-fg p-24" fxLayout="row" fxLayoutAlign="space-between center">
       <h2>Dashboard</h2>
+
       <button mat-raised-button class="mat-white-bg mt-16 mt-sm-0" [routerLink]="'/content-post'">
         <span>POST CONTENT</span>
       </button>
+
     </div>
     <div class="container">
       <div class="row content-card mat-white-bg mb-5">
@@ -13,6 +15,11 @@
           <mat-card-content>
             <div>
               <div class="col-12 mb-2">
+
+                <mat-form-field>
+                  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+                </mat-form-field>
+
                 <mat-table #contentTable [dataSource]="dataSourceContent" matSort>
 
                   <ng-container matColumnDef="title">
@@ -49,14 +56,14 @@
                 </mat-table>
 
                 <mat-paginator #paginatorContent [pageSize]="25" [pageSizeOptions]="[25, 50, 100]"
-                  [showFirstLastButtons]="true">
-                </mat-paginator>
+                [showFirstLastButtons]="true">
+              </mat-paginator>
 
-              </div>
             </div>
-          </mat-card-content>
-        </mat-card>
-      </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
     </div>
   </div>
+</div>
 </div>

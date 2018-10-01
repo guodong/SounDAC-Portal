@@ -68,6 +68,12 @@ export class RightsManagementComponent implements OnInit, OnDestroy {
     }));
   }
 
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim(); // Remove whitespace
+    filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+    this.dataSourceContent.filter = filterValue;
+  }
+
   ngOnDestroy(){
     this.subscription.unsubscribe();
   }
