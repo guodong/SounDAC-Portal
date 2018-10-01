@@ -1,4 +1,4 @@
-import { faucet, faucetConfig, rightsManagementPortal, sdacApi } from './private-config';
+import { faucet, faucetConfig, rightsManagementPortal, sdacApi, websocket, testAccounts } from './private-config';
 
 export const environment = {
   production: true,
@@ -6,5 +6,7 @@ export const environment = {
   blockchainFaucet: faucet,
   blockchainFaucetConfig: faucetConfig,
   rightsManagementPortal: rightsManagementPortal,
-  sdacApi: sdacApi
+  sdacApi: sdacApi,
+  websocket: websocket,
+  testAccounts: testAccounts
 };

@@ -27,7 +27,7 @@ export class SdacService {
 
   setWebSocket() {
     sdac.config.set('websocket', 'wss://api.muse.blckchnd.com');
-    // sdac.config.set('websocket', 'ws://35.221.33.24:8090');
+    // sdac.config.set('websocket', 'ws://35.238.124.181:8090');
   }
 
   getAccount(username): Promise<any> {

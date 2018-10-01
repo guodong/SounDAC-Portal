@@ -1,15 +1,15 @@
 // Core
 import { Injectable } from '@angular/core';
-
-// Modules
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/database';
 
+// Services
+import { AuthService } from './auth.service';
+
 // Models
 import { RmpUsers } from '../models/rmp-users';
 import { User } from '../models/user';
-import { AuthService } from './auth.service';
 
 @Injectable()
 export class AdminService {
@@ -44,7 +44,7 @@ export class AdminService {
 
             const user: User = new User(snapshot.val().uid, snapshot.val().muserName.toLowerCase(), snapshot.val().email);
             user.dateCreated = snapshot.val().dateAdded;
-            user.roles = Object.assign({}, user.roles);            
+            user.roles = Object.assign({}, user.roles);
 
             firebase.app('sdacApi').firestore().collection('users').doc(user.id).set(Object.assign({}, user)).then(function () {
 
@@ -78,7 +78,7 @@ export class AdminService {
         const user = doc.data();
         user.username = doc.data().musername;
 
-        firebase.app('sdacApi').firestore().collection('users').doc(doc.data().id).update(user).then( result => {
+        firebase.app('sdacApi').firestore().collection('users').doc(doc.data().id).update(user).then(result => {
           console.log(user.username + ' updated!');
         }).catch(error => {
           console.log('error', error);

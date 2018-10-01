@@ -18,6 +18,8 @@ import * as firebase from 'firebase/app';
 
 // Services
 import { AdminService } from './services/admin.service';
+import { AdminTestnetService } from './services/admin-testnet.service';
+import { AdminUserService } from './services/admin-user.service';
 import { AlertService } from './services/alert.service';
 import { AuthService } from './services/auth.service';
 import { CoinMarketCapService } from './services/coin-market-cap.service';
@@ -33,6 +35,7 @@ import { ManagementGuard } from './services/guards/management.guard';
 // Layout
 import { AppComponent } from './app.component';
 import { AlertDialogComponent } from './layout/dialogs/alert/alert.dialog.component';
+import { DeleteDialogComponent } from './layout/dialogs/delete/delete.dialog.component';
 import { ErrorDialogComponent } from './layout/dialogs/error/error.dialog.component';
 import { LoadingDialogComponent } from './layout/dialogs/loading/loading.dialog.component';
 import { NavbarComponent } from './layout/navbar/navbar.component';
@@ -42,6 +45,10 @@ import { SidenavComponent } from './layout/sidenav/sidenav.component';
 
 // Components
 import { AdminComponent } from './content/admin/admin.component';
+import { AdminUsersComponent } from './content/admin/users/users.component';
+import { AdminUserEmailDialogComponent } from './content/admin/users/email-dialog/email.dialog.component';
+import { AdminTestnetComponent } from './content/admin/testnet/testnet.component';
+import { AdminTestnetReportDialogComponent } from './content/admin/testnet/report-dialog/report.dialog.component';
 import { HomeComponent } from './content/home/home.component';
 import { LayoutComponent } from './layout/layout.component';
 import { LoginComponent } from './content/defaults/login/login.component';
@@ -72,7 +79,11 @@ import { ModalWritersComponent } from './content/rights-management/modal/writers
 
 // Firebase Initialization
 firebase.initializeApp(environment.rightsManagementPortal, 'rightsManagementPortal'); // Rights Management Portal
+
 firebase.initializeApp(environment.sdacApi, 'sdacApi'); // Sdac API
+const firestore = firebase.app('sdacApi').firestore();
+const settings = { timestampsInSnapshots: true };
+firestore.settings(settings);
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -84,7 +95,7 @@ const routes: Routes = [
       { path: '', component: HomeComponent },
       { path: 'admin', component: AdminComponent, canActivate: [AdminGuard] },
       { path: 'wallet', component: WalletComponent },
-      { path: 'post-content', component: ContentComponent, canActivate: [ManagementGuard] },      
+      { path: 'post-content', component: ContentComponent, canActivate: [ManagementGuard] },
       { path: '**', component: PageNotFoundComponent }
     ]
   }
@@ -95,6 +106,9 @@ const routes: Routes = [
     ErrorDialogComponent,
     LoadingDialogComponent,
     AlertDialogComponent,
+    DeleteDialogComponent,
+    AdminUserEmailDialogComponent,
+    AdminTestnetReportDialogComponent,
     ModalTransferComponent,
     ModalRedeemComponent,
     ModalKeyComponent,
@@ -113,6 +127,7 @@ const routes: Routes = [
     ErrorDialogComponent,
     EmailComponent,
     AlertDialogComponent,
+    DeleteDialogComponent,
     LayoutComponent,
     LoadingDialogComponent,
     ModalTransferComponent,
@@ -134,6 +149,10 @@ const routes: Routes = [
     PageNotFoundComponent,
     WalletComponent,
     AdminComponent,
+    AdminUsersComponent,
+    AdminTestnetComponent,
+    AdminUserEmailDialogComponent,
+    AdminTestnetReportDialogComponent,
     ContentComponent,
     RightsManagementComponent,
     GenreComponent,
@@ -153,13 +172,15 @@ const routes: Routes = [
     SharedModule,
     HttpClientModule,
     HttpModule,
-    RouterModule.forRoot(routes)    
+    RouterModule.forRoot(routes)
   ],
   providers: [
     AdminGuard,
     ManagementGuard,
     UserGuard,
     AdminService,
+    AdminTestnetService,
+    AdminUserService,
     AlertService,
     AuthService,
     CoinMarketCapService,
