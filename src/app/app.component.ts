@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Subject, Observable } from 'rxjs/rx';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { LoadingDialogComponent } from './layout/dialogs/loading/loading.dialog.component';
 import { UIService } from './services/ui.service';

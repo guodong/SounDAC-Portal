@@ -12,7 +12,7 @@ import { ContentComponent } from '../content/content.component';
 
 export class CountriesComponent implements OnInit {
 
-    
+
     toolTips = {
         countries: 'PLEASE SELECT THE COUNTRY IN WHICH THIS RECORDING WAS FIRST PUBLISHED.',
         delay: '1000',

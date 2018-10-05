@@ -9,6 +9,7 @@ import { ModalReviewComponent } from '../modal/review/modal-review.component';
 import { ModalPublishersComponent } from '../modal/publishers/modal-publishers.component';
 import { ModalArtistComponent } from '../modal/artist/modal-artist.component';
 import { ModalWritersComponent } from '../modal/writers/modal-writers.component';
+import { CountryValidator } from '../validators/country.validator';
 import { AuthService } from '../../../services/auth.service';
 import { SdacService } from '../../../services/sdac.service';
 import { AlertService } from '../../../services/alert.service';
@@ -223,7 +224,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
 
   //#endregion
 
-  //#region lifecycle 
+  //#region lifecycle
   ngOnInit() {
     this.subscription = this.auth.user$.subscribe(user => {
       if (user) {
@@ -292,7 +293,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
         albumArtists: this.fb.array([]),
         albumGenre1: [''],
         albumGenre2: [''],
-        countryOrigin: [''],
+        countryOrigin: ['', CountryValidator.validCountry],
         explicit: [''],
         albumPLine: [''],
         albumCLine: [''],
@@ -375,7 +376,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
       // the value is inferred from the total balance minus the
       // publishers_share
 
-      publishers_share: [50, [Validators.min(0), Validators.max(100), Validators.pattern('[0-9]+(\.[0-9][0-9]?)?')]], // On the chain, the remaining balance is inferred as the composition side shares 
+      publishers_share: [50, [Validators.min(0), Validators.max(100), Validators.pattern('[0-9]+(\.[0-9][0-9]?)?')]], // On the chain, the remaining balance is inferred as the composition side shares
 
       playing_reward: [5, [Validators.required, Validators.min(1), Validators.max(100), Validators.pattern('[0-9]+(\.[0-9][0-9]?)?')]],
 
@@ -386,9 +387,11 @@ export class ContentComponent implements OnInit, AfterViewInit {
 
 
       // isOneOwner: false, // TODO: Move variable to inside form - here
-    });
+    }, {updateOn: 'blur'});
 
   }
+
+
 
   onFormValuesChanged() {
     for (const field in this.formErrors) {
