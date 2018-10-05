@@ -46,7 +46,7 @@
                   <ng-container matColumnDef="uploaded">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header mdSortStart="uploaded">Uploaded</th>
                     <mat-cell *matCellDef="let content">
-                      <span [innerHtml]="content.uploaded"></span>
+                      <span [innerHtml]="content.uploaded | date:'medium'"></span>
                     </mat-cell>
                   </ng-container>
 
