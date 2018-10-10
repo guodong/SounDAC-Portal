@@ -1,0 +1,54 @@
+<h2 mat-dialog-title class="text-center">Full Report</h2>
+<mat-dialog-content>
+
+  <div class="row">
+    <div class="col">
+
+      <!--Transactions-->
+      <table mat-table [dataSource]="data.transactions" class="mat-elevation-z8">
+
+        <!-- Start Time Column -->
+        <ng-container matColumnDef="startTime">
+          <th mat-header-cell *matHeaderCellDef> Start Time </th>
+          <td mat-cell *matCellDef="let element">
+            <span [innerHtml]="element.startTime.toDate() | date:'medium'"></span>
+          </td>
+        </ng-container>
+
+        <!-- End Time Column -->
+        <ng-container matColumnDef="endTime">
+          <th mat-header-cell *matHeaderCellDef> End Time </th>
+          <td mat-cell *matCellDef="let element">
+            <span [innerHtml]="element.endTime.toDate() | date:'medium'"></span>
+          </td>
+        </ng-container>
+
+        <!-- Execution Time Column -->
+        <ng-container matColumnDef="executionTime">
+          <th mat-header-cell *matHeaderCellDef> Execution </th>
+          <td mat-cell *matCellDef="let element">
+            <span [innerHtml]="(element.endTime.seconds - element.startTime.seconds)"></span>
+            <span>s</span>
+          </td>
+        </ng-container>
+
+        <!-- Status -->
+        <ng-container matColumnDef="success">
+          <th mat-header-cell *matHeaderCellDef> Status </th>
+          <td mat-cell *matCellDef="let element">
+            <span *ngIf="element.success" class="text-success">Succeeded</span>
+            <span *ngIf="!element.success" class="text-danger">Failed</span>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+    </div>
+  </div>
+
+</mat-dialog-content>
+<mat-dialog-actions class="d-flex justify-content-center">
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

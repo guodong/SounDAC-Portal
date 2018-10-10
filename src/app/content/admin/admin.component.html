@@ -19,11 +19,12 @@
             <div class="row my-1">
               <div class="col-12 my-2">
                 <h3>Import Users</h3>
-                <span>Running this command require you to export and import the user list with firebase auth cli first and copying
+                <span>Running this command require you to export and import the user list with firebase auth cli first
+                  and copying
                   them to the rmp-user models.</span>
               </div>
               <div class="col-12 my-2">
-                <button mat-raised-button class="mat-purple-bg" (click)="admin.importRMPUsers()" [disabled]="!auth.isAdmin(auth.user)">Import</button>
+                <button mat-raised-button class="mat-purple-bg" (click)="admin.importRMPUsers()" disabled>Import</button>
               </div>
               <div class="col-12 my-1">
                 <mat-divider></mat-divider>
@@ -32,10 +33,10 @@
 
             <div class="row my-1">
               <div class="col-12 my-2">
-                <h3>Vest test</h3>
+                <h3>API Testing</h3>
               </div>
               <div class="col-12 my-2">
-                <button mat-raised-button class="mat-purple-bg" (click)="test()">Test Vest</button>
+                <button mat-raised-button class="mat-purple-bg" (click)="testAPI()">Test Route</button>
               </div>
               <div class="col-12 my-1">
                 <mat-divider></mat-divider>
@@ -47,16 +48,16 @@
 
         <!--Users-->
         <mat-tab label="Users">
-          <div class="container-fluid">
+          <ng-template matTabContent>
+            <admin-user></admin-user>
+          </ng-template>
+        </mat-tab>
 
-            <!--XSD Balance-->
-            <div class="row my-1">
-              <div class="col-12 my-2">
-                <h3>To be continued...</h3>
-              </div>
-            </div>
-
-          </div>
+        <!--Testnet-->
+        <mat-tab label="Testnet">
+          <ng-template matTabContent>
+            <admin-testnet></admin-testnet>
+          </ng-template>
         </mat-tab>
 
       </mat-tab-group>

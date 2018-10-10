@@ -2,6 +2,8 @@
 import { Component } from '@angular/core';
 import { AdminService } from '../../services/admin.service';
 import { AuthService } from '../../services/auth.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'admin',
@@ -12,13 +14,25 @@ export class AdminComponent {
 
   constructor(
     public auth: AuthService,
-    public admin: AdminService
+    public admin: AdminService,
+    private http: HttpClient,
   ) {
 
   }
 
-  test(){
-    console.log(Number(0.01).toFixed(6));
+  private url = environment.apiUrl + 'soundac/';
+
+  testAPI(){
+
+    const body: any = {
+      username: 'dom'
+    };
+
+    // Post Test
+    this.http.post(this.url + 'getAccount', body).subscribe((response: any) => {
+      console.log(response);
+    });
+
   }
 
 }

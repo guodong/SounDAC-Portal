@@ -1,0 +1,20 @@
+table {
+  width: 100%;
+  min-width: 650px;
+}
+
+button{
+  mat-icon{
+    color: #ffffff;
+  }
+}
+
+.blink {
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
