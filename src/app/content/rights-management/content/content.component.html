@@ -2,7 +2,6 @@
   <div class="top-bg mat-deep-purple-bg"></div>
   <div class="center">
 
-
     <div class="header white-fg p-24" fxLayout="row" fxLayoutAlign="space-between center">
       <h2>Rights Management</h2>
 
@@ -150,7 +149,9 @@
                     </mat-error>
                   </mat-form-field>
 
-                  <countries class="col-4 my-2"></countries>
+                  <countries class="col-4 my-2">
+
+                  </countries>
 
                 </div>
 
@@ -177,8 +178,6 @@
                 <div formGroupName="album_meta">
 
                   <div *ngIf="contentForm.get('album_meta.partOfAlbum').value">
-
-
 
                     <div class="row my-1">
                       <div class="col-12 my-2">

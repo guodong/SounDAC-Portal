@@ -3,16 +3,19 @@ import { Enums } from '../content.enums';
 
 export class CountryValidator {
   static validCountry(fc: FormControl){
-    const countryArray = new Array(Enums.Countries);
+    const countryArray = Object.values(Enums.Countries);
 
-    if(countryArray.includes(fc.value)){
-      //console.log("Fired true");
-      return ({validCountry: true});
+    var found = false;
+    for(var i = 0; i < countryArray.length; i++) {
+      if (countryArray[i] === fc.value) {
+        found = true;
+        break;
+      }
+    }
+
+    if(!found){
+      return ({validCountry: "Must be an existing country."});
     } else {
-      console.log("Fired false");
-      console.log(countryArray);
-      console.log(Object.values(countryArray));
-      //console.log(countryArray.includes(fc.value));
       return (null);
     }
   }

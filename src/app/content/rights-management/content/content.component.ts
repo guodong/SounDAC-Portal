@@ -293,7 +293,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
         albumArtists: this.fb.array([]),
         albumGenre1: [''],
         albumGenre2: [''],
-        countryOrigin: ['', CountryValidator.validCountry],
+        countryOrigin: [''],
         explicit: [''],
         albumPLine: [''],
         albumCLine: [''],
@@ -813,7 +813,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
         if (this.publishers.length === 0) {
           this.publishers.push(
             this.fb.control({
-              publisher: ' ',
+              publisher: '',
               IPI_CAE: '',
               ISNI: undefined
             }));

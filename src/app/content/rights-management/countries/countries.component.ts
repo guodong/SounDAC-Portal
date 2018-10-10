@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'
 import { Observable } from 'rxjs/Observable';
 import { Enums } from '../content.enums';
 import { ContentComponent } from '../content/content.component';
+import { CountryValidator } from '../validators/country.validator';
 
 @Component({
     selector: 'countries',
@@ -18,7 +19,8 @@ export class CountriesComponent implements OnInit {
         delay: '1000',
     };
 
-    smartControl: FormControl = new FormControl();
+    smartControl: FormControl = new FormControl('', CountryValidator.validCountry);
+
 
     options = [
         'United States',
@@ -227,19 +229,19 @@ export class CountriesComponent implements OnInit {
 
     constructor(
         private content: ContentComponent
-    ) { }
+    ) {}
 
     ngOnInit() {
         this.filteredOptions = this.smartControl.valueChanges
             .startWith(null)
             .map(val => val ? this.filter(val) : this.options.slice());
         this.filteredOptions.subscribe((value) => this.selectedValue(value[0]));
+
     }
 
     filter(val: string): string[] {
         return this.options.filter(option =>
             option.toLowerCase().indexOf(val.toLowerCase()) === 0);
-
     }
 
     selectedValue(option) {
