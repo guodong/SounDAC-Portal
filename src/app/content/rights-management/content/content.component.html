@@ -328,7 +328,7 @@
                 <div class="row my-1">
                   <div class="col-12 my-2">
                     <mat-checkbox matInput formControlName="soleOwner" [matTooltip]="toolTips.oneOwner"
-                      [matTooltipShowDelay]="toolTips.delay" [attr.disabled]="masterRoyaltySplit.length > 1" (change)="oneOwner()">
+                      [matTooltipShowDelay]="toolTips.delay" [disabled]="masterRoyaltySplit.length > 1" (change)="oneOwner()">
                       <span [innerHtml]="'Content is 100% owned and managed by ' + username"></span>
                     </mat-checkbox>
                   </div>
@@ -356,11 +356,11 @@
                         <strong>Master Side income must be 1 - 100</strong>
                       </mat-error>
                       <!-- <mat-error *ngIf="contentForm.get('master_share').hasError('pattern') && contentForm.get('master_share').touched">
-                        <strong>Max number of decimal places is 2</strong>
-                      </mat-error> -->
+  <strong>Max number of decimal places is 2</strong>
+  </mat-error> -->
                     </div>
                     <div class="col-8 my-2">
-                      <mat-slider [attr.disabled]="sliderDisabled" [step]="step" [thumbLabel]="thumbLabel" [max]="max"
+                      <mat-slider [disabled]="sliderDisabled" [step]="step" [thumbLabel]="thumbLabel" [max]="max"
                         [min]="splitMin" (change)="onGenSplitChange()" formControlName="master_share">
                       </mat-slider>
                     </div>
@@ -374,8 +374,8 @@
                         <strong>Composition Side income must be 0 - 100</strong>
                       </mat-error>
                       <!-- <mat-error *ngIf="contentForm.get('publishers_share').hasError('pattern') && contentForm.get('publishers_share').touched">
-                        <strong>Max number of decimal places is 2</strong>
-                      </mat-error> -->
+  <strong>Max number of decimal places is 2</strong>
+  </mat-error> -->
                     </div>
                   </div>
                   <div class="row my-1">
@@ -410,7 +410,7 @@
                     </mat-form-field>
 
                     <mat-checkbox class="margin" formControlName="masterManagesContract" #masterManagesContract
-                      [attr.disabled]="isOneOwner" id="masterManagesContract" [checked]="masterManagesContract.checked"
+                      [disabled]="isOneOwner" id="masterManagesContract" [checked]="masterManagesContract.checked"
                       (change)="updateMasterManagesContract(masterManagesContract.checked)">
                       Manages Contract</mat-checkbox>
 
@@ -419,7 +419,7 @@
                     </mat-form-field>
 
                     <button mat-raised-button class="mat-purple-bg mt-16 mt-sm-0" (click)="addRoyaltySplit('masterRoyaltySplit')"
-                      color="primary" [attr.disabled]="!mastInputValid() || isOneOwner">Add</button>
+                      color="primary" [disabled]="!mastInputValid() || isOneOwner">Add</button>
 
                     <mat-error *ngIf="contentForm.get('tempDistributions.bp').hasError('max') || contentForm.get('tempDistributions.bp').hasError('min') && contentForm.get('tempDistributions.bp').touched">
                       <strong>Percentage of income must be 0 - 100</strong>
@@ -430,12 +430,12 @@
                     </mat-error>
 
                     <!-- <mat-error *ngIf="contentForm.get('tempManagement.percentage').hasError('pattern') && contentForm.get('tempManagement.percentage').touched">
-                      <strong>Max number of decimal places is 2</strong>
-                    </mat-error> -->
+  <strong>Max number of decimal places is 2</strong>
+  </mat-error> -->
 
                     <!-- <mat-error *ngIf="contentForm.get('tempDistributions.bp').hasError('pattern') && contentForm.get('tempDistributions.bp').touched">
-                      <strong>Max number of decimal places is 2</strong>
-                    </mat-error> -->
+  <strong>Max number of decimal places is 2</strong>
+  </mat-error> -->
                   </div>
 
                 </div>
@@ -450,8 +450,8 @@
                   </mat-error>
 
                   <!-- <mat-error *ngIf="contentForm.get('management_threshold').hasError('pattern') && contentForm.get('management_threshold').touched">
-                    <strong>Max number of decimal places is 2</strong>
-                  </mat-error> -->
+  <strong>Max number of decimal places is 2</strong>
+  </mat-error> -->
                 </div>
                 <mat-error *ngIf="masterIncomeTotal !== 100 && contentForm.get('tempDistributions.bp').touched">
                   <strong>Income must total 100%</strong>
@@ -485,7 +485,7 @@
                           </div>
                           <!-- <div class="col-md-1" [innerHtml]="data.weight"></div> -->
                           <div class="col-md-1">
-                            <button mat-icon-button [attr.disabled]="isOneOwner" (click)="removeFromList('masterRoyaltySplit', i)">
+                            <button mat-icon-button [disabled]="isOneOwner" (click)="removeFromList('masterRoyaltySplit', i)">
                               <mat-icon>cancel</mat-icon>
                             </button>
                           </div>
@@ -523,7 +523,7 @@
                             <input type="number" min=0 max=100 matInput placeholder="Weight" formControlName="percentage">
                           </mat-form-field>
                           <button mat-raised-button class="mat-purple-bg mt-16 mt-sm-0" (click)="addRoyaltySplit('compRoyaltySplit')"
-                            color="primary" [attr.disabled]="!compInputValid()">Add</button>
+                            color="primary" [disabled]="!compInputValid()">Add</button>
 
                           <mat-error *ngIf="contentForm.get('tempDistributionsComp.bp').hasError('max') || contentForm.get('tempDistributionsComp.bp').hasError('min') && contentForm.get('tempDistributionsComp.bp').touched">
                             <strong>Percentage of income must be 0 - 100</strong>
@@ -533,12 +533,12 @@
                           </mat-error>
 
                           <!-- <mat-error *ngIf="contentForm.get('tempDistributionsComp.bp').hasError('pattern') && contentForm.get('tempDistributionsComp.bp').touched">
-                            <strong>Max number of decimal places is 2</strong>
-                          </mat-error> -->
+  <strong>Max number of decimal places is 2</strong>
+  </mat-error> -->
 
                           <!-- <mat-error *ngIf="contentForm.get('tempDistributionsComp.percentage').hasError('pattern') && contentForm.get('tempDistributionsComp.percentage').touched">
-                            <strong>Max number of decimal places is 2</strong>
-                          </mat-error> -->
+  <strong>Max number of decimal places is 2</strong>
+  </mat-error> -->
                         </div>
                       </div>
                     </div>
@@ -561,8 +561,8 @@
                   </mat-error>
 
                   <!-- <mat-error *ngIf="contentForm.get('management_threshold_comp').hasError('pattern') && contentForm.get('management_threshold_comp').touched">
-                    <strong>Max number of decimal places is 2</strong>
-                  </mat-error> -->
+  <strong>Max number of decimal places is 2</strong>
+  </mat-error> -->
 
                   <div class="container-fluid">
                     <div class="row my-1">
@@ -605,6 +605,5 @@
         </form>
       </div>
     </div>
-
   </div>
 </div>
