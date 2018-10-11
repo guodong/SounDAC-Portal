@@ -140,7 +140,7 @@ export class SdacService {
             reject(err);
           } else {
             resolve(success);
-            that.alertService.showCustomMessage('Success', '');
+            that.alertService.showCustomMessage('Success', 'Your redeemed RYLT tokens will be available as XSD in 3.5 days.');
           }
         });
     }).catch((err) => {

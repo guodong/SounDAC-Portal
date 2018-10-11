@@ -277,7 +277,6 @@ export class WalletComponent implements OnInit, OnDestroy {
   }
 
   updatePassword() {
-
     this.ui.showLoading();
 
     const truePassword: string = this.auth.user.getPassword();
@@ -294,22 +293,16 @@ export class WalletComponent implements OnInit, OnDestroy {
     }
 
     if (!errors) {
-
       // Get a set of new Keys based on the new generated password
       this.auth.getPrivateKeys(this.username, newPassword).then((keys: SdacKeys) => {
-
         // Update the actual keys with the new password
         this.auth.updateAccountKeys(this.username, password, newPassword, keys.ownerPubkey, keys.activePubkey, keys.basicPubkey, keys.memoPubkey)
           .then((response: boolean) => {
-
             this.ui.hideLoading();
-
             if (response) {
-              this.alert.showCustomMessage('Password updated!', 'Your password has been updated succesfully.');
               this.generatedPassword = null;
               this.passwordForm.reset();
             }
-
           });
 
       });
