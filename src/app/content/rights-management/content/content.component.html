@@ -6,7 +6,7 @@
       <h2>Rights Management</h2>
 
       <button mat-raised-button class="mat-white-bg mt-16 mt-sm-0 save-content-button" mat-raised-button type="submit"
-        (click)="reviewContent()" [disabled]="!contentForm.valid || !customValidation()">
+        (click)="reviewContent()" [disabled]="!contentForm.valid || !customValidation() || !countrysmartControl.valid">
         <span>REVIEW</span>
       </button>
     </div>
