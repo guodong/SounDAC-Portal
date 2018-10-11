@@ -3,7 +3,7 @@ import { Enums } from '../content.enums';
 
 export class GenreValidator {
   static validGenre(fc: FormControl){
-    const genreArray = Object.values(Enums.Genre);
+    const genreArray = Object.values(Enums.GenreString);
 
     var found = false;
     for(var i = 0; i < genreArray.length; i++) {

@@ -387,7 +387,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
 
 
       // isOneOwner: false, // TODO: Move variable to inside form - here
-    }, {updateOn: 'blur'});
+    });
 
   }
 
