@@ -35,11 +35,10 @@
     "g": "^2.0.1",
     "hammerjs": "2.0.8",
     "jquery": "3.3.1",
-    "museblockchain-js": "git+https://github.com/soundac/SounDAC-JS.git",
     "popper.js": "1.14.4",
     "rxjs": "6.2.2",
     "rxjs-compat": "6.2.2",
-    "soundac-js": "https://github.com/soundac/SounDAC-JS",
+    "soundac-js": "https://github.com/soundac/SounDAC-JS.git",
     "web-animations-js": "2.3.1",
     "zone.js": "0.8.26"
   },

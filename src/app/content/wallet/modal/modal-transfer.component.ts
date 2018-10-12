@@ -19,7 +19,7 @@ export class ModalTransferComponent {
 
   save() {
     if (this.data.transferto === '') {
-      alert('Please provide a SounDAC account name to transfer to.');
+      alert('Please provide a SOUNDAC account name to transfer to.');
     } else {
       this.dialogRef.close(this.data);
     }

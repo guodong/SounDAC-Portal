@@ -14,4 +14,6 @@ export class AdminUserEmailDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: User
   ) { }
 
+  updatedEmail: any;
+
 }

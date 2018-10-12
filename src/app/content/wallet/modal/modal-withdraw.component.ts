@@ -13,11 +13,10 @@ export class ModalWithdrawComponent {
     public dialogRef: MatDialogRef<ModalWithdrawComponent>
   ) { }
 
+  minVIP = this.data.balance - 5;
   inputAmount = '';
   getWeeklyAmount() {
     return ((Number.parseFloat(this.inputAmount) / 13) / Math.pow(10, 3)).toFixed(6);
-
-    // console.log(Number(0.01).toFixed(6));
   }
 
   save() {
@@ -26,5 +25,13 @@ export class ModalWithdrawComponent {
 
   close() {
     this.dialogRef.close();
+  }
+
+  min() {
+    let val = false;
+    if (Number.parseFloat(this.inputAmount) > this.minVIP) {
+      val = true;
+    }
+    return val;
   }
 }

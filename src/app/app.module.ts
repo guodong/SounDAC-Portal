@@ -62,6 +62,7 @@ import { PageNotFoundComponent } from './content/defaults/page-not-found/page-no
 import { RegisterComponent } from './content/defaults/register/register.component';
 import { RegisterExternalComponent } from './content/defaults/register-external/register-external.component';
 import { TacComponent } from './content/defaults/register/terms-conditions/tac.component';
+import { AdvanceComponent } from './content/advance/advance.component';
 import { WalletComponent } from './content/wallet/wallet.component';
 import { RightsManagementComponent } from './content/rights-management/rights-management.component';
 import { ContentComponent } from './content/rights-management/content/content.component';
@@ -95,6 +96,7 @@ const routes: Routes = [
       { path: '', component: HomeComponent },
       { path: 'admin', component: AdminComponent, canActivate: [AdminGuard] },
       { path: 'wallet', component: WalletComponent },
+      { path: 'advance', component: AdvanceComponent },
       { path: 'post-content', component: ContentComponent, canActivate: [ManagementGuard] },
       { path: '**', component: PageNotFoundComponent }
     ]
@@ -147,6 +149,7 @@ const routes: Routes = [
     SearchComponent,
     TacComponent,
     PageNotFoundComponent,
+    AdvanceComponent,
     WalletComponent,
     AdminComponent,
     AdminUsersComponent,

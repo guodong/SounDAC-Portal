@@ -2,7 +2,7 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MatDialog, MatDialogRef, PageEvent, MatTableDataSource, MatPaginator } from '@angular/material';
+import { MatDialog, MatDialogRef, MatTableDataSource, MatPaginator } from '@angular/material';
 
 // Services
 import { AlertService } from '../../services/alert.service';
@@ -21,7 +21,6 @@ import { ModalRedeemComponent } from './modal/modal-redeem.component';
 import { SdacAccountHistory } from '../../models/sdac-account-history';
 import { SdacAccount } from '../../models/sdac-account';
 import { SdacKeys } from '../../models/sdac-keys';
-import { SdacWitness } from '../../models/sdac-witness';
 import { Subscription } from '../../../../node_modules/rxjs/Subscription';
 
 @Component({
@@ -55,22 +54,15 @@ export class WalletComponent implements OnInit, OnDestroy {
   }
 
   @ViewChild('paginator') paginator: MatPaginator;
-  @ViewChild('paginatorWitness') paginatorWitness: MatPaginator;
 
   subscription: Subscription;
   username: any;
   passwordForm: FormGroup;
   account: SdacAccount = new SdacAccount();
   defaultDate: Date = new Date('1969-12-31T23:59:59');
-  WitnessListArray: SdacWitness[] = [];
   generatedPassword: string;
   CurrentPass: string;
   marketCap: any;
-
-  showPrivateBasic: boolean = false;
-  showPrivateActive: boolean = false;
-  showPrivateOwner: boolean = false;
-  showPrivateMemo: boolean = false;
 
   dialogRefTrans: MatDialogRef<ModalTransferComponent>;
   dialogRefVest: MatDialogRef<ModalDialogVestComponent>;
@@ -80,11 +72,6 @@ export class WalletComponent implements OnInit, OnDestroy {
   // Account History
   dataSource = new MatTableDataSource<SdacAccountHistory>(this.account.history);
   displayedColumnsHistory = ['date', 'transaction'];
-
-  // Witness
-  dataSourceWitness = new MatTableDataSource<SdacWitness>(this.WitnessListArray);
-  displayedColumnsWitness = ['owner', 'block', 'url'];
-  inputWitness: string;
 
   // Claim of Stake
   inputWIF: string;
@@ -105,18 +92,11 @@ export class WalletComponent implements OnInit, OnDestroy {
         this.getAccount();
         this.getPrivateKeys(); // Loading Private keys until blockchain fork happens - Require Active keys for most transactions
         this.getAccountHistory();
-        this.getWitnesses();
         this.getMarketCap();
-
-        if (user) {
-          const pw = this.auth.user.getPassword();
-        }
 
       }
 
-    }).subscribe(user => {
-
-    });
+    }).subscribe();
 
   }
 
@@ -159,18 +139,6 @@ export class WalletComponent implements OnInit, OnDestroy {
       this.dataSource.data = response;
       this.dataSource.paginator = this.paginator;
     });
-  }
-
-  getWitnesses() {
-    this.sdacService.getWitnesses().then(((result: any[]) => {
-      result.forEach(res => {
-        const witness: SdacWitness = new SdacWitness();
-        witness.mapWitness(res);
-        // this.WitnessListArray.push(witness);
-        this.dataSourceWitness.data.push(witness);
-      });
-      this.dataSourceWitness.paginator = this.paginatorWitness;
-    }));
   }
 
   getMarketCap() {
@@ -277,7 +245,6 @@ export class WalletComponent implements OnInit, OnDestroy {
   }
 
   updatePassword() {
-
     this.ui.showLoading();
 
     const truePassword: string = this.auth.user.getPassword();
@@ -294,106 +261,22 @@ export class WalletComponent implements OnInit, OnDestroy {
     }
 
     if (!errors) {
-
       // Get a set of new Keys based on the new generated password
       this.auth.getPrivateKeys(this.username, newPassword).then((keys: SdacKeys) => {
-
         // Update the actual keys with the new password
         this.auth.updateAccountKeys(this.username, password, newPassword, keys.ownerPubkey, keys.activePubkey, keys.basicPubkey, keys.memoPubkey)
           .then((response: boolean) => {
-
             this.ui.hideLoading();
-
             if (response) {
-              this.alert.showCustomMessage('Password updated!', 'Your password has been updated succesfully.');
               this.generatedPassword = null;
               this.passwordForm.reset();
             }
-
           });
 
       });
 
     }
 
-  }
-
-  loadPrivateKeys() {
-    const password = this.auth.user.getPassword();
-    this.auth.getPrivateKeys(this.username, password).then((keys: SdacKeys) => {
-      this.account.keys.basic = keys.basic;
-      this.account.keys.active = keys.active;
-      this.account.keys.owner = keys.owner;
-      this.account.keys.memo = keys.memo;
-    });
-  }
-
-  togglePrivatekeys(key: string) {
-
-    if (key === 'basic') {
-      if (!this.showPrivateBasic) {
-        if (this.account.keys.basic === '') {
-          this.loadPrivateKeys();
-        }
-        this.showPrivateBasic = true;
-      } else {
-        this.showPrivateBasic = false;
-      }
-    }
-
-    if (key === 'active') {
-      if (!this.showPrivateActive) {
-        if (this.account.keys.active === '') {
-          this.loadPrivateKeys();
-        }
-        this.showPrivateActive = true;
-      } else {
-        this.showPrivateActive = false;
-      }
-    }
-
-    if (key === 'owner') {
-      if (!this.showPrivateOwner) {
-        if (this.account.keys.owner === '') {
-          this.loadPrivateKeys();
-        }
-        this.showPrivateOwner = true;
-      } else {
-        this.showPrivateOwner = false;
-      }
-    }
-
-    if (key === 'memo') {
-      if (!this.showPrivateMemo) {
-        if (this.account.keys.memo === '') {
-          this.loadPrivateKeys();
-        }
-        this.showPrivateMemo = true;
-      } else {
-        this.showPrivateMemo = false;
-      }
-    }
-
-  }
-
-  voteWitness(witnessOwner: string, vote: boolean) {
-    this.ui.showLoading();
-    const password = this.auth.user.getPassword();
-    this.auth.getPrivateKeys(this.username, password).then((keys: SdacKeys) => {
-
-      this.account.keys.basic = keys.basic;
-      this.account.keys.active = keys.active;
-      this.account.keys.owner = keys.owner;
-      this.account.keys.memo = keys.memo;
-
-      this.sdacService.voteWitness(this.username, this.account.keys.active, witnessOwner, vote);
-
-    });
-  }
-
-  claimWIF() {
-    this.ui.showLoading();
-    // this.sdacService.claimBalance(this.username, this.inputWIF); // ToDo: Check Muse-js library to figure source of current error
   }
 
 }

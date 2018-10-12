@@ -25,6 +25,10 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
   displayedColumns: string[] = ['createdAt', 'id', 'username', 'email', 'roles', 'actions'];
   dataSource: User[];
+  username: string;
+  email: string;
+  startDateVal: Date;
+  endDateVal: Date;
 
   ngOnInit() {
     // this.getUsers();
