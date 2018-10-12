@@ -23,7 +23,7 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
   }
 
   private subscription: Subscription;
-  displayedColumns: string[] = ['dateCreated', 'id', 'username', 'email', 'roles', 'actions'];
+  displayedColumns: string[] = ['createdAt', 'id', 'username', 'email', 'roles', 'actions'];
   dataSource: User[];
 
   ngOnInit() {
@@ -31,19 +31,26 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // this.subscription.unsubscribe();
+    this.unsubscribe();
   }
 
-  // getUsers() {
-  //   this.ui.showLoading();
-  //   this.subscription = this.adminUserService.getUsers().subscribe(users => {
-  //     this.dataSource = users;
-  //     this.ui.hideLoading();
-  //   });
-  // }
+  unsubscribe() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  getUsers() {
+    // this.ui.showLoading();
+    // this.subscription = this.adminUserService.getUsers().subscribe(users => {
+    //   this.dataSource = users;
+    //   // this.ui.hideLoading();
+    // });
+  }
 
   getByUsername(username) {
     this.ui.showLoading();
+    this.unsubscribe();
     this.subscription = this.adminUserService.getUsersByUsername(username).subscribe(users => {
       this.dataSource = users;
       this.ui.hideLoading();
@@ -52,7 +59,17 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
 
   getByEmail(email) {
     this.ui.showLoading();
+    this.unsubscribe();
     this.subscription = this.adminUserService.getUsersByEmail(email).subscribe(users => {
+      this.dataSource = users;
+      this.ui.hideLoading();
+    });
+  }
+
+  getByDate(startDate, endDate) {
+    this.ui.showLoading();
+    this.unsubscribe();
+    this.subscription = this.adminUserService.getUsersByDate(startDate, endDate).subscribe(users => {
       this.dataSource = users;
       this.ui.hideLoading();
     });

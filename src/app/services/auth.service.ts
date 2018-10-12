@@ -16,6 +16,7 @@ import { Observable } from 'rxjs/Observable';
 import { UserService } from './user.service';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/of';
+import { firestore } from 'firebase';
 
 
 @Injectable()
@@ -126,6 +127,7 @@ export class AuthService {
 
               // Set User
               auth.user = new User(res.id, res.username, res.email, res.key, res.roles);
+              // auth.user.createdAt = firestore.Timestamp.now();
               auth.user.encryptPassword(user.password);
 
               // if (key && key !== '') {

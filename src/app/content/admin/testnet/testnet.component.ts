@@ -35,14 +35,21 @@ export class AdminTestnetComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.unsubscribe();
+  }
+
+  unsubscribe() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   getReports() {
-    this.ui.showLoading();
+    // this.ui.showLoading();
+    // this.unsubscribe();
     this.subscription = this.adminTestnetService.getReports().subscribe(reports => {
       this.dataSource = reports;
-      this.ui.hideLoading();
+      // this.ui.hideLoading();
     });
   }
 

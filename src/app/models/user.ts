@@ -20,6 +20,7 @@ export class User {
     key: string;
     roles: Roles;
     dateCreated: Date;
+    createdAt: Timestamp;
 
     getPassword(): string {
         return cryptojs.AES.decrypt(sessionStorage.getItem('password'), this.key).toString(cryptojs.enc.Utf8);
