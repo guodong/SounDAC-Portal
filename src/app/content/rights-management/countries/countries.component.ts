@@ -19,7 +19,7 @@ export class CountriesComponent implements OnInit {
         delay: '1000',
     };
 
-    countrysmartControl: FormControl = new FormControl('', CountryValidator.validCountry);
+    smartControl: FormControl = new FormControl('', CountryValidator.validCountry);
 
 
     options = [
@@ -232,7 +232,7 @@ export class CountriesComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.filteredOptions = this.countrysmartControl.valueChanges
+        this.filteredOptions = this.smartControl.valueChanges
             .startWith(null)
             .map(val => val ? this.filter(val) : this.options.slice());
         this.filteredOptions.subscribe((value) => this.selectedValue(value[0]));
@@ -245,6 +245,10 @@ export class CountriesComponent implements OnInit {
     }
 
     selectedValue(option) {
+      if(!this.smartControl.errors) {
         this.content.setCountry(option);
+      } else {
+        this.content.setCountry(null); //this passes the error into the main form
+      }
     }
 }

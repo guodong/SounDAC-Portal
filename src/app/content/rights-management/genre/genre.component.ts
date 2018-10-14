@@ -341,8 +341,12 @@ export class GenreComponent implements OnInit {
     }
 
     mapSelectedGenre(option) {
+      if(!this.smartControl.errors) {
         const mg = MapGenre.getMappedGenre(option);
         this.content.mapGenre(this.message, mg);
+      } else {
+        this.content.mapGenre(this.message, null);
+      }
     }
 
     selectorParam(text) {

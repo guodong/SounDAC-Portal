@@ -1,13 +1,13 @@
 <form name="smartForm" class="smart-form">
     <mat-form-field class="full-width">
-        <input type="text" placeholder="Country of Origin" matInput [formControl]="countrysmartControl" [matAutocomplete]="auto"
+        <input type="text" placeholder="Country of Origin" matInput [formControl]="smartControl" [matAutocomplete]="auto"
             matTooltip= {{toolTips.countries}} matTooltipShowDelay= {{toolTips.delay}}>
         <mat-autocomplete #auto="matAutocomplete">
             <mat-option #selectedCountry *ngFor="let option of filteredOptions | async" [value]="option">
                 {{ option }}
             </mat-option>
         </mat-autocomplete>
-        <mat-error *ngIf="countrysmartControl.hasError('validCountry') && countrysmartControl.touched">
+        <mat-error *ngIf="smartControl.hasError('validCountry') && smartControl.touched">
           <strong>Must be a valid country</strong>
         </mat-error>
     </mat-form-field>
