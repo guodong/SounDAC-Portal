@@ -9,6 +9,7 @@ import { ModalReviewComponent } from '../modal/review/modal-review.component';
 import { ModalPublishersComponent } from '../modal/publishers/modal-publishers.component';
 import { ModalArtistComponent } from '../modal/artist/modal-artist.component';
 import { ModalWritersComponent } from '../modal/writers/modal-writers.component';
+import { CountryValidator } from '../validators/country.validator';
 import { AuthService } from '../../../services/auth.service';
 import { SdacService } from '../../../services/sdac.service';
 import { AlertService } from '../../../services/alert.service';
@@ -223,7 +224,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
 
   //#endregion
 
-  //#region lifecycle 
+  //#region lifecycle
   ngOnInit() {
     this.subscription = this.auth.user$.subscribe(user => {
       if (user) {
@@ -375,7 +376,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
       // the value is inferred from the total balance minus the
       // publishers_share
 
-      publishers_share: [50, [Validators.min(0), Validators.max(100), Validators.pattern('[0-9]+(\.[0-9][0-9]?)?')]], // On the chain, the remaining balance is inferred as the composition side shares 
+      publishers_share: [50, [Validators.min(0), Validators.max(100), Validators.pattern('[0-9]+(\.[0-9][0-9]?)?')]], // On the chain, the remaining balance is inferred as the composition side shares
 
       playing_reward: [5, [Validators.required, Validators.min(1), Validators.max(100), Validators.pattern('[0-9]+(\.[0-9][0-9]?)?')]],
 
@@ -389,6 +390,8 @@ export class ContentComponent implements OnInit, AfterViewInit {
     });
 
   }
+
+
 
   onFormValuesChanged() {
     for (const field in this.formErrors) {
@@ -708,25 +711,50 @@ export class ContentComponent implements OnInit, AfterViewInit {
     }
   }
 
-  setCountry(country) {
+  setCountry(country: string | null) {
+    if(country) {
     this.contentForm.get('album_meta').patchValue({ countryOrigin: country });
+  } else {
+    this.contentForm.controls.album_meta['controls']['countryOrigin'].setErrors({validCountry: "Must be an existing country."});
+  }
   }
 
-  mapGenre(selectorParam: string, genre: number) {
+  mapGenre(selectorParam: string, genre: number | null) {
+    if(genre) {
     switch (selectorParam) {
       case 'albumGenre1':
         this.contentForm.get('album_meta').patchValue({ albumGenre1: genre });
+        this.contentForm.updateValueAndValidity();
         break;
       case 'albumGenre2':
         this.contentForm.get('album_meta').patchValue({ albumGenre2: genre });
+        this.contentForm.updateValueAndValidity();
         break;
       case 'trackGenre1':
         this.contentForm.get('track_meta').patchValue({ trackGenre1: genre });
+        this.contentForm.updateValueAndValidity();
         break;
       case 'trackGenre2':
         this.contentForm.get('track_meta').patchValue({ trackGenre2: genre });
+        this.contentForm.updateValueAndValidity();
         break;
     }
+  } else {
+    switch (selectorParam) {
+      case 'albumGenre1':
+        this.contentForm.controls.album_meta['controls']['albumGenre1'].setErrors({validGenre: "Must be an existing genre."});
+        break;
+      case 'albumGenre2':
+        this.contentForm.controls.album_meta['controls']['albumGenre2'].setErrors({validGenre: "Must be an existing genre."});
+        break;
+      case 'trackGenre1':
+        this.contentForm.controls.track_meta['controls']['trackGenre1'].setErrors({validGenre: "Must be an existing genre."});
+        break;
+      case 'trackGenre2':
+        this.contentForm.controls.track_meta['controls']['trackGenre2'].setErrors({validGenre: "Must be an existing genre."});
+        break;
+    }
+  }
   }
 
   currentDate() {
@@ -810,7 +838,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
         if (this.publishers.length === 0) {
           this.publishers.push(
             this.fb.control({
-              publisher: ' ',
+              publisher: '',
               IPI_CAE: '',
               ISNI: undefined
             }));

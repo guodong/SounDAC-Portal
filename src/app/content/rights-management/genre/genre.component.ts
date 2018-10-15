@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
+import { GenreValidator } from '../validators/genre.validator';
 import 'rxjs/add/operator/startWith';
-
 import { Enums } from '../content.enums';
 import { MapGenre } from './map-genre';
 import { ContentComponent } from '../content/content.component';
@@ -22,7 +22,7 @@ export class GenreComponent implements OnInit {
         delay: '1000',
     };
 
-    smartControl: FormControl = new FormControl();
+    smartControl: FormControl = new FormControl('', GenreValidator.validGenre);
 
     options = [
         Enums.GenreString.AcousticBlues,
@@ -341,8 +341,12 @@ export class GenreComponent implements OnInit {
     }
 
     mapSelectedGenre(option) {
+      if(!this.smartControl.errors) {
         const mg = MapGenre.getMappedGenre(option);
         this.content.mapGenre(this.message, mg);
+      } else {
+        this.content.mapGenre(this.message, null);
+      }
     }
 
     selectorParam(text) {

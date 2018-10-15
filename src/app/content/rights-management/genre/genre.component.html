@@ -7,5 +7,8 @@
                 {{ option }}
             </mat-option>
         </mat-autocomplete>
+        <mat-error *ngIf="smartControl.hasError('validGenre') && smartControl.touched">
+          <strong>Must be a valid genre</strong>
+        </mat-error>
     </mat-form-field>
 </form>
