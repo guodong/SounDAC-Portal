@@ -208,10 +208,10 @@ export class SdacService {
     });
   }
 
-  voteStreamingPlatform(username, activeKey, streamingPlatform: string, vote: boolean) {
+  voteStreamingPlatform(activeKey, username, streamingPlatform: string, vote: boolean) {
     this.setWebSocket();
     return new Promise(function (resolve, reject) {
-      sdac.broadcast.accountStreamingPlatformVote(username, activeKey, witnessOwner, vote, (code, message) => {
+      sdac.broadcast.accountStreamingPlatformVote(activeKey, username, witnessOwner, vote, (code, message) => {
         if (code === 1) {
           resolve(true);
         } else {
