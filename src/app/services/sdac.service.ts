@@ -112,6 +112,21 @@ export class SdacService {
     });
   }
 
+  getStreamingPlatforms() {
+    this.setWebSocket();
+    return new Promise(function (resolve, reject) {
+      sdac.api.lookupStreamingPlatformAccounts('', 100, function (err, success) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(success);
+        }
+      });
+    }).catch((err) => {
+      this.alertService.showErrorMessage('getStreamingPlatforms(): ' + err);
+    });
+  }
+
   transferXsd(username, password, transferTo, amount, memo) {
     this.setWebSocket();
     return new Promise(function (resolve, reject) {
@@ -182,6 +197,21 @@ export class SdacService {
     this.setWebSocket();
     return new Promise(function (resolve, reject) {
       sdac.witnessVote(username, password, witnessOwner, vote, (code, message) => {
+        if (code === 1) {
+          resolve(true);
+        } else {
+          reject(message);
+        }
+      });
+    }).catch((err) => {
+      this.alertService.showErrorMessage('voteWitness(): ' + err);
+    });
+  }
+
+  voteStreamingPlatform(username, activeKey, streamingPlatform: string, vote: boolean) {
+    this.setWebSocket();
+    return new Promise(function (resolve, reject) {
+      sdac.broadcast.accountStreamingPlatformVote(username, activeKey, witnessOwner, vote, (code, message) => {
         if (code === 1) {
           resolve(true);
         } else {
