@@ -97,6 +97,36 @@ export class SdacService {
     });
   }
 
+  getStreamingPlatforms() {
+    this.setWebSocket();
+    return new Promise(function (resolve, reject) {
+      sdac.api.lookupStreamingPlatformAccounts('', 100, function (err, success) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(success);
+        }
+      });
+    }).catch((err) => {
+      this.alertService.showErrorMessage('getStreamingPlatforms(): ' + err);
+    });
+  }
+
+  voteStreamingPlatform(username, activeKey, streamingPlatform: string, vote: boolean) {
+    this.setWebSocket();
+    return new Promise(function (resolve, reject) {
+      sdac.broadcast.accountStreamingPlatformVote(activeKey, username, streamingPlatform, vote, (code, message) => {
+        if (code === 1) {
+          resolve(true);
+        } else {
+          reject(message);
+        }
+      });
+    }).catch((err) => {
+      this.alertService.showErrorMessage('voteStreamingPlatform(): ' + err);
+    });
+  }
+
   transferXsd(username, password, transferTo, amount, memo) {
     this.setWebSocket();
     return new Promise(function (resolve, reject) {
@@ -134,15 +164,15 @@ export class SdacService {
     this.setWebSocket();
     const that = this;
     const requestId = Utils.generateRequestId();
-      return new Promise(function (resolve, reject) {
-        sdac.broadcast.convert(activeKey, username, requestId, amount + ' ' + that.rylt, function (err, success) {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(success);
-            that.alertService.showCustomMessage('Success', 'Your redeemed RYLT tokens will be available as XSD in 3.5 days.');
-          }
-        });
+    return new Promise(function (resolve, reject) {
+      sdac.broadcast.convert(activeKey, username, requestId, amount + ' ' + that.rylt, function (err, success) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(success);
+          that.alertService.showCustomMessage('Success', 'Your redeemed RYLT tokens will be available as XSD in 3.5 days.');
+        }
+      });
     }).catch((err) => {
       this.alertService.showErrorMessage('redeemRylt(): ' + err);
     });

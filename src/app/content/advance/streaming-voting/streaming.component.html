@@ -1,0 +1,81 @@
+<div class="container-fluid pb-2">
+
+  <div class="row my-1">
+
+    <div class="col-12 mt-2">
+      <small class="text-danger font-weight-bold">This feature is currently unavailable</small>
+      <h3>Streaming Platform Voting</h3>
+    </div>
+
+    <!--Votes Amount-->
+    <!-- <div class="col-12 my-2">
+      <p>
+        <span>As a XSD holder you get </span>
+        <span class="font-weight-bold">30</span>
+        <span> streaming platform votes, use them wisely.</span>
+        <br />
+
+        <span>You have </span>
+        <span class="font-weight-bold" [innerHtml]="30 - account.streaming_platforms_voted_for"></span>
+        <span> streaming platform votes left.</span>
+      </p>
+    </div> -->
+
+    <!--Input Voting-->
+    <div class="col-12 mb-2">
+      <div class="row">
+        <div class="col-12">
+          <p>
+            If you whould like to vote for a streaming platform outside of the top 10, enter the account name below to
+            cast a vote.
+          </p>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4">
+          <mat-form-field>
+            <input matInput placeholder="Streaming platform Name" [(ngModel)]="inputVote">
+          </mat-form-field>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-8">
+          <button mat-raised-button class="mat-purple-bg" (click)="voteStreaming(inputVote, account.streamingPlatformVotes.indexOf(inputVote) <= -1)"
+            disabled>Vote
+          </button>
+          <!--[disabled]="!inputVote"-->
+        </div>
+      </div>
+    </div>
+
+    <!--Streaming Platforms-->
+    <div class="col-12 mb-2">
+      <mat-table #streamingTable [dataSource]="dataSource">
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Streaming Platforms</th>
+          <mat-cell *matCellDef="let streamingPlatform; let i=index">
+
+            <!--Id-->
+            <span class="mr-3" [innerHtml]="i +1"></span>
+
+            <!--Actions-->
+            <button *ngIf="false" mat-button class="mr-3 border purple-border" (click)="voteStreaming(streamingPlatform.name, true)"
+              disabled>
+              <mat-icon class="purple-fg" aria-label="thumb_up">thumb_up</mat-icon>
+            </button>
+            <button mat-button class="mr-3 mat-purple-bg" (click)="voteStreaming(streamingPlatform.name, false)"
+              disabled>
+              <mat-icon class="mat-icon white-fg" aria-label="thumb_up">thumb_up</mat-icon>
+            </button>
+
+            <!--Name-->
+            <span [innerHtml]="streamingPlatform.name"></span>
+
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+      <mat-paginator #paginator [pageSize]="50" [pageSizeOptions]="[50, 100, 200]" [showFirstLastButtons]="true"></mat-paginator>
+    </div>
+  </div>
+
+</div>

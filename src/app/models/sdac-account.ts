@@ -16,9 +16,10 @@ export class SdacAccount {
     keys: SdacKeys;
     history: SdacAccountHistory[];
     witnessVotes: string[];
+    streamingPlatformVotes: string[];
 
     mapAccount(sdacAccount: any){
-        // console.log(sdacAccount); // Object from blockchain - Uncomment to view all properties
+        console.log(sdacAccount); // Object from blockchain - Uncomment to view all properties
 
         this.keys.basicPubkey = sdacAccount.basic.key_auths[0][0];
         this.keys.activePubkey = sdacAccount.active.key_auths[0][0];
@@ -29,6 +30,7 @@ export class SdacAccount {
         this.MBDbalance = sdacAccount.mbd_balance.split(' ')[0];
         this.NextwithDraw = new Date(sdacAccount.next_vesting_withdrawal);
         this.witnessVotes = sdacAccount.witness_votes;
+        this.streamingPlatformVotes = sdacAccount.streaming_platform_votes;
     }
 
 }

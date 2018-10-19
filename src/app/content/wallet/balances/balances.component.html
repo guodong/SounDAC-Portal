@@ -1,0 +1,187 @@
+<div class="container-fluid">
+
+  <!--XSD Balance-->
+  <div class="row my-1">
+    <div class="col-12 my-2">
+      <h3>XSD Balance:</h3>
+      <span [innerHtml]="account.XsdBalance"></span>
+    </div>
+    <div class="col-12 my-2">
+      <button mat-raised-button class="mat-purple-bg mr-1" (click)="transferXsd()">
+        Transfer
+      </button>
+      <button mat-raised-button class="mat-purple-bg" (click)="vestXsd()">
+        Upgrade to VIP
+      </button>
+    </div>
+    <div class="col-12 my-2">
+      Tradeable tokens that may be transferred anywhere at anytime. XSD can be vested by clicking Upgrade to
+      VIP.
+    </div>
+    <div class="col-12 my-1">
+      <mat-divider></mat-divider>
+    </div>
+  </div>
+
+  <!--Vesting Balance-->
+  <div class="row my-1">
+    <div class="col-12 my-2">
+      <h3>VIP Balance:</h3>
+      <span [innerHtml]="account.Vestbalance"></span>
+    </div>
+    <div class="col-12 my-2">
+      <button mat-raised-button (click)="withdrawVest()" class="mat-purple-bg mr-1">
+        Exit VIP
+      </button>
+      <button mat-raised-button (click)="cancelWithdraw()" class="mat-purple-bg">
+        Cancel Exit
+      </button>
+    </div>
+    <div class="col-12 my-2">
+      Tokens that grant you more influence within the network.
+    </div>
+    <div class="col-12 my-1">
+      <mat-divider></mat-divider>
+    </div>
+  </div>
+
+  <!--RYLT Dollar-->
+  <div class="row my-1">
+    <div class="col-12 my-2">
+      <h3>RYLT Balance:</h3>
+      <span [innerHtml]="account.MBDbalance"></span>
+    </div>
+
+    <div class="col-12 my-2">
+      <button mat-raised-button (click)="redeemRylt()" class="mat-purple-bg">
+        Redeem
+      </button>
+    </div>
+
+    <div class="col-12 my-2">
+      <span [innerHtml]="'1 RYLT token can be redeemed for about 1 USD worth of XSD tokens.'"></span>
+    </div>
+
+    <div class="col-12 my-1">
+      <mat-divider></mat-divider>
+    </div>
+  </div>
+
+  <!--Next Withdrawal-->
+  <div class="row my-1">
+    <div class="col-12 my-2">
+      <h3>Next Exit:</h3>
+      <ng-template>
+        <span *ngIf="account.NextwithDraw.getDate() != defaultDate.getDate()" [innerHtml]="account.NextwithDraw | date:'MM/dd/yy hh:mm a z'"></span>
+        <span *ngIf="account.NextwithDraw.getDate() == defaultDate.getDate()" [innerHtml]="'No pending Exits'"></span>
+      </ng-template>
+    </div>
+    <div class="col-12 my-1">
+      <mat-divider></mat-divider>
+    </div>
+  </div>
+
+  <!--History-->
+  <div class="row my-1">
+    <div class="col-12 mt-2">
+      <h3>History</h3>
+    </div>
+    <div class="col-12">
+      <mat-table #table [dataSource]="dataSource">
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="date">
+          <mat-header-cell *matHeaderCellDef> Date </mat-header-cell>
+          <mat-cell *matCellDef="let history">
+            <span [innerHtml]="history.date | date:'MM/dd/yy hh:mm a z'"></span>
+          </mat-cell>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="transaction">
+          <mat-header-cell *matHeaderCellDef> Event </mat-header-cell>
+          <mat-cell *matCellDef="let history">
+
+            <!--Created Account-->
+            <ng-template [ngIf]="history.transaction.transactionType == 'account_create' && history.transaction.creator == username">
+              <span [innerHtml]="'Created Account ' + history.transaction.newAccountName"></span>
+            </ng-template>
+
+            <!--Account Creation-->
+            <ng-template [ngIf]="history.transaction.transactionType == 'account_create' && history.transaction.newAccountName == username">
+              <span [innerHtml]="'Account Creation'"></span>
+            </ng-template>
+
+            <!--Transfer - Received-->
+            <ng-template [ngIf]="history.transaction.transactionType == 'transfer' && history.transaction.to == username">
+              <span [innerHtml]="'Received ' + history.transaction.amount + ' XSD from ' + history.transaction.from"></span>
+            </ng-template>
+
+            <!--Transfer - Sent-->
+            <ng-template [ngIf]="history.transaction.transactionType == 'transfer' && history.transaction.to != username">
+              <span [innerHtml]="'Sent ' + history.transaction.amount + ' XSD to ' + history.transaction.to"></span>
+            </ng-template>
+
+            <!--Vesting - Transfer-->
+            <ng-template [ngIf]="history.transaction.transactionType == 'transfer_to_vesting' && history.transaction.to == username">
+              <span [innerHtml]="'Transferred ' + history.transaction.amount + '  XSD to VIP'"></span>
+            </ng-template>
+
+            <!--Vesting - Sent-->
+            <ng-template [ngIf]="history.transaction.transactionType == 'transfer_to_vesting' && history.transaction.to != username">
+              <span [innerHtml]="'Sent ' + history.transaction.amount + ' VIP to ' + history.transaction.to"></span>
+            </ng-template>
+
+            <!--Vesting - Widthdraw-->
+            <ng-template [ngIf]="history.transaction.transactionType == 'withdraw_vesting'">
+              <span [innerHtml]="'Withdrawing ' + history.transaction.vestingShares + ' VIP'"></span>
+            </ng-template>
+
+            <!--Witness Voted-->
+            <ng-template [ngIf]="history.transaction.transactionType == 'account_witness_vote' && history.transaction.approve">
+              <span [innerHtml]="history.transaction.account + ' Voted Witness ' + history.transaction.witness"></span>
+            </ng-template>
+
+            <!--Witness UnVoted-->
+            <ng-template [ngIf]="history.transaction.transactionType == 'account_witness_vote' && !history.transaction.approve">
+              <span [innerHtml]="history.transaction.account + ' UnVoted Witness ' + history.transaction.witness"></span>
+            </ng-template>
+
+            <!--Witness Update-->
+            <ng-template [ngIf]="history.transaction.transactionType == 'witness_update'">
+              <span [innerHtml]="'Witness Update'"></span>
+            </ng-template>
+
+            <!--Account Update-->
+            <ng-template [ngIf]="history.transaction.transactionType == 'account_update'">
+              <span [innerHtml]="'Account Update'"></span>
+            </ng-template>
+
+            <!--Content-->
+            <ng-template [ngIf]="history.transaction.transactionType == 'content'">
+              <span [innerHtml]="'Content Listed: URL: ' + history.transaction.url + ' Uploader: ' + history.transaction.uploader"></span>
+            </ng-template>
+
+            <!--Fill Vesting Withdraw-->
+            <ng-template [ngIf]="history.transaction.transactionType == 'fill_vesting_withdraw'">
+              <span [innerHtml]="'Exit of VIP from ' + history.transaction.fromAccount + ' to ' + history.transaction.toAccount + ' of ' + history.transaction.deposited"></span>
+            </ng-template>
+
+            <!--Content-->
+            <ng-template [ngIf]="history.transaction.transactionType == 'custom_json'">
+              <span [innerHtml]="'Custom Json ' + history.id + ' ' + history.json + ' ' + history.transaction.requiredAuths + ' ' + history.transaction.requiredBasicAuths"></span>
+            </ng-template>
+
+          </mat-cell>
+        </ng-container>
+
+        <mat-row *matRowDef="let row; columns: displayedColumnsHistory;"></mat-row>
+
+      </mat-table>
+
+      <mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true"></mat-paginator>
+    </div>
+
+  </div>
+
+</div>

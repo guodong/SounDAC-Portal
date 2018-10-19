@@ -53,17 +53,23 @@ import { HomeComponent } from './content/home/home.component';
 import { LayoutComponent } from './layout/layout.component';
 import { LoginComponent } from './content/defaults/login/login.component';
 import { EmailComponent } from './content/defaults/email/email.component';
-import { ModalTransferComponent } from './content/wallet/modal/modal-transfer.component';
-import { ModalRedeemComponent } from './content/wallet/modal/modal-redeem.component';
+import { ModalTransferComponent } from './content/wallet/balances/modals/modal-transfer.component';
+import { ModalRedeemComponent } from './content/wallet/balances/modals/modal-redeem.component';
 import { ModalKeyComponent } from './layout/sidenav/modals/artist-key/modal-key.component';
-import { ModalDialogVestComponent } from './content/wallet/modal/modal-vest.component';
-import { ModalWithdrawComponent } from './content/wallet/modal/modal-withdraw.component';
+import { ModalDialogVestComponent } from './content/wallet/balances/modals/modal-vest.component';
+import { ModalWithdrawComponent } from './content/wallet/balances/modals/modal-withdraw.component';
 import { PageNotFoundComponent } from './content/defaults/page-not-found/page-not-found.component';
 import { RegisterComponent } from './content/defaults/register/register.component';
 import { RegisterExternalComponent } from './content/defaults/register-external/register-external.component';
 import { TacComponent } from './content/defaults/register/terms-conditions/tac.component';
 import { AdvanceComponent } from './content/advance/advance.component';
+import { AdvanceClaimOfStakeComponent } from './content/advance/claim-of-stake/claim-of-stake.component';
+import { AdvanceWitnessComponent } from './content/advance/witness-voting/witness.component';
+import { AdvanceStreamingComponent } from './content/advance/streaming-voting/streaming.component';
+import { AdvancePermissionsComponent } from './content/advance/permissions/permissions.component';
 import { WalletComponent } from './content/wallet/wallet.component';
+import { WalletBalancesComponent } from './content/wallet/balances/balances.component';
+import { WalletPasswordComponent } from './content/wallet/password/password.component';
 import { RightsManagementComponent } from './content/rights-management/rights-management.component';
 import { ContentComponent } from './content/rights-management/content/content.component';
 import { GenreComponent } from './content/rights-management/genre/genre.component';
@@ -72,6 +78,8 @@ import { ProductTypeComponent } from './content/rights-management/product-type/p
 import { ProsComponent } from './content/rights-management/pros/pros.component';
 import { SamplesComponent } from './content/rights-management/samples/samples.component';
 import { WriterRolesComponent } from './content/rights-management/writer-roles/writer-roles.component';
+import { MusicComponent } from './content/music/music.component';
+import { MusicUploadComponent } from './content/music/upload/upload.component';
 
 import { ModalArtistComponent } from './content/rights-management/modal/artist/modal-artist.component';
 import { ModalReviewComponent } from './content/rights-management/modal/review/modal-review.component';
@@ -97,6 +105,7 @@ const routes: Routes = [
       { path: 'admin', component: AdminComponent, canActivate: [AdminGuard] },
       { path: 'wallet', component: WalletComponent },
       { path: 'advance', component: AdvanceComponent },
+      { path: 'music', component: MusicComponent },
       { path: 'post-content', component: ContentComponent, canActivate: [ManagementGuard] },
       { path: '**', component: PageNotFoundComponent }
     ]
@@ -150,7 +159,13 @@ const routes: Routes = [
     TacComponent,
     PageNotFoundComponent,
     AdvanceComponent,
+    AdvanceClaimOfStakeComponent,
+    AdvanceStreamingComponent,
+    AdvancePermissionsComponent,
+    AdvanceWitnessComponent,
     WalletComponent,
+    WalletBalancesComponent,
+    WalletPasswordComponent,
     AdminComponent,
     AdminUsersComponent,
     AdminTestnetComponent,
@@ -163,7 +178,9 @@ const routes: Routes = [
     ProductTypeComponent,
     ProsComponent,
     SamplesComponent,
-    WriterRolesComponent
+    WriterRolesComponent,
+    MusicComponent,
+    MusicUploadComponent
   ],
   imports: [
     CommonModule,

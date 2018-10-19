@@ -1,23 +1,19 @@
-<div id="post" class="page-layout carded fullwidth">
+<div class="page-layout carded fullwidth">
+
+  <!--Purple Background-->
   <div class="top-bg mat-deep-purple-bg"></div>
   <div class="center">
 
     <!--Header-->
-    <div class="header white-fg p-24" fxLayout="row" fxLayoutAlign="space-between center">
-      <h2>Wallet</h2>
-      <div *ngIf="marketCap" class="text-right align-middle">
-
-        <!-- <span [innerHtml]="marketCap.price_btc"></span>
-        <span> BTC / XSD</span>
-        <br /> -->
-
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+      <h2 class="text-white">
+        <i class="material-icons align-middle mr-1">credit_card</i>
+        <span class="align-middle">Wallet</span>
+      </h2>
+      <div *ngIf="marketCap" class="text-right align-middle text-white">
         <span [innerHtml]="marketCap.price_usd | currency:'USD':'symbol':'0.2-4'"></span>
         <span> USD / XSD</span>
         <br />
-
-        <!-- <span [innerHtml]="'XSD tokens worth about '"></span>
-        <span [innerHtml]="(account.XsdBalance * marketCap.price_usd) | currency:'USD':'symbol':'0.2-2'"></span>
-        <span [innerHtml]="' USD'"></span> -->
       </div>
     </div>
 
@@ -27,281 +23,16 @@
 
         <!--Balances-->
         <mat-tab label="Balances">
-          <div class="container-fluid">
-
-            <!--XSD Balance-->
-            <div class="row my-1">
-              <div class="col-12 my-2">
-                <h3>XSD Balance:</h3>
-                <span [innerHtml]="account.XsdBalance"></span>
-              </div>
-              <div class="col-12 my-2">
-                <button mat-raised-button class="mat-purple-bg mr-1" (click)="transferXsd()">
-                  Transfer
-                </button>
-                <button mat-raised-button class="mat-purple-bg" (click)="vestXsd()">
-                  Upgrade to VIP
-                </button>
-              </div>
-              <div class="col-12 my-2">
-                Tradeable tokens that may be transferred anywhere at anytime. XSD can be vested by clicking Upgrade to
-                VIP.
-              </div>
-              <div class="col-12 my-1">
-                <mat-divider></mat-divider>
-              </div>
-            </div>
-
-            <!--Vesting Balance-->
-            <div class="row my-1">
-              <div class="col-12 my-2">
-                <h3>VIP Balance:</h3>
-                <span [innerHtml]="account.Vestbalance"></span>
-              </div>
-              <div class="col-12 my-2">
-                <button mat-raised-button (click)="withdrawVest()" class="mat-purple-bg mr-1">
-                  Exit VIP
-                </button>
-                <button mat-raised-button (click)="cancelWithdraw()" class="mat-purple-bg">
-                  Cancel Exit
-                </button>
-              </div>
-              <div class="col-12 my-2">
-                Tokens that grant you more influence within the network.
-              </div>
-              <div class="col-12 my-1">
-                <mat-divider></mat-divider>
-              </div>
-            </div>
-
-            <!--RYLT Dollar-->
-            <div class="row my-1">
-              <div class="col-12 my-2">
-                <h3>RYLT Balance:</h3>
-                <span [innerHtml]="account.MBDbalance"></span>
-              </div>
-
-              <div class="col-12 my-2">
-                <button mat-raised-button (click)="redeemRylt()" class="mat-purple-bg">
-                  Redeem
-                </button>
-              </div>
-
-              <div class="col-12 my-2">
-                <span [innerHtml]="'1 RYLT token can be redeemed for about 1 USD worth of XSD tokens.'"></span>
-              </div>
-
-              <div class="col-12 my-1">
-                <mat-divider></mat-divider>
-              </div>
-            </div>
-
-            <!--Next Withdrawal-->
-            <div class="row my-1">
-              <div class="col-12 my-2">
-                <h3>Next Exit:</h3>
-                <span *ngIf="account.NextwithDraw && account.NextwithDraw.getDate() != defaultDate.getDate()"
-                  [innerHtml]="account.NextwithDraw | date:'MM/dd/yy hh:mm a z'"></span>
-                <span *ngIf="account.NextwithDraw && account.NextwithDraw.getDate() == defaultDate.getDate()"
-                  [innerHtml]="'No pending Exits'"></span>
-              </div>
-              <div class="col-12 my-1">
-                <mat-divider></mat-divider>
-              </div>
-            </div>
-
-            <!--History-->
-            <div class="row my-1">
-              <div class="col-12 mt-2">
-                <h3>History</h3>
-              </div>
-              <div class="col-12">
-                <mat-table #table [dataSource]="dataSource">
-
-                  <!-- Position Column -->
-                  <ng-container matColumnDef="date">
-                    <mat-header-cell *matHeaderCellDef> Date </mat-header-cell>
-                    <mat-cell *matCellDef="let history">
-                      <span [innerHtml]="history.date | date:'MM/dd/yy hh:mm a z'"></span>
-                    </mat-cell>
-                  </ng-container>
-
-                  <!-- Name Column -->
-                  <ng-container matColumnDef="transaction">
-                    <mat-header-cell *matHeaderCellDef> Event </mat-header-cell>
-                    <mat-cell *matCellDef="let history">
-
-                      <!--Created Account-->
-                      <ng-template [ngIf]="history.transaction.transactionType == 'account_create' && history.transaction.creator == username">
-                        <span [innerHtml]="'Created Account ' + history.transaction.newAccountName"></span>
-                      </ng-template>
-
-                      <!--Account Creation-->
-                      <ng-template [ngIf]="history.transaction.transactionType == 'account_create' && history.transaction.newAccountName == username">
-                        <span [innerHtml]="'Account Creation'"></span>
-                      </ng-template>
-
-                      <!--Transfer - Received-->
-                      <ng-template [ngIf]="history.transaction.transactionType == 'transfer' && history.transaction.to == username">
-                        <span [innerHtml]="'Received ' + history.transaction.amount + ' XSD from ' + history.transaction.from"></span>
-                      </ng-template>
-
-                      <!--Transfer - Sent-->
-                      <ng-template [ngIf]="history.transaction.transactionType == 'transfer' && history.transaction.to != username">
-                        <span [innerHtml]="'Sent ' + history.transaction.amount + ' XSD to ' + history.transaction.to"></span>
-                      </ng-template>
-
-                      <!--Vesting - Transfer-->
-                      <ng-template [ngIf]="history.transaction.transactionType == 'transfer_to_vesting' && history.transaction.to == username">
-                        <span [innerHtml]="'Transferred ' + history.transaction.amount + '  XSD to VIP'"></span>
-                      </ng-template>
-
-                      <!--Vesting - Sent-->
-                      <ng-template [ngIf]="history.transaction.transactionType == 'transfer_to_vesting' && history.transaction.to != username">
-                        <span [innerHtml]="'Sent ' + history.transaction.amount + ' VIP to ' + history.transaction.to"></span>
-                      </ng-template>
-
-                      <!--Vesting - Widthdraw-->
-                      <ng-template [ngIf]="history.transaction.transactionType == 'withdraw_vesting'">
-                        <span [innerHtml]="'Withdrawing ' + history.transaction.vestingShares + ' VIP'"></span>
-                      </ng-template>
-
-                      <!--Witness Voted-->
-                      <ng-template [ngIf]="history.transaction.transactionType == 'account_witness_vote' && history.transaction.approve">
-                        <span [innerHtml]="history.transaction.account + ' Voted Witness ' + history.transaction.witness"></span>
-                      </ng-template>
-
-                      <!--Witness UnVoted-->
-                      <ng-template [ngIf]="history.transaction.transactionType == 'account_witness_vote' && !history.transaction.approve">
-                        <span [innerHtml]="history.transaction.account + ' UnVoted Witness ' + history.transaction.witness"></span>
-                      </ng-template>
-
-                      <!--Witness Update-->
-                      <ng-template [ngIf]="history.transaction.transactionType == 'witness_update'">
-                        <span [innerHtml]="'Witness Update'"></span>
-                      </ng-template>
-
-                      <!--Account Update-->
-                      <ng-template [ngIf]="history.transaction.transactionType == 'account_update'">
-                        <span [innerHtml]="'Account Update'"></span>
-                      </ng-template>
-
-                      <!--Content-->
-                      <ng-template [ngIf]="history.transaction.transactionType == 'content'">
-                        <span [innerHtml]="'Content Listed: URL: ' + history.transaction.url + ' Uploader: ' + history.transaction.uploader"></span>
-                      </ng-template>
-
-                      <!--Fill Vesting Withdraw-->
-                      <ng-template [ngIf]="history.transaction.transactionType == 'fill_vesting_withdraw'">
-                        <span [innerHtml]="'Exit of VIP from ' + history.transaction.fromAccount + ' to ' + history.transaction.toAccount + ' of ' + history.transaction.deposited"></span>
-                      </ng-template>
-
-                      <!--Content-->
-                      <ng-template [ngIf]="history.transaction.transactionType == 'custom_json'">
-                        <span [innerHtml]="'Custom Json ' + history.id + ' ' + history.json + ' ' + history.transaction.requiredAuths + ' ' + history.transaction.requiredBasicAuths"></span>
-                      </ng-template>
-
-                    </mat-cell>
-                  </ng-container>
-
-                  <mat-row *matRowDef="let row; columns: displayedColumnsHistory;"></mat-row>
-
-                </mat-table>
-
-                <mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true"></mat-paginator>
-              </div>
-
-            </div>
-
-          </div>
+          <ng-template matTabContent>
+            <wallet-balances *ngIf="account && username" [account]="account" [username]="username"></wallet-balances>
+          </ng-template>
         </mat-tab>
 
         <!--Password-->
         <mat-tab label="Password">
-          <div class="container-fluid pb-2">
-
-            <div class="row my-1">
-              <div class="col-12 mt-2">
-                <!-- <small class="text-danger font-weight-bold">This feature is currently disabled</small> -->
-                <h3 [innerHtml]="'Reset '+ username +'\'s Password'"></h3>
-              </div>
-              <div class="col-12">
-                <ul class="pl-0 list-unstyled">
-                  <li>Do
-                    <span class="font-weight-bold">not</span> lose your password.
-                  </li>
-                  <li>We cannot recover your password.</li>
-                  <li>If you can remember your password, It's not secure.</li>
-                  <li>Use only randomly-generated passwords.</li>
-                  <li>Do not tell anyone your password.</li>
-                  <li>Always back up your password.</li>
-                  <!-- Need to verify time -->
-                  <!-- <li>For security reasons, your password can only be changed once every 24 hours.</li>  -->
-                </ul>
-              </div>
-              <div class="col-12 my-1">
-                <mat-divider></mat-divider>
-              </div>
-            </div>
-
-            <div class="row my-1">
-
-              <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()" autocomplete="off">
-
-                <div class="col-12 mb-2">
-                  <mat-form-field>
-                    <input matInput type="password" placeholder="Current Password" formControlName="password"
-                      autocomplete="off">
-                    <mat-error *ngIf="passwordForm.controls.password.hasError('required')">
-                      <strong>Password is required</strong>
-                    </mat-error>
-                  </mat-form-field>
-                </div>
-
-                <div class="col-12 mb-2">
-                  <mat-form-field>
-                    <input matInput type="password" placeholder="New Password" formControlName="newPassword"
-                      autocomplete="off">
-                    <mat-error *ngIf="passwordForm.controls.newPassword.hasError('required')">
-                      <strong>Generated Password is required</strong>
-                    </mat-error>
-                  </mat-form-field>
-                </div>
-
-                <div class="col-12 mb-2">
-                  <mat-form-field>
-                    <input matInput type="password" placeholder="Confirm Password" formControlName="confirmPassword"
-                      autocomplete="off">
-                    <mat-error *ngIf="!passwordMatch()">
-                      <strong>Password must match</strong>
-                    </mat-error>
-                    <mat-error *ngIf="passwordForm.controls.confirmPassword.hasError('required')">
-                      <strong>Password confirmation is required</strong>
-                    </mat-error>
-                  </mat-form-field>
-                </div>
-
-                <div class="col-12 mt-2">
-                  <mat-checkbox formControlName="understand" required>
-                    I UNDERSTAND THIS WALLET HOSTER CANNOT RECOVER LOST PASSWORDS
-                  </mat-checkbox>
-                </div>
-
-                <div class="col-12 mb-2">
-                  <mat-checkbox formControlName="saved" required>
-                    I HAVE SECURELY SAVED MY NEW PASSWORD
-                  </mat-checkbox>
-                </div>
-
-                <div class="col-12 my-2">
-                  <button mat-raised-button class="mat-purple-bg" [disabled]="!passwordForm.valid">
-                    Update Password
-                  </button>
-                </div>
-              </form>
-            </div>
-
-          </div>
+          <ng-template matTabContent>
+            <wallet-password *ngIf="account && username" [account]="account" [username]="username"></wallet-password>
+          </ng-template>
         </mat-tab>
 
       </mat-tab-group>

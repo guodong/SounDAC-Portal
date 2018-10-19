@@ -1,7 +1,13 @@
+<!--Music-->
+<button mat-button routerLink="/music">
+    <mat-icon aria-label="User">music_note</mat-icon>
+    <span>Music</span>
+</button>
+
 <!--Logged-->
 <button *ngIf="auth.user" mat-button [matMenuTriggerFor]="menu">
     <mat-icon aria-label="User">account_circle</mat-icon>
-    <span [innerHtml]="auth.user.username"></span>
+    <span class="ml-1" [innerHtml]="auth.user.username"></span>
 </button>
 <mat-menu class="mt-5" #menu="matMenu">
     <button mat-menu-item (click)="onSupportNav()">

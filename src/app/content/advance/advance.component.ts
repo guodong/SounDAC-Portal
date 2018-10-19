@@ -10,8 +10,8 @@ import { UIService } from '../../services/ui.service';
 // Models
 import { SdacAccount } from '../../models/sdac-account';
 import { SdacKeys } from '../../models/sdac-keys';
-import { SdacWitness } from '../../models/sdac-witness';
 import { Subscription } from 'rxjs/Subscription';
+import { SdacStreamingPlatform } from '../../models/sdac-streaming-platform';
 
 @Component({
   selector: 'advance',
@@ -26,26 +26,18 @@ export class AdvanceComponent implements OnInit, OnDestroy {
     private ui: UIService
   ) { }
 
-  @ViewChild('paginatorWitness') paginatorWitness: MatPaginator;
+  
+  @ViewChild('paginatorStreamingPlatform') paginatorStreamingPlatform: MatPaginator;
 
   account: SdacAccount = new SdacAccount();
   subscription: Subscription;
-  username: any;
+  username: string;
 
-  // Keys
-  showPrivateBasic: boolean = false;
-  showPrivateActive: boolean = false;
-  showPrivateOwner: boolean = false;
-  showPrivateMemo: boolean = false;
-
-  // Witness
-  WitnessListArray: SdacWitness[] = [];
-  dataSourceWitness = new MatTableDataSource<SdacWitness>(this.WitnessListArray);
-  displayedColumnsWitness = ['owner', 'block', 'url'];
-  inputWitness: string;
-
-  // Claim of Stake
-  inputWIF: string;
+  // Streaming Platforms
+  StreamingPlatformListArray: SdacStreamingPlatform[] = [];
+  dataSourceStreamingPlatforms = new MatTableDataSource<SdacStreamingPlatform>(this.StreamingPlatformListArray);
+  displayedColumnsStreamingPlatforms = [''];
+  inputStreamingPlatform: string;
 
   ngOnInit() {
 
@@ -56,13 +48,12 @@ export class AdvanceComponent implements OnInit, OnDestroy {
 
       if (user) {
 
-        // this.auth.user = user; // Update User
+        // Get Username
         this.username = user.username;
 
         // Get Account Infos
         this.getAccount();
-        this.getPrivateKeys(); // Loading Private keys until blockchain fork happens - Require Active keys for most transactions
-        this.getWitnesses();
+        this.getPrivateKeys();
 
       }
 
@@ -70,7 +61,9 @@ export class AdvanceComponent implements OnInit, OnDestroy {
 
   }
 
-  ngOnDestroy() { }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 
 
   getAccount() {
@@ -101,94 +94,18 @@ export class AdvanceComponent implements OnInit, OnDestroy {
     });
   }
 
-  getWitnesses() {
-    this.sdacService.getWitnesses().then(((result: any[]) => {
-      result.forEach(res => {
-        const witness: SdacWitness = new SdacWitness();
-        witness.mapWitness(res);
-        // this.WitnessListArray.push(witness);
-        this.dataSourceWitness.data.push(witness);
-      });
-      this.dataSourceWitness.paginator = this.paginatorWitness;
+  getStreamingPlatforms() {
+    this.sdacService.getStreamingPlatforms().then(((result: any[]) => {
+      console.log(result);
+      // result.forEach(res => {
+      //   console.log(res);
+      //   const streamingPlatform: SdacStreamingPlatform = new SdacStreamingPlatform();
+      //   streamingPlatform.map(res);
+      //   // this.WitnessListArray.push(witness);
+      //   this.dataSourceStreamingPlatforms.data.push(streamingPlatform);
+      // });
+      // this.dataSourceStreamingPlatforms.paginator = this.paginatorStreamingPlatform;
     }));
-  }
-
-  loadPrivateKeys() {
-    const password = this.auth.user.getPassword();
-    this.auth.getPrivateKeys(this.username, password).then((keys: SdacKeys) => {
-      this.account.keys.basic = keys.basic;
-      this.account.keys.active = keys.active;
-      this.account.keys.owner = keys.owner;
-      this.account.keys.memo = keys.memo;
-    });
-  }
-
-  togglePrivatekeys(key: string) {
-
-    if (key === 'basic') {
-      if (!this.showPrivateBasic) {
-        if (this.account.keys.basic === '') {
-          this.loadPrivateKeys();
-        }
-        this.showPrivateBasic = true;
-      } else {
-        this.showPrivateBasic = false;
-      }
-    }
-
-    if (key === 'active') {
-      if (!this.showPrivateActive) {
-        if (this.account.keys.active === '') {
-          this.loadPrivateKeys();
-        }
-        this.showPrivateActive = true;
-      } else {
-        this.showPrivateActive = false;
-      }
-    }
-
-    if (key === 'owner') {
-      if (!this.showPrivateOwner) {
-        if (this.account.keys.owner === '') {
-          this.loadPrivateKeys();
-        }
-        this.showPrivateOwner = true;
-      } else {
-        this.showPrivateOwner = false;
-      }
-    }
-
-    if (key === 'memo') {
-      if (!this.showPrivateMemo) {
-        if (this.account.keys.memo === '') {
-          this.loadPrivateKeys();
-        }
-        this.showPrivateMemo = true;
-      } else {
-        this.showPrivateMemo = false;
-      }
-    }
-
-  }
-
-  voteWitness(witnessOwner: string, vote: boolean) {
-    this.ui.showLoading();
-    const password = this.auth.user.getPassword();
-    this.auth.getPrivateKeys(this.username, password).then((keys: SdacKeys) => {
-
-      this.account.keys.basic = keys.basic;
-      this.account.keys.active = keys.active;
-      this.account.keys.owner = keys.owner;
-      this.account.keys.memo = keys.memo;
-
-      this.sdacService.voteWitness(this.username, this.account.keys.active, witnessOwner, vote);
-
-    });
-  }
-
-  claimWIF() {
-    this.ui.showLoading();
-    // this.sdacService.claimBalance(this.username, this.inputWIF); // ToDo: Check Muse-js library to figure source of current error
   }
 
 

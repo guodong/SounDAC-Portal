@@ -1,0 +1,55 @@
+<div id="music-uploads" class="page-layout carded fullwidth">
+
+  <!--Purple Background-->
+  <div class="top-bg mat-deep-purple-bg"></div>
+
+  <div class="center">
+
+    <!--Header-->
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+      <h2 class="text-white">
+        <i class="material-icons align-middle">music_note</i>
+        <span class="align-middle">Music Upload</span>
+      </h2>
+    </div>
+
+    <!--Content-->
+    <div class="content-card mat-white-bg mb-5">
+
+      <mat-vertical-stepper #stepper linear>
+
+        <!--Upload-->
+        <mat-step label="Upload" [completed]="stepUploadCompleted" [editable]="!stepUploadCompleted">
+          <music-upload></music-upload>
+        </mat-step>
+
+        <!--Track Info-->
+        <mat-step label="Track Info" [completed]="stepTrackInfoCompleted" [editable]="!stepTrackInfoCompleted">
+          <music-upload></music-upload>
+        </mat-step>
+
+        <!--Composition-->
+        <mat-step label="Composition" [completed]="stepCompositionCompleted" [editable]="!stepCompositionCompleted">
+          <music-upload></music-upload>
+        </mat-step>
+
+        <!--Royalties-->
+        <mat-step label="Royalties" [completed]="stepRoyaltiesCompleted" [editable]="!stepRoyaltiesCompleted">
+          <music-upload></music-upload>
+        </mat-step>
+
+        <!--Confirmation-->
+        <mat-step label="Confirmation">
+          <div class="row">
+            <div class="col-12 mt-3">
+              <button mat-raised-button color="primary" (click)="submit()">Submit</button>
+            </div>
+          </div>
+        </mat-step>
+
+      </mat-vertical-stepper>
+
+    </div>
+
+  </div>
+</div>

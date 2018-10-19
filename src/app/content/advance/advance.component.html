@@ -1,10 +1,16 @@
 <div id="post" class="page-layout carded fullwidth">
+
+  <!--Purple Background-->
   <div class="top-bg mat-deep-purple-bg"></div>
+
   <div class="center">
 
     <!--Header-->
-    <div class="header white-fg p-24" fxLayout="row" fxLayoutAlign="space-between center">
-      <h2>Advance Features</h2>
+    <div class="header p-24" fxLayout="row" fxLayoutAlign="space-between center">
+      <h2 class="text-white">
+        <i class="material-icons align-middle mr-2">build</i>
+        <span class="align-middle">Advance Features</span>
+      </h2>
     </div>
 
     <!--Content-->
@@ -13,223 +19,30 @@
 
         <!--Permissions-->
         <mat-tab label="Permissions">
-          <div class="container-fluid pb-2">
-
-            <div class="row my-1">
-              <div class="col-12 mt-2">
-                <h3 class="mb-1">Basic</h3>
-              </div>
-              <div class="col-12 mb-2">
-                <small *ngIf="!showPrivateBasic" class="font-weight-bold font-italic" [innerHtml]="account.keys.basicPubkey"></small>
-                <small *ngIf="showPrivateBasic" class="font-weight-bold font-italic" [innerHtml]="account.keys.basic"></small>
-              </div>
-              <div class="col-12 mb-2">
-                <button mat-raised-button class="mat-purple-bg" (click)="togglePrivatekeys('basic')">
-                  <span *ngIf="showPrivateBasic">Show Public</span>
-                  <span *ngIf="!showPrivateBasic">Show Private</span>
-                </button>
-              </div>
-              <div class="col-12 my-2">
-                The basic key is used for non-financial functions such as voting, connection with other users and
-                approving/declining proposed
-                modifications to your data. It should be different from the active and owner keys.
-              </div>
-              <div class="col-12 my-1">
-                <mat-divider></mat-divider>
-              </div>
-            </div>
-
-            <div class="row my-1">
-              <div class="col-12 mt-2">
-                <h3 class="mb-1">Active</h3>
-              </div>
-              <div class="col-12 mb-2">
-                <small *ngIf="!showPrivateActive" class="font-weight-bold font-italic" [innerHtml]="account.keys.activePubkey"></small>
-                <small *ngIf="showPrivateActive" class="font-weight-bold font-italic" [innerHtml]="account.keys.active"></small>
-              </div>
-              <div class="col-12 mb-2">
-                <button mat-raised-button class="mat-purple-bg" (click)="togglePrivatekeys('active')">
-                  <span *ngIf="showPrivateActive">Show Public</span>
-                  <span *ngIf="!showPrivateActive">Show Private</span>
-                </button>
-              </div>
-              <div class="col-12 my-2">
-                The active key is used for financial transactions and the creation of (or updates to) your data. It
-                should be used from a
-                secure workstation.
-              </div>
-              <div class="col-12 my-1">
-                <mat-divider></mat-divider>
-              </div>
-            </div>
-
-            <div class="row my-1">
-              <div class="col-12 mt-2">
-                <h3 class="mb-1">Owner</h3>
-              </div>
-              <div class="col-12 mb-2">
-                <small *ngIf="!showPrivateOwner" class="font-weight-bold font-italic" [innerHtml]="account.keys.ownerPubkey"></small>
-                <small *ngIf="showPrivateOwner" class="font-weight-bold font-italic" [innerHtml]="account.keys.owner"></small>
-              </div>
-              <div class="col-12 mb-2">
-                <button mat-raised-button class="mat-purple-bg" (click)="togglePrivatekeys('owner')">
-                  <span *ngIf="showPrivateOwner">Show Public</span>
-                  <span *ngIf="!showPrivateOwner">Show Private</span>
-                </button>
-              </div>
-              <div class="col-12 my-2">
-                The owner key is the master key for the account and is required to change the other keys. The private
-                key or password for
-                the owner key should be kept offline as much as possible.
-              </div>
-              <div class="col-12 my-1">
-                <mat-divider></mat-divider>
-              </div>
-            </div>
-
-            <div class="row my-1">
-              <div class="col-12 mt-2">
-                <h3 class="mb-1">Memo</h3>
-              </div>
-              <div class="col-12 mb-2">
-                <small *ngIf="!showPrivateMemo" class="font-weight-bold font-italic" [innerHtml]="account.keys.memoPubkey"></small>
-                <small *ngIf="showPrivateMemo" class="font-weight-bold font-italic" [innerHtml]="account.keys.memo"></small>
-              </div>
-              <div class="col-12 mb-2">
-                <button mat-raised-button class="mat-purple-bg" (click)="togglePrivatekeys('memo')">
-                  <span *ngIf="showPrivateMemo">Show Public</span>
-                  <span *ngIf="!showPrivateMemo">Show Private</span>
-                </button>
-              </div>
-              <div class="col-12 my-2">
-                <span>The memo key is used to create and read memos.</span>
-              </div>
-            </div>
-
-          </div>
+          <ng-template matTabContent>
+            <advance-permissions *ngIf="account" [account]="account"></advance-permissions>
+          </ng-template>
         </mat-tab>
 
         <!--Witness & Voting-->
-        <mat-tab label="Witness-Voting">
-          <div class="container-fluid pb-2">
+        <mat-tab label="Witness Voting">
+          <ng-template matTabContent>
+            <advance-witness *ngIf="account && username" [account]="account" [username]="username"></advance-witness>
+          </ng-template>
+        </mat-tab>
 
-            <div class="row my-1">
-
-              <div class="col-12 mt-2">
-                <h3>Witness Voting</h3>
-              </div>
-
-              <!--Votes Amount-->
-              <div class="col-12 my-2">
-                <p>
-                  <span>As a XSD holder you get </span>
-                  <span class="font-weight-bold">30</span>
-                  <span> witness votes, use them wisely.</span>
-                  <br />
-
-                  <span>You have </span>
-                  <span class="font-weight-bold" [innerHtml]="30 - account.witnessVotes.length"></span>
-                  <span> witness votes left.</span>
-                </p>
-              </div>
-
-              <!--Input Voting-->
-              <div class="col-12 mb-2">
-                <div class="row">
-                  <div class="col-12">
-                    <p>
-                      If you whould like to vote for a witness outside of the top 50, enter the account name below to
-                      cast a vote.
-                    </p>
-                  </div>
-                  <div class="col-xs-12 col-sm-6 col-md-4">
-                    <mat-form-field>
-                      <input matInput placeholder="Witness Name" [(ngModel)]="inputWitness">
-                    </mat-form-field>
-                  </div>
-                  <div class="col-xs-12 col-sm-6 col-md-8">
-                    <button mat-raised-button class="mat-purple-bg" (click)="voteWitness(inputWitness, account.witnessVotes.indexOf(inputWitness) <= -1)"
-                      [disabled]="!inputWitness">Vote
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <!--Witnesses-->
-              <div class="col-12 mb-2">
-                <mat-table #witnessTable [dataSource]="dataSourceWitness">
-
-                  <ng-container matColumnDef="owner">
-                    <th mat-header-cell *matHeaderCellDef>Witness</th>
-                    <mat-cell *matCellDef="let witness; let i=index">
-                      <span class="mr-3" [innerHtml]="i +1"></span>
-                      <button *ngIf="account.witnessVotes.indexOf(witness.owner) <= -1" mat-button class="mr-3 border purple-border"
-                        (click)="voteWitness(witness.owner, true)">
-                        <mat-icon class="purple-fg" aria-label="thumb_up">thumb_up</mat-icon>
-                      </button>
-                      <button *ngIf="account.witnessVotes.indexOf(witness.owner) > -1" mat-button class="mr-3 mat-purple-bg"
-                        (click)="voteWitness(witness.owner, false)">
-                        <mat-icon class="mat-icon white-fg" aria-label="thumb_up">thumb_up</mat-icon>
-                      </button>
-                      <span [innerHtml]="witness.owner"></span>
-                    </mat-cell>
-                  </ng-container>
-
-                  <ng-container matColumnDef="block">
-                    <th mat-header-cell *matHeaderCellDef>Last Minted Block</th>
-                    <mat-cell *matCellDef="let witness">
-                      <span [innerHtml]="witness.last_confirmed_block_num"></span>
-                    </mat-cell>
-                  </ng-container>
-
-                  <ng-container matColumnDef="url">
-                    <th mat-header-cell *matHeaderCellDef>Information</th>
-                    <mat-cell *matCellDef="let witness">
-                      <a [href]="witness.url" target="_blank" [innerHtml]="witness.url"></a>
-                    </mat-cell>
-                  </ng-container>
-
-                  <mat-header-row *matHeaderRowDef="displayedColumnsWitness"></mat-header-row>
-                  <mat-row *matRowDef="let row; columns: displayedColumnsWitness;"></mat-row>
-                </mat-table>
-                <mat-paginator #paginatorWitness [pageSize]="50" [pageSizeOptions]="[50, 100, 200]"
-                  [showFirstLastButtons]="true"></mat-paginator>
-              </div>
-            </div>
-
-          </div>
+        <!--Streaming & Voting-->
+        <mat-tab label="Streaming Platform Voting">
+          <ng-template matTabContent>
+            <advance-streaming *ngIf="account && username" [account]="account" [username]="username"></advance-streaming>
+          </ng-template>
         </mat-tab>
 
         <!--Claim of Stake-->
         <mat-tab label="Claim of Stake">
-          <div class="container-fluid pb-2">
-
-            <div class="row my-1">
-              <div class="col-12 mt-2">
-                <small class="text-danger font-weight-bold">This feature is currently unavailable</small>
-                <h3 class="mt-2">Claim of Stake</h3>
-              </div>
-              <div class="col-12">
-                <p>Enter the Owner Private Key / WIF of your old Muse account and/or enter the Private Key of the
-                  Bitcoin
-                  address from which you participated in the pre-sale</p>
-              </div>
-              <div class="col-12 mb-2">
-                <div class="row">
-                  <div class="col-xs-12 col-sm-6 col-md-4">
-                    <mat-form-field>
-                      <input matInput placeholder="WIF" [(ngModel)]="inputWIF">
-                    </mat-form-field>
-                  </div>
-                  <div class="col-xs-12 col-sm-6 col-md-8">
-                    <button mat-raised-button class="mat-purple-bg" (click)="claimWIF()" disabled>Claim</button>
-                    <!--[disabled]="!inputWIF"-->
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
+          <ng-template matTabContent>
+            <advance-claim-of-stake *ngIf="username" [username]="username"></advance-claim-of-stake>
+          </ng-template>
         </mat-tab>
 
       </mat-tab-group>

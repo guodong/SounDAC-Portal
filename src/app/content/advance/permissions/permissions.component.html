@@ -1,0 +1,98 @@
+<div class="container-fluid pb-2">
+
+  <!--Basic-->
+  <div class="row my-1">
+    <div class="col-12 mt-2">
+      <h3 class="mb-1">Basic</h3>
+    </div>
+    <div class="col-12 mb-2">
+      <small *ngIf="!showPrivateBasic" class="font-weight-bold font-italic" [innerHtml]="account.keys.basicPubkey"></small>
+      <small *ngIf="showPrivateBasic" class="font-weight-bold font-italic" [innerHtml]="account.keys.basic"></small>
+    </div>
+    <div class="col-12 mb-2">
+      <button mat-raised-button class="mat-purple-bg" (click)="togglePrivateKey('basic')">
+        <span *ngIf="showPrivateBasic">Show Public</span>
+        <span *ngIf="!showPrivateBasic">Show Private</span>
+      </button>
+    </div>
+    <div class="col-12 my-2">
+      The basic key is used for non-financial functions such as voting, connection with other users and
+      approving/declining proposed
+      modifications to your data. It should be different from the active and owner keys.
+    </div>
+    <div class="col-12 my-1">
+      <mat-divider></mat-divider>
+    </div>
+  </div>
+
+  <!--Active-->
+  <div class="row my-1">
+    <div class="col-12 mt-2">
+      <h3 class="mb-1">Active</h3>
+    </div>
+    <div class="col-12 mb-2">
+      <small *ngIf="!showPrivateActive" class="font-weight-bold font-italic" [innerHtml]="account.keys.activePubkey"></small>
+      <small *ngIf="showPrivateActive" class="font-weight-bold font-italic" [innerHtml]="account.keys.active"></small>
+    </div>
+    <div class="col-12 mb-2">
+      <button mat-raised-button class="mat-purple-bg" (click)="togglePrivateKey('active')">
+        <span *ngIf="showPrivateActive">Show Public</span>
+        <span *ngIf="!showPrivateActive">Show Private</span>
+      </button>
+    </div>
+    <div class="col-12 my-2">
+      The active key is used for financial transactions and the creation of (or updates to) your data. It
+      should be used from a
+      secure workstation.
+    </div>
+    <div class="col-12 my-1">
+      <mat-divider></mat-divider>
+    </div>
+  </div>
+
+  <!--Owner-->
+  <div class="row my-1">
+    <div class="col-12 mt-2">
+      <h3 class="mb-1">Owner</h3>
+    </div>
+    <div class="col-12 mb-2">
+      <small *ngIf="!showPrivateOwner" class="font-weight-bold font-italic" [innerHtml]="account.keys.ownerPubkey"></small>
+      <small *ngIf="showPrivateOwner" class="font-weight-bold font-italic" [innerHtml]="account.keys.owner"></small>
+    </div>
+    <div class="col-12 mb-2">
+      <button mat-raised-button class="mat-purple-bg" (click)="togglePrivateKey('owner')">
+        <span *ngIf="showPrivateOwner">Show Public</span>
+        <span *ngIf="!showPrivateOwner">Show Private</span>
+      </button>
+    </div>
+    <div class="col-12 my-2">
+      The owner key is the master key for the account and is required to change the other keys. The private
+      key or password for
+      the owner key should be kept offline as much as possible.
+    </div>
+    <div class="col-12 my-1">
+      <mat-divider></mat-divider>
+    </div>
+  </div>
+
+  <!--Memo-->
+  <div class="row my-1">
+    <div class="col-12 mt-2">
+      <h3 class="mb-1">Memo</h3>
+    </div>
+    <div class="col-12 mb-2">
+      <small *ngIf="!showPrivateMemo" class="font-weight-bold font-italic" [innerHtml]="account.keys.memoPubkey"></small>
+      <small *ngIf="showPrivateMemo" class="font-weight-bold font-italic" [innerHtml]="account.keys.memo"></small>
+    </div>
+    <div class="col-12 mb-2">
+      <button mat-raised-button class="mat-purple-bg" (click)="togglePrivateKey('memo')">
+        <span *ngIf="showPrivateMemo">Show Public</span>
+        <span *ngIf="!showPrivateMemo">Show Private</span>
+      </button>
+    </div>
+    <div class="col-12 my-2">
+      <span>The memo key is used to create and read memos.</span>
+    </div>
+  </div>
+
+</div>
