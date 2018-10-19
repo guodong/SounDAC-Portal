@@ -1,71 +1,83 @@
+//Core
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogRef, PageEvent, MatTableDataSource, MatPaginator, MatSort} from '@angular/material';
+import { MatSortModule } from '@angular/material/sort';
+import { Router } from '@angular/router';
 
+//Services
+import { SdacService } from '../../services/sdac.service';
+import { AuthService } from '../../services/auth.service';
+import { UIService } from '../../services/ui.service';
 
-import {Component, ViewChild, AfterViewInit} from '@angular/core';
-import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+//Models
+import { SdacContent } from '../../models/sdac-content';
+import { Subscription } from '../../../../node_modules/rxjs/Subscription';
 
-/**
- * @title Data table with sorting, pagination, and filtering.
- */
 @Component({
-  selector: 'rights-management',
+  selector: 'content-rights-management',
   templateUrl: './rights-management.component.html',
   styleUrls: ['./rights-management.component.scss']
 })
+export class RightsManagementComponent implements OnInit, OnDestroy {
 
+  constructor(
+    private sdacService: SdacService,
+    private auth: AuthService,
+    private ui: UIService,
+    private router: Router
+  ) { }
 
-export class RightsManagementComponent implements AfterViewInit{
-  // displayedColumns = ['id', 'name', 'progress', 'content'];
-  // dataSource: MatTableDataSource<UserData>;
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild('paginator') paginator: MatPaginator;
+  @ViewChild('paginatorContent') paginatorContent: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor() {
-    // Create 100 users
-    // const users: UserData[] = [];
-    // for (let i = 1; i <= 100; i++) { users.push(createNewUser(i)); }
+  subscription: Subscription;
+  username: any;
+  ContentListArray: SdacContent[] = [];
+  dataSourceContent = new MatTableDataSource<SdacContent>(this.ContentListArray);
+  displayedColumnsContent = ['title', 'url', "timesplayed", 'uploaded',];
 
-    // Assign the data to the data source for the table to render
-    // this.dataSource = new MatTableDataSource(users);
+  ngOnInit(){
+
+    this.ui.showLoading();
+
+    this.subscription = this.auth.user$.map(user => {
+
+      if (user) {
+
+        // this.auth.user = user; // Update User
+        this.username = user.username;
+        this.loadcontents();
+      }
+    }).subscribe(user => {
+
+    });
+
   }
 
-  /**
-   * Set the paginator and sort after the view init since this component will
-   * be able to query its view for the initialized paginator and sort.
-   */
-  ngAfterViewInit() {
-    // this.dataSource.paginator = this.paginator;
-    // this.dataSource.sort = this.sort;
+  loadcontents() {
+    this.sdacService.getAccountContent(this.username).then(((result: any[]) => {
+      result.forEach(res => {
+        const content: SdacContent = new SdacContent();
+        content.mapContent(res);
+        this.dataSourceContent.data.push(content);
+      });
+      this.dataSourceContent.paginator = this.paginatorContent;
+      this.dataSourceContent.sort = this.sort;
+      this.ui.hideLoading();
+    }));
   }
 
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
-    // this.dataSource.filter = filterValue;
+    this.dataSourceContent.filter = filterValue;
+  }
+
+  ngOnDestroy(){
+    this.subscription.unsubscribe();
+  }
+  test(param) {
+    //console.log(param);
   }
 }
-
-/** Builds and returns a new User. */
-// function createNewUser(id: number): UserData {
-//   const name =
-//       NAMES[Math.round(Math.random() * (NAMES.length - 1))] + ' ' +
-//       NAMES[Math.round(Math.random() * (NAMES.length - 1))].charAt(0) + '.';
-
-//   return {
-//     id: id.toString(),
-//     name: name,
-//     progress: Math.round(Math.random() * 100).toString(),
-//     content: CONTENT['']
-//   };
-// }
-
-/** Constants used to fill up our data base. */
-// const CONTENT = [''];
-// const NAMES = [''];
-
-// export interface UserData {
-//   id: string;
-//   name: string;
-//   progress: string;
-//   content: string;
-// }

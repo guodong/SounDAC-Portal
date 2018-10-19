@@ -13,7 +13,7 @@
       </a>
     </li>
     <li>
-      <a routerLink="/music" routerLinkActive="active">
+      <a *ngIf="auth.isAdmin(auth.user)" routerLink="/music" routerLinkActive="active">
         <i class="material-icons mx-4 align-middle">music_note</i>
         <span>Music</span>
       </a>

@@ -22,4 +22,6 @@ export class MusicComponent implements OnInit {
       // this.ui.showLoading();
     }
 
+    submit(){}
+
 }

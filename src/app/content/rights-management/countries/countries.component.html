@@ -7,5 +7,7 @@
                 {{ option }}
             </mat-option>
         </mat-autocomplete>
+        <mat-error *ngIf="smartControl.hasError('validCountry') && smartControl.touched">
+          <strong>Must be a valid country</strong>
+        </mat-error>
     </mat-form-field>
-</form>

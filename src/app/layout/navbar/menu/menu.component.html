@@ -1,5 +1,5 @@
 <!--Music-->
-<button mat-button routerLink="/music">
+<button *ngIf="auth.isAdmin(auth.user)" mat-button routerLink="/music">
     <mat-icon aria-label="User">music_note</mat-icon>
     <span>Music</span>
 </button>
