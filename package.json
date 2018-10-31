@@ -38,7 +38,7 @@
     "popper.js": "1.14.4",
     "rxjs": "6.2.2",
     "rxjs-compat": "6.2.2",
-    "soundac-js": "https://github.com/soundac/SounDAC-JS.git",
+    "museblockchain-js": "https://github.com/soundac/SounDAC-JS.git",
     "web-animations-js": "2.3.1",
     "zone.js": "0.8.26"
   },
