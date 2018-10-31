@@ -71,10 +71,10 @@
   <div class="row my-1">
     <div class="col-12 my-2">
       <h3>Next Exit:</h3>
-      <ng-template>
+
         <span *ngIf="account.NextwithDraw.getDate() != defaultDate.getDate()" [innerHtml]="account.NextwithDraw | date:'MM/dd/yy hh:mm a z'"></span>
         <span *ngIf="account.NextwithDraw.getDate() == defaultDate.getDate()" [innerHtml]="'No pending Exits'"></span>
-      </ng-template>
+
     </div>
     <div class="col-12 my-1">
       <mat-divider></mat-divider>
