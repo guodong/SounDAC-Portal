@@ -1,0 +1,32 @@
+<div class="video_overlay">
+  <video id="videoBackground" playsinline="true" autoplay="true" muted="true" loop="true">
+    <source src="/assets/video.mp4" type="video/mp4">
+  </video>
+</div>
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-8 offset-md-2">
+      <mat-card class="login mat-elevation-z12">
+        <mat-card-content>
+          <div class="row">
+
+            <!--Image-->
+            <div class="col-12 mb-3 text-center">
+              <img src="assets/img/logo-txt-blk.png" class="logo">
+            </div>
+
+            <!--Form-->
+            <div class="col-12 text-center">
+              <h1>Our services are currently undergoing a maintenance, we will be back soon.</h1>
+            </div>
+
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+</div>
+
+<app-loading [isLoading]="ui.getLoadingState()" [loadingMessage]="ui.getLoadingMessage()"></app-loading>

@@ -6,6 +6,7 @@ import { faucet, faucetConfig, rightsManagementPortal, sdacApi, websocket, testA
 
 export const environment = {
   production: false,
+  temporary: false, // Update in firebase first - this is just a fallback if firebase is dead
   apiUrl: 'http://localhost:5000/api/',
   blockchainFaucet: faucet,
   blockchainFaucetConfig: faucetConfig,

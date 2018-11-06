@@ -2,6 +2,7 @@ import { faucet, faucetConfig, rightsManagementPortal, sdacApi, websocket, testA
 
 export const environment = {
   production: true,
+  temporary: false, // Update in firebase first - this is just a fallback if firebase is dead
   apiUrl: 'https://api.soundac.io/api/',
   blockchainFaucet: faucet,
   blockchainFaucetConfig: faucetConfig,
