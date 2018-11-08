@@ -2,15 +2,19 @@
   <div class="top-bg mat-deep-purple-bg"></div>
   <div class="center">
     <div class="header white-fg p-24" fxLayout="row" fxLayoutAlign="space-between center">
-      <h2>Dashboard</h2>
+      <h2>My Sounds</h2>
 
       <button mat-raised-button class="mat-white-bg mt-16 mt-sm-0" [routerLink]="'/content-post'">
         <span>POST CONTENT</span>
       </button>
 
     </div>
-    <div class="container">
-      <div class="row content-card mat-white-bg mb-5">
+
+
+
+
+    <div class="content-card mat-white-bg mb-5">
+      <!-- <div class="container"> -->
         <mat-card>
           <mat-card-content>
             <div>
@@ -56,14 +60,14 @@
                 </mat-table>
 
                 <mat-paginator #paginatorContent [pageSize]="25" [pageSizeOptions]="[25, 50, 100]"
-                [showFirstLastButtons]="true">
-              </mat-paginator>
+                  [showFirstLastButtons]="true">
+                </mat-paginator>
 
+              </div>
             </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    <!-- </div> -->
   </div>
-</div>
 </div>

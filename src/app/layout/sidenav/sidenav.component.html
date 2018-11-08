@@ -12,12 +12,12 @@
         <span>Wallet</span>
       </a>
     </li>
-    <li>
+    <!-- <li>
       <a *ngIf="auth.isAdmin(auth.user)" routerLink="/music" routerLinkActive="active">
         <i class="material-icons mx-4 align-middle">music_note</i>
         <span>Music</span>
       </a>
-    </li>
+    </li> -->
     <li>
       <a routerLink="/advance" routerLinkActive="active">
         <i class="material-icons mx-4 align-middle">build</i>
@@ -29,7 +29,7 @@
       <a (click)="artistKeyVerification()" routerLinkActive="active">
         <!-- <*ngIf=user.role !== Management then popup, else line 16> -->
         <i class="material-icons mx-4 align-middle">line_style</i>
-        <span>Rights Management</span>
+        <span>My Sounds</span>
       </a>
     </li>
     <li *ngIf="auth.isAdmin(auth.user)">
