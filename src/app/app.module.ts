@@ -80,25 +80,30 @@ import { SamplesComponent } from './content/rights-management/samples/samples.co
 import { WriterRolesComponent } from './content/rights-management/writer-roles/writer-roles.component';
 import { MusicComponent } from './content/music/music.component';
 import { MusicUploadComponent } from './content/music/upload/upload.component';
+import { TemporaryComponent } from './content/defaults/temporary/temporary.component';
 
 import { ModalArtistComponent } from './content/rights-management/modal/artist/modal-artist.component';
 import { ModalReviewComponent } from './content/rights-management/modal/review/modal-review.component';
 import { ModalPublishersComponent } from './content/rights-management/modal/publishers/modal-publishers.component';
 import { ModalWritersComponent } from './content/rights-management/modal/writers/modal-writers.component';
 
+
 // Firebase Initialization
 firebase.initializeApp(environment.rightsManagementPortal, 'rightsManagementPortal'); // Rights Management Portal
+firebase.app('rightsManagementPortal').firestore().settings({ timestampsInSnapshots: true });
 
 firebase.initializeApp(environment.sdacApi, 'sdacApi'); // Sdac API
-const firestore = firebase.app('sdacApi').firestore();
-const settings = { timestampsInSnapshots: true };
-firestore.settings(settings);
+firebase.app('sdacApi').firestore().settings({ timestampsInSnapshots: true });
+// const firestore = firebase.app('sdacApi').firestore();
+// const settings = { timestampsInSnapshots: true };
+// firestore.settings(settings);
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'email', component: EmailComponent },
   { path: 'register-external', component: RegisterExternalComponent },
+  { path: 'temporary', component: TemporaryComponent },
   {
     path: '', component: LayoutComponent, canActivate: [UserGuard], children: [
       { path: '', component: HomeComponent },
@@ -183,7 +188,8 @@ const routes: Routes = [
     SamplesComponent,
     WriterRolesComponent,
     MusicComponent,
-    MusicUploadComponent
+    MusicUploadComponent,
+    TemporaryComponent
   ],
   imports: [
     CommonModule,

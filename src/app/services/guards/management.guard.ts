@@ -36,8 +36,9 @@ export class ManagementGuard implements CanActivate {
         // Redirect
         this.router.navigateByUrl('/');
 
+
       }
-      
+
       return false;
 
     });

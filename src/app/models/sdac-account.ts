@@ -19,7 +19,7 @@ export class SdacAccount {
     streamingPlatformVotes: string[];
 
     mapAccount(sdacAccount: any){
-        console.log(sdacAccount); // Object from blockchain - Uncomment to view all properties
+        //console.log(sdacAccount); // Object from blockchain - Uncomment to view all properties
 
         this.keys.basicPubkey = sdacAccount.basic.key_auths[0][0];
         this.keys.activePubkey = sdacAccount.active.key_auths[0][0];
